@@ -1,0 +1,7 @@
+Perform deep matching for this job against the user profile.
+
+Profile: {profile}
+
+Job: {job}
+
+Output only valid JSON with: score (0-1), decision ("accept" or "reject"), reasoning.

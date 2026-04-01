@@ -1,0 +1,34 @@
+# Python bytecode
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Environments and sensitive files
+.env
+.venv/
+venv/
+ENV/
+
+# Database
+job_matcher.db
+
+# Logs
+logs/
+*.log
+
+# Test cache
+.pytest_cache/
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# IDE files
+.vscode/
+.idea/
+
+# Build and distribution
+build/
+dist/
+*.egg-info/

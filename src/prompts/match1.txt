@@ -1,0 +1,7 @@
+Evaluate if this job matches the user profile for stage 1 filtering.
+
+Profile: {profile}
+
+Job: {job}
+
+Output only valid JSON with: score (0-1), decision ("advance" or "reject"), reasoning.

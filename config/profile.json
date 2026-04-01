@@ -1,0 +1,17 @@
+{
+  "roles": ["Backend Software Engineer", "AI Engineer", "Platform Engineer"],
+  "level": "new-grad",
+  "locations": ["Toronto", "Remote", "US if eligible"],
+  "work_auth": {
+    "canada": true,
+    "us": false,
+    "sponsorship": false
+  },
+  "skills": {
+    "core": ["Python", "TypeScript", "Node.js", "SQL", "Docker", "APIs", "Backend Systems", "LLM", "Cloud"],
+    "secondary": ["React", "Redis", "Terraform", "CI/CD"]
+  },
+  "interests": ["AI", "developer tools", "platform", "infrastructure", "backend"],
+  "highlights": ["Reduced CI runtime by 50%", "Built backend services", "Improved cloud efficiency", "Shipped AI features"],
+  "avoid": ["frontend", "senior roles", "PM", "designer"]
+}
