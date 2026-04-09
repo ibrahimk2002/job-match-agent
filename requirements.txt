@@ -3,4 +3,3 @@ openai
 requests
 pytest
 pytest-cov
-firecrawl-py
