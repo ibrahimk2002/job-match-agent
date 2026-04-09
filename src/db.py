@@ -35,8 +35,6 @@ def init_db():
         job_id INTEGER NOT NULL,
         raw_text TEXT,
         extraction_json TEXT,
-        scrape_status TEXT DEFAULT 'pending',
-        scrape_error TEXT,
         FOREIGN KEY (job_id) REFERENCES jobs(id)
     )''')
     cursor.execute('''CREATE TABLE IF NOT EXISTS match_results (
@@ -79,22 +77,13 @@ def insert_job(url, url_hash, company=None, title=None, location=None):
         cursor.close()
         conn.close()
 
-def get_pending_jobs():
-    conn = get_db_connection()
-    cursor = conn.cursor()
-    cursor.execute("SELECT * FROM job_content WHERE scrape_status = 'pending'")
-    results = [dict(row) for row in cursor.fetchall()]
-    cursor.close()
-    conn.close()
-    return results
-
-def update_job_content(job_id, raw_text, extraction_json, status, error=None):
+def update_job_content(job_id, raw_text, extraction_json):
     conn = get_db_connection()
     cursor = conn.cursor()
     cursor.execute("""
-        INSERT OR REPLACE INTO job_content (job_id, raw_text, extraction_json, scrape_status, scrape_error)
-        VALUES (?, ?, ?, ?, ?)
-    """, (job_id, raw_text, extraction_json, status, error))
+        INSERT OR REPLACE INTO job_content (job_id, raw_text, extraction_json)
+        VALUES (?, ?, ?)
+    """, (job_id, raw_text, extraction_json))
     conn.commit()
     cursor.close()
     conn.close()

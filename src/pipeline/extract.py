@@ -17,5 +17,5 @@ def extract_job_data():
     for job in pending:
         prompt = prompt_template.format(raw_text=job[2])
         result = call_llm(prompt)
-        update_job_content(job[1], job[2], json.dumps(result), 'success')
+        update_job_content(job[1], job[2], json.dumps(result))
         log_info(f"Extracted data for job {job[1]}")
