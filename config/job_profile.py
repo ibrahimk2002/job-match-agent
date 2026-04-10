@@ -55,3 +55,32 @@ class JobProfile(BaseModel):
     extraction_confidence: float
     evidence_snippets: list[EvidenceSnippet]
     profile_meta: ProfileMeta
+
+
+class ExtractionResult(BaseModel):
+    normalized_title: str
+    role_family: Literal[
+        "backend", "frontend", "full_stack", "data", "ml",
+        "devops", "qa", "mobile", "unknown"
+    ]
+    role_subtype: str | None
+    seniority: Literal[
+        "intern", "new_grad", "junior", "mid", "senior",
+        "staff", "principal", "unknown"
+    ]
+    employment_type: Literal[
+        "full_time", "contract", "internship", "temporary", "unknown"
+    ]
+    work_mode: Literal["remote", "hybrid", "onsite", "unknown"]
+    location_scope: str | None
+    summary: str
+    must_have_requirements: list[str]
+    preferred_requirements: list[str]
+    responsibilities: list[str]
+    skills: Skills
+    experience_requirements: ExperienceRequirements
+    education_requirements: list[str]
+    domain_signals: list[str]
+    explicit_constraints: list[str]
+    extraction_confidence: float
+    evidence_snippets: list[EvidenceSnippet]
