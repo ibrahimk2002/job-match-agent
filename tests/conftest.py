@@ -3,9 +3,10 @@ import sys
 import sqlite3
 import pytest
 
-# Only src/ needs to be on the path — utils/ now lives inside src/.
+# src/ and config/ both need to be on the path
 project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, os.path.join(project_root, "src"))
+sys.path.insert(0, os.path.join(project_root, "config"))
 
 # Load .env so that os.getenv() calls inside utils/config.py succeed at import time.
 from dotenv import load_dotenv
@@ -35,6 +36,7 @@ def temp_db(tmp_path, monkeypatch):
     def _get_conn():
         conn = sqlite3.connect(db_file)
         conn.row_factory = sqlite3.Row
+        conn.execute("PRAGMA foreign_keys = ON")
         return conn
 
     monkeypatch.setattr(db_module, "get_db_connection", _get_conn)
