@@ -16,6 +16,7 @@ job_matcher.db
 # Logs
 logs/
 *.log
+*.csv
 
 # Test cache
 .pytest_cache/
