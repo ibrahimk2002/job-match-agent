@@ -1,21 +1,58 @@
-import json
 import os
-from integrations.openai_client import call_llm
-from db import update_job_content
+import sys
+from datetime import datetime, timezone
+
+_PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
+if _PROJECT_ROOT not in sys.path:
+    sys.path.insert(0, _PROJECT_ROOT)
+
+from config.job_profile import JobProfile, ProfileMeta
+from integrations.openai_client import extract_job_profile
+from db import get_pending_extraction, save_extraction, fail_extraction
 from utils.utils import log_info
 
+
+DEFAULT_MODEL = "gpt-4.1-nano"
+SCHEMA_VERSION = "1.0"
+
+
+def _read_prompt_and_version(prompt_path: str) -> tuple[str, str]:
+    with open(prompt_path, 'r', encoding='utf-8') as f:
+        content = f.read()
+    first_line = content.splitlines()[0].strip() if content else ""
+    if first_line.startswith("# prompt_version:"):
+        return content, first_line.split(":", 1)[1].strip()
+    return content, "unknown"
+
+
 def extract_job_data():
-    from db import get_db_connection
-    conn = get_db_connection()
-    cursor = conn.cursor()
-    cursor.execute("SELECT * FROM job_content WHERE extraction_json IS NULL AND raw_text IS NOT NULL")
-    pending = cursor.fetchall()
-    conn.close()
+    pending = get_pending_extraction()
     prompt_path = os.path.join(os.path.dirname(__file__), '..', 'prompts', 'extraction.txt')
-    with open(prompt_path, 'r') as f:
-        prompt_template = f.read()
+    system_prompt, prompt_version = _read_prompt_and_version(prompt_path)
+
     for job in pending:
-        prompt = prompt_template.format(raw_text=job[2])
-        result = call_llm(prompt)
-        update_job_content(job[1], job[2], json.dumps(result))
-        log_info(f"Extracted data for job {job[1]}")
+        db_job_id = job['job_id']
+        source_id = job['source_id']
+        print(f"Processing job_id {db_job_id} with source_id {source_id}")
+        try:
+            extraction_result = extract_job_profile(
+                system_prompt=system_prompt,
+                job_text=job['raw_text'],
+                model=DEFAULT_MODEL,
+            )
+            profile_meta = ProfileMeta(
+                schema_version=SCHEMA_VERSION,
+                prompt_version=prompt_version,
+                model=DEFAULT_MODEL,
+                generated_at=datetime.now(timezone.utc).isoformat(),
+            )
+            profile = JobProfile(
+                job_id=source_id,
+                profile_meta=profile_meta,
+                **extraction_result.model_dump(),
+            )
+            save_extraction(db_job_id, profile)
+            log_info(f"Extracted data for job_id {db_job_id}: {profile.role_family} / {profile.seniority}")
+        except Exception as e:
+            fail_extraction(db_job_id, str(e))
+            log_info(f"Extraction failed for job_id {db_job_id}: {e}")
