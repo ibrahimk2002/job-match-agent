@@ -4,7 +4,7 @@ from pipeline.run import run_pipeline
 
 def main():
     # Load profile
-    profile_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'config', 'profile.json'))
+    profile_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'config', 'user_profile.json'))
     with open(profile_path, 'r') as f:
         profile = json.load(f)
     
