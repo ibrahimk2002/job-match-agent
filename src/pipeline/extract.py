@@ -26,12 +26,16 @@ def _read_prompt_and_version(prompt_path: str) -> tuple[str, str]:
 
 
 def extract_job_data():
-    pending = get_pending_extraction()
     prompt_path = os.path.join(os.path.dirname(__file__), '..', 'prompts', 'extraction.txt')
     system_prompt, prompt_version = _read_prompt_and_version(prompt_path)
+    pending = get_pending_extraction(
+        schema_version=SCHEMA_VERSION,
+        prompt_version=prompt_version,
+        model_version=DEFAULT_MODEL,
+    )
 
     for job in pending:
-        db_job_id = job['job_id']
+        db_job_id = job['job_posting_id']
         source_id = job['source_id']
         print(f"Processing job_id {db_job_id} with source_id {source_id}")
         try:
