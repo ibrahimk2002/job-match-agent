@@ -1,0 +1,23 @@
+{
+  "source_file": "linkedin_jobs_Software_Engineer_Toronto_Canada_2_3_week.csv",
+  "total_input_rows": 25,
+  "total_cleaned": 25,
+  "total_rejected": 0,
+  "total_deduped_removed": 0,
+  "total_duplicate_url_removed": 0,
+  "total_duplicate_text_removed": 0,
+  "total_common_template_flagged": 0,
+  "total_blacklisted_flagged": 0,
+  "flag_distribution": {
+    "contains_responsibilities_heading": 17,
+    "contains_qualifications_heading": 5,
+    "normalization_changed_text": 22,
+    "contains_requirements_heading": 6,
+    "contains_about_role_heading": 10,
+    "contains_about_you_heading": 2,
+    "contains_preferred_heading": 8
+  },
+  "schema_version": "v1",
+  "cleanup_version": "v1",
+  "run_at": "2026-04-09T20:35:57.049635+00:00"
+}

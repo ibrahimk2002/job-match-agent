@@ -1,0 +1,1305 @@
+job_id,url,title,company,location,posted_date,description,missing_required_fields,missing_description,very_short_description,possible_duplicate_text,common_template_text,boilerplate_heavy,low_signal_text,cleanup_review_recommended,meta_cleaned_at,meta_source_file,meta_source_row
+li-4398951667,https://www.linkedin.com/jobs/view/4398951667/,Junior Full-stack AI Developer,Avanade,"Toronto, ON (On-site)",,"Introduction
+
+Kick-start your career by joining a collaborative team where learning, mentorship, and real-world impact go hand in hand. In this role, you'll work alongside experienced developers and directly with clients to understand their business needs and build modern technology solutions. You'll gain hands-on exposure to AI engineering, full-stack development, and data pipelines, while developing strong technical, problem-solving, and consulting skills in a supportive environment where your growth truly matters.
+
+Come join us
+
+Join our team to build new technology solutions where everyone's contribution matters. You'll work directly with clients to understand their business, systems, and goals, and collaborate with your teammates to deliver high-quality results. As you work, you'll keep learning and improving your skills, because progress and growth are important to us. Together, we do what matters.
+
+What you'll do
+
+Work on projects that help you grow your skills in AI engineering, full stack development, and data pipelines for enterprise applications.
+
+AI Engineering: Help build AI agents by connecting models to APIs, writing integration code, and testing endpoints to make sure services work together smoothly.
+
+Full Stack Development: Build front-end features, fix UI bugs, connect them to back-end routes, and write unit tests to support the application.
+
+Data Pipeline Engineering: Write and maintain ETL scripts, check scheduled jobs for errors, and document pipeline steps to keep data flowing reliably.
+
+Meet your team and clients to clarify requirements.
+
+Deliver features that are high-quality, reliable, and easy to test.
+
+Follow technical best practices, participate in code reviews, and pair programs to solve tough problems.
+
+Practice breaking down tasks and estimating how long they'll take.
+
+Collaborate closely with senior developers who provide guidance and mentorship, while actively taking responsibility for your own growth by developing technical and consulting skills through initiative and continuous learning.
+
+Qualifications
+
+Characteristics that demonstrate success for this role:
+
+Analytical, curious, agile
+Team player and good communicator
+Problem-solver, patient and quality-driven
+Self-motivating
+Innovative mindset
+Job Qualifications
+You are interested in modern application development for large organizations.
+You are enthusiastic about continuous learning, enjoy collaborating with others, and are motivated to launch your career within a supportive, capable team. Especially if you have hands-on experience with Python and have existing exposure to AI tools.
+Bachelor degree in Computer Science, Engineering or related field.
+Compensation at Avanade varies depending on a wide array of factors, which may include but are not limited to the specific office location, role, skill set, and level of experience. As required by local law, Avanade provides a reasonable range of compensation, based on full-time employment, for roles that may be hired as set forth below.
+
+The recruiting efforts for this position are intended to fill a brand new position.
+
+The base pay range shown below is intended as a guideline to reflect the majority of offers for this role.
+
+It does not represent a maximum limit - in some cases, actual compensation may exceed the range where appropriate.
+
+Salary: British Columbia/Ontario - 31$ to 37$ per hour
+ information on our benefits here: Benefits and Total Rewards | Avanade Canada",False,False,False,False,False,False,False,False,2026-04-09T20:35:57.001783+00:00,linkedin_jobs_Software_Engineer_Toronto_Canada_2_3_week.csv,1
+li-4384990656,https://www.linkedin.com/jobs/view/4384990656/,Software Engineer (Python) | Remote,Crossing Hurdles,Canada (Remote),,"Position: Python SWE
+Type: Hourly contract
+Compensation: $100 per hour
+Location: Remote
+Commitment: Part-time, approximately 20 hours per week; contract expected to last at least 1 month
+Role Responsibilities
+Build and maintain complex, production-grade Python services, tools, or frameworks
+Apply advanced Python features such as async/await, generators, decorators, and context managers
+Design modular, testable, and well-structured codebases using modern Python best practices
+Contribute to AI model-training workflows by providing high-quality engineering input
+Collaborate asynchronously with researchers and engineers on model-training projects
+Requirements
+Strong experience building and maintaining production-grade Python systems
+Strong command of Python language fundamentals and advanced features
+Strong experience with modern Python tooling and frameworks
+Strong experience writing modular, testable code and using testing frameworks
+Ability to reason about performance, profiling, and memory optimization
+Ability to work independently in a remote, contract-based environment
+Application Process
+Upload your resume.
+Complete a technical interview.
+Submit a short form.",False,False,False,False,False,False,False,False,2026-04-09T20:35:57.002136+00:00,linkedin_jobs_Software_Engineer_Toronto_Canada_2_3_week.csv,2
+li-4286968059,https://www.linkedin.com/jobs/view/4286968059/,Software Engineer - All Levels,GlossGenius,"Toronto, ON",,"About GlossGenius
+GlossGenius is building an ecosystem enabling entrepreneurs to succeed. We empower small business owners to focus on being creators, not admins, by offering a range of business management tools including booking and scheduling, marketing, analytics, payment processing and much more.
+Over 100,000 small business owners have chosen to rely on GlossGenius every day to run their entire set of business operations. Joining its powerful, intuitive platform with its vibrant, distinguished brand, GlossGenius is the ideal combination of a fintech, SMB software, and consumer company all in one.
+About the Role
+GlossGenius has grown significantly, supporting tens of thousands of customers and seeing billions of transaction volumes on our platforms. As our customers continue to grow their businesses, we want to enable them to be more successful. For that, we're building AI features that will transform how our customers operate and grow their businesses
+That's why we are seeking strong Software Engineers, All levels to join one of our Product or Platform-based teams. Product-focused engineers work at the intersection of business needs and technical solutions, solving key customer problems. Platform-focused engineers build scalable, reliable, and extensible systems that empower product teams to move faster, deliver with quality, and focus on customer value.
+This role is Hybrid in our NYC headquarters (Tuesdays & Thursdays in-office).
+This role is remote from the San Francisco Bay Area
+This role is remote from the Greater Toronto Area
+What We Work With
+We are open to hearing from candidates who know different programming languages and are excited to learn more and grow their skills. Our current stack:
+Kotlin (micronaut, jooq), Ruby (Rails, Sidekiq), gRPC, protobuf
+Typescript / Javascript (React, Redux)
+React Native
+AWS, Kubernetes, Postgres and Terraform
+What You'll Do
+As a Software Engineer at GlossGenius, you'll play a critical role in shaping a platform that powers over 100,000 small businesses and processes more than $3 billion in payments annually. Engineers work on high-impact initiatives that support our rapid growth and evolving scale. Examples of your potential responsibilities include:
+Develop, release, and run large-scale web applications that empower beauty and wellness businesses to operate and grow.
+Build new AI features for our customers.
+Develop and define our microservice-based infrastructure.
+Build tools and solutions that enable internal teams to work faster, more effectively, with more confidence, and improve the value they can provide our users (Business Scalability team).
+Work on core experiences such as making payments friction-free for clients and customers, building tools to help customers earn more per hour, or enabling businesses to effortlessly grow and manage their teams.
+Focus on front-end development, crafting intuitive and engaging user experiences for our web and mobile applications.
+Improve performance, reliability, scalability, and security for our backend systems.
+What We're Looking For
+2+ years of professional experience in software development.
+A Bachelor's degree in Computer Science, a related technical field, or equivalent practical experience.
+A strong desire to move fast and have a significant impact.
+An entrepreneurial mindset, eager to take ownership and contribute new ideas to solve challenging problems.
+Ability to analyze and improve efficiency, scalability, and stability of various system resources.
+Demonstrates strong collaboration skills and team spirit.
+Benefits & Perks
+Flexible PTO
+Competitive health & dental insurance options, with premiums partially or fully covered by GG
+In-person opportunities that are designed to help team members foster collaboration and build community (ie; working out of a co-working space, team dinners, and other team building activities)
+Fertility and adoption benefits via Carrot
+Generous, fully-paid parental leave policy
+401k benefit - employees are eligible to contribute starting day 1 of employment
+Professional Development - employees receive a yearly stipend for approved learning and educational-related expenses
+Pre-tax commuter benefits
+Dependent Care FSA
+Home office support
+At GlossGenius, we celebrate our differences and are committed to creating a workplace where all employees feel supported and empowered to do their best work. We believe this benefits not only our employees but our product, customers, and community as well. GlossGenius is proud to be an Equal Opportunity and Affirmative Action Employer.
+Personal Information: Notice at Collection for Employees and Applicants
+Agency Submissions
+If a resume or applicant is submitted to GlossGenius by a third party without a signed search agreement in place, it will become the property of GlossGenius and no fee will be paid, irrespective of whether the candidate is hired.",False,False,False,False,False,False,False,False,2026-04-09T20:35:57.004286+00:00,linkedin_jobs_Software_Engineer_Toronto_Canada_2_3_week.csv,3
+li-4398495303,https://www.linkedin.com/jobs/view/4398495303/,QA Engineer (Early Career) (Canada),Jobright.ai,Canada (Remote),,"Jobright is your personal AI job search agent that transforms the way you do job search from solo, time-consuming efforts to a fast, expert-guided journey, simplifying every job search step and accelerating your route to the best job outcomes. They are seeking a QA Engineer to design and execute test plans, identify bugs, and collaborate with teams to ensure product quality.
+Why Join Us
+- Build real, production AI agents used by real users
+- High ownership and impact
+- Work at the intersection of AI, agents, and product
+- Shape how people experience AI-driven job search
+Responsibilities
+- Design and execute test plans, test cases, and regression suites that ensure product quality across web and API layers before every release
+- Identify, reproduce, and document bugs with clear severity assessments and reproduction steps that help engineers resolve issues quickly
+- Build and maintain automated test frameworks that reduce manual testing effort and catch regressions early in the development cycle
+- Collaborate with product and engineering teams during sprint planning and feature reviews to surface edge cases and quality risks before code is written
+- Track and report on quality metrics such as defect rates, test coverage, and release readiness to give the team a clear picture of product health
+Qualification
+Required
+- Recent graduate or early-career professional (0 - 2 years of experience) with a degree in Computer Science, Software Engineering, or a related technical field
+- Hands-on experience writing automated tests using frameworks such as Selenium, Cypress, Playwright, or Pytest
+- A sharp eye for detail and the natural instinct to ask 'what could go wrong' - comfortable thinking through edge cases, boundary conditions, and failure modes
+- Strong communication skills with the ability to write clear, actionable bug reports that engineers actually want to read
+Preferred
+- Previous internship or project experience owning QA processes, writing test strategies, or shipping tested features in a team environment
+- Familiarity with API testing tools like Postman or REST Assured and experience validating backend behavior independent of the UI
+- Exposure to integrating automated tests into CI/CD pipelines using tools like GitHub Actions, Jenkins, or CircleCI
+- Interest in shifting quality left - advocating for testability in design discussions rather than only catching issues after implementation",False,False,False,False,False,False,False,False,2026-04-09T20:35:57.005238+00:00,linkedin_jobs_Software_Engineer_Toronto_Canada_2_3_week.csv,4
+li-4399287046,https://www.linkedin.com/jobs/view/4399287046/,Software Engineer (Java),micro1,Canada (Remote),,"Job Title: Java Developer
+Job Type: Contractor
+Location: Remote
+Job Summary:
+Join our customer's team as an expert Java Developer. You will leverage your deep understanding of Java to architect, develop, and maintain robust software solutions in a fully remote and collaborative setting. If you are passionate about creating high-quality code and delivering exceptional results, this role will provide the challenging and rewarding environment you seek.
+Key Responsibilities:
+Design and implement scalable, efficient, and maintainable Java applications.
+Collaborate with cross-functional teams to define, design, and deliver new features and enhancements.
+Conduct thorough code reviews, ensuring adherence to best practices and high standards of code quality.
+Troubleshoot and resolve complex technical issues in a timely manner.
+Contribute to architectural decisions and participate in system integration planning.
+Document technical designs, processes, and workflows clearly and effectively.
+Stay updated with the latest Java developments, frameworks, and industry trends.
+Required Skills and Qualifications:
+Expert-level proficiency in Java, with a strong portfolio of completed projects.
+Solid experience with object-oriented design, data structures, and algorithms.
+Strong written and verbal communication skills with the ability to explain technical details to non-technical stakeholders.
+Proven ability to work independently in a remote environment while collaborating with distributed teams.
+Demonstrated problem-solving skills and attention to detail.
+Experience with version control systems such as Git.
+Familiarity with agile methodologies and remote collaboration tools.
+Preferred Qualifications:
+Experience with modern Java frameworks such as Spring or Hibernate.
+Background in cloud-based deployments or microservices architecture.
+Previous experience working directly with international customers or distributed teams.",False,False,False,False,False,False,False,False,2026-04-09T20:35:57.005875+00:00,linkedin_jobs_Software_Engineer_Toronto_Canada_2_3_week.csv,5
+li-3998438100,https://www.linkedin.com/jobs/view/3998438100/,"Software Engineer, Backend (All Levels / All Teams)",DoorDash,"Toronto, ON",,"About The Role
+
+DoorDash is building the world's most reliable on-demand, logistics engine for delivery. We are continuing to grow rapidly and expanding our Engineering offices globally! We are looking for Backend Engineers to build and maintain a large scale 24x7 global infrastructure system that powers DoorDash's 3-sided marketplace of Consumers, Merchants and Dashers.
+
+We're looking for Backend Engineers to work on both Product and Product Platform based teams. Product focused Engineers work at the intersection of product and infrastructure to solve key business problems with elegant technical solutions. You'll operate our backend services and architecture that support all product functionality and will be challenged to consider the big picture -- collaborating cross-functionally, as well as evaluating and executing on trade-offs to maximize business impact for the company.
+
+This role is hybrid with some in-office time expected and will report to an Engineering Manager.
+
+You're excited about this opportunity because you will...
+
+Develop, release and run large-scale web applications
+Develop and define the backend architecture and tech stack for a product area
+Improve performance, reliability, scalability and security for our backend systems
+Be involved in transitioning our monolithic codebase to a microservice-based architecture
+Completely disrupt logistics by tackling bleeding-edge, technical problems
+We're excited about you because you have...
+
+B.S., M.S., or PhD. in Computer Science or equivalent
+Prior experience working with backend tech stacks
+Ability to analyze and improve efficiency, scalability, and stability of various system resources
+Experience with service oriented architecture, writing REST API's, unit testing, and architectural design
+Understanding of modern web stacks and architecture (HTTP, REST)
+Experience with SQL and NoSQL databases and other technologies (e.g. Postgres, Redis, Elasticsearch, RabbitMQ)
+Notice to Applicants for Jobs Located in NYC or Remote Jobs Associated With Office in NYC Only
+
+We use Covey as part of our hiring and/or promotional process for jobs in NYC and certain features may qualify it as an AEDT in NYC. As part of the hiring and/or promotion process, we provide Covey with job requirements and candidate submitted applications. We began using Covey Scout for Inbound from August 21, 2023, through December 21, 2023, and resumed using Covey Scout for Inbound again on June 29, 2024.
+
+The Covey tool has been reviewed by an independent auditor. Results of the audit may be viewed here: Covey
+
+Compensation
+
+Actual compensation within the pay range listed below will be decided based on factors including, but not limited to, skills, prior relevant experience, and specific work location. Base salary is localized according to employee work location.
+
+In addition to base salary, the compensation for this role includes opportunities for equity grants. Talk to your recruiter for more information.
+
+DoorDash cares about you and your overall well-being. That's why we offer a comprehensive benefits package for all regular employees, that includes paid time off, paid parental leave, wellness benefit and several paid holidays.
+
+Additionally, for full-time employees, DoorDash offers medical, dental, and vision benefits, disability and basic life insurance, an RRSP including an employer match, and a mental health program, among others.
+
+To learn more about our benefits, visit our careers page here.
+
+The base pay for this position ranges from our lowest geographical market up to our highest geographical market within British Columbia.
+
+I4
+
+$120,000 - $150,000 CAD
+
+I5
+
+$149,500 - $187,000 CAD
+
+I6
+
+$185,000 - $231,500 CAD
+
+About DoorDash
+
+At DoorDash, our mission to empower local economies shapes how our team members move quickly, learn, and reiterate in order to make impactful decisions that display empathy for our range of users - from Dashers to merchant partners to consumers. We are a technology and logistics company that started by enabling door-to-door delivery, and we are looking for team members who can help us go from a company that is known as the place you order food to a company that people turn to for any and all goods.
+
+DoorDash is growing rapidly and changing constantly, which gives our team members the opportunity to share their unique perspectives, solve new challenges, and own their careers. We're committed to supporting employees' happiness, healthiness, and overall well-being by providing comprehensive benefits and perks including premium healthcare, wellness expense reimbursement, paid parental leave and more.
+
+Our Commitment to Diversity and Inclusion
+
+We're committed to growing and empowering a more inclusive community within our company, industry, and cities. That's why we hire and cultivate diverse teams of people from all backgrounds, experiences, and perspectives. We believe that true innovation happens when everyone has room at the table and the tools, resources, and opportunity to excel.
+
+If you need any accommodations, please inform your recruiting contact upon initial connection.",False,False,False,False,False,False,False,False,2026-04-09T20:35:57.007411+00:00,linkedin_jobs_Software_Engineer_Toronto_Canada_2_3_week.csv,6
+li-4395368597,https://www.linkedin.com/jobs/view/4395368597/,"Associate, Software Engineer, New Grad Card Expansion",Capital One,"Toronto, ON (Hybrid)",,"161 Bay Street (93021), Canada, Toronto,Toronto, Ontario,
+
+Associate, Software Engineer, New Grad Card Expansion
+
+MUST INCLUDE YOUR RESUME AND UNOFFICIAL TRANSCRIPT IN ONE PDF DOCUMENT IN THE ATTACHMENT SECTION WHEN YOU CREATE YOUR PROFILE TO APPLY.
+
+About Capital One Canada.
+
+For over 30 years, we've been on a mission to change banking for good and build relationships by making credit accessible, simple, intuitive and rewarding. We want to help Canadians succeed with credit, because we believe in people - in our customers, in our associates, and in talent like you!
+
+About The Team
+
+Yes, we're a credit card company. But we're more than that too. We're driven by what our customers want, and how to make their lives simpler.
+
+We're always looking for creative ways to offer digital solutions that make sense for our customers. With your help, we'll build the next generation of banking in Canada based on customer-focused values, compelling products and great engineering.
+
+About The Role
+
+Our environment is creative, filled with teams that are passionate about the work they're doing and the people they are doing it for. We're a technology thought leader in the financial industry and we want to keep it that way.
+
+We have a passion for open-source and for working with the latest technologies. Whether you're a big Apple fan or an Android lover, a UI developer or prefer NoSQL databases over anything else, you'll fit in our team. All you need is to be passionate about technology!
+
+Below are some of the skills the team is looking for, but you're not expected to have them all. Curiosity and willingness to learn are what matter most.
+
+IDE: Android Studio, XCode, Visual Studio Code, IntelliJ
+Language: Kotlin, Swift, Javascript, Typescript, GoLang, NodeJS
+AWS: S3, EC2, Lambda, Route53, Security Groups, IAM roles
+Monitoring Tool: Splunk, New Relic, Cloudwatch
+Testing Framework: MockitoJUnitRunner, Espresso, XCTest
+Our Associates are involved in business critical projects. Here are some examples.
+
+Improve user experience for Android / iOS customers
+Develop CI/CD pipelines to AWS cloud environment
+Remediate and enhance cyber security
+Create front end applications with React and Angular.
+Develop backend Microservice applications and APIs
+Think it. Code it.
+
+This is our motto! By that, we mean that you, as a member of one of our great Agile teams will be responsible for the design, coding, testing and delivery of solutions that benefit our customers and Canadians in general.
+
+Continuous Learning
+
+We're here to help you develop your knowledge and skills, both on the job and in the classroom. Our engineers have access to incredible continuous learning tools and courses through our very own Tech College, a world-class learning hub that offers both online and in-person classes for across multiple disciplines - Cloud Computing, Cyber Security, Mobile Development, Machine Learning & AI, to name a few.
+
+As a new Software Engineer, you'll join the Tech Development Program (TDP), which takes place over your first year with us and involves hands-on learning, development, and networking. Throughout your time in the program you could tackle front-end, back-end, full-stack, mobile development, or maybe even all of them.
+
+Your Responsibilities:
+Work as part of a dynamic team throughout the software development life cycle
+Collaborate with designers and analysts to implement enhancements or new applications
+Develop code to meet story acceptance criteria
+Conduct design and code reviews to ensure high-level quality output
+Ensure adherence to continuous improvement practices as required to meet quality, and time to market imperatives
+Maintain records to document program development, and revisions
+Provide third-level support of software solution as needed
+Basic Qualifications:
+Have obtained a Bachelor's degree or higher between September 2025 to September 2026
+Good communication, presentation, and writing skills
+Good understanding of testing fundamentals
+Experience in unix or linux operating systems
+Able to work within a team setting and actively participate and collaborate in team discussions
+Preferred Qualifications:
+Experience in front end development such as JavaScript, HTML, mobile, frameworks such as React, Vue, Angular
+Knowledge of programming languages, including but not limited to Java, Python, JavaScript, NodeJS, Kotlin.
+Experience with Jenkins CI/CD, microservices, API design / integration
+Experience with version control technology i.e. Git
+Experience in a Linux/Unix environment with strong coding background.
+Working at Capital One.
+
+Enjoy a hybrid work environment, with 3 days in the office. Build a comfortable workspace with our one-time, Work From Home allowance and enjoy our head office located conveniently across the street from Union Station.
+
+Live well - physically, financially and emotionally. Receive support for you and those who are most important to you, with full coverage for spouses, domestic partners, and dependents. With up to $3000 in mental health coverage and up to $5000 in tuition subsidies per year - and much more - you'll discover that Capital One is committed to helping you live your best life.
+
+Capital One Canada is an equal opportunity employer committed to fostering a diverse and inclusive work environment. We consider all qualified applicants and will meet the needs of those requiring reasonable accommodations.
+
+If you have visited our website in search of information on employment opportunities or to apply for a position, and you require an accommodation, please contact Capital One Recruiting at 1-800-304-9102 or via email at RecruitingAccommodation@capitalone.com. All information you provide will be kept confidential and will be used only to the extent required to provide needed reasonable accommodations.
+
+For technical support or questions about Capital One's recruiting process, please send an email to Careers@capitalone.com.
+
+Capital One does not provide, endorse nor guarantee and is not liable for third-party products, services, educational tools or other information available through this site.
+
+Capital One Financial is made up of several different entities. Please note that any position posted in Canada is for Capital One Canada, any position posted in the United Kingdom is for Capital One Europe and any position posted in the Philippines is for Capital One Philippines Service Corp. (COPSSC).
+
+We may use your information for automated decision making. We may, for certain purposes, render a decision based exclusively on automated processing of your personal information as a part of the candidate screening process.
+
+Capital One Canada is an equal opportunity employer committed to fostering a diverse and inclusive work environment. We consider all qualified applicants and will meet the needs of those requiring reasonable accommodations.
+
+If you have visited our website in search of information on employment opportunities or to apply for a position, and you require an accommodation, please contact Capital One Recruiting at 1-800-304-9102 or via email at ARCanada@capitalone.com. All information you provide will be kept confidential and will be used only to the extent required to provide needed reasonable accommodations.
+
+For technical support or questions about Capital One's recruiting process, please send an email to Careers@capitalone.com
+
+Capital One does not provide, endorse nor guarantee and is not liable for third-party products, services, educational tools or other information available through this site.
+
+Capital One Financial is made up of several different entities. Please note that any position posted in Canada is for Capital One Canada, any position posted in the United Kingdom is for Capital One Europe and any position posted in the Philippines is for Capital One Philippines Service Corp. (COPSSC).",False,False,False,False,False,False,False,False,2026-04-09T20:35:57.009039+00:00,linkedin_jobs_Software_Engineer_Toronto_Canada_2_3_week.csv,7
+li-4395301387,https://www.linkedin.com/jobs/view/4395301387/,Software Engineer,HISH IT SERVICES,Canada (Remote),,"Role : Software Engineer
+Location: Remote
+Job type: Contract(6 Months) - High possibility of Extention
+Pay : CAD $47 /Hour
+Start date : Immediate
+ ***Candidates must have a valid work permit to work in Canada***
+ As a Software Engineer on the nearshore team, you will contribute to full-stack development across our B2B and B2C SaaS products, working with React/TypeScript on the frontend and NestJS/Node.js on the backend. You'll collaborate closely with senior engineers and the Technical Lead Engineer to build secure, scalable, and customer-centric features. This is a great opportunity to grow your skills while working on applications that secure millions of small businesses and consumers in the cybersecurity domain.
+ Key Responsibilities
+Feature Development & Delivery
+Build and maintain features for B2B and B2C SaaS products.
+Collaborate with fellow engineers, the Product Manager, and UX Designer to understand requirements and estimate timelines.
+Communicate progress, blockers, and delays proactively to the team.
+Contribute to improving engineering practices and processes.
+Explore and experiment with generative AI tools to enhance development workflows.
+ Programming & Implementation
+Write high quality, maintainable, and well-tested code.
+Implement front-end UI components using TypeScript and React.
+Implement RESTful API endpoints using TypeScript, NestJS, and Node.js.
+Participate in peer code reviews to maintain code quality and follow engineering best practices.
+Collaborate with developers to build reusable code and components.
+Follow software security requirements and secure coding practices.
+Leverage modern developer tools (including AI-assisted tools) to enhance productivity.
+ Software Design
+Contribute to technical discussions and design reviews.
+Help design and build reusable React components for the front-end UI.
+Consider performance, scalability, and user experience when implementing features.
+ Please share your profile with hr@hish.ca",False,False,False,False,False,False,False,False,2026-04-09T20:35:57.009600+00:00,linkedin_jobs_Software_Engineer_Toronto_Canada_2_3_week.csv,8
+li-4395490720,https://www.linkedin.com/jobs/view/4395490720/,Junior Backend Engineer,Lush Fresh Handmade Cosmetics North America,"Toronto, ON (Hybrid)",,"Lush Handmade Cosmetics is a global enterprise with more than 900 retail shops in 52 countries focused on producing creative and indulgent cosmetics and bath products using only the freshest organic fruits and vegetables, pure essential oils, and safe synthetics. We are dedicated to fair-trade sourcing, supporting sustainable communities, and giving back through our Lush Giving Products which donate 75% to grassroots organizations that support people, animals and the planet.
+The Team
+Lush Digital leads digital strategy for Lush across online, retail & manufacturing globally, creating, developing and supporting the tools that drive the business. From design, artwork & photography to engineering, systems & data, we support all of Lush's digital needs.
+The Role
+As a Junior Backend Engineer, you will contribute to backend services and tooling that support the Global business. Your responsibilities will include developing custom software, including our REST APIs, GraphQL subgraphs, extending open-source software like Saleor, ERPNext, and integrating with third-party solutions like Power BI, CloudSQL.
+We endeavour to provide innovative solutions for bespoke LUSH use-cases. This role would suit a candidate who is passionate about developing high-quality, performant products which are suitable for use in a global business.
+Reporting to the Backend Engineering Team Lead, the Junior Backend Engineer undertakes the following RESPONSIBILITIES:
+Write clear, maintainable code that will scale across projects and distributed development teams.
+Collaborate with engineers, QAs, designers, and partners to solve interesting and challenging problems for delivering scalable technology worldwide.
+Refactor, review and maintain existing enterprise application code bases ensuring scalability, performance and security are taken into consideration, building new features to support the growth of global business.
+Actively research and implement innovative techniques and features to enhance the development process.
+You bring the following QUALIFICATIONS:
+TypeScript development experience, proficient in the native libraries and able to demonstrate a genuine interest in TypeScript coding philosophy and practices.
+Able to translate product or business requirements into technological initiatives.
+Able to autonomously debug and resolve issues.
+Comfortable writing SQL queries.
+Have a very good working knowledge of git.
+Have experience building web applications using a web framework like Express.
+Have experience building GraphQL APIs with Apollo federated GraphQL or Hive Gateway experience as a bonus.
+Have working experience of application packaging and deployment. Some knowledge of Docker would be ideal.
+What's it like working for Lush
+People are at the heart of our business. We want you to enjoy and challenge yourself, build a career, and teach us what we don't know, so we've created a culture where your job description is a starting point, not an end goal. Our working style is flexible, fluid, supportive, and authentic - if you've got the drive to push yourself and try different things, you will have our support.
+
+Thriving with a diverse company culture, celebrating the uniqueness of our staff, and committed to inclusion. We are proud to be an equal opportunity employer.
+We thank all interested applicants; however, only qualified candidates will be contacted.
+We're 10% Employee Owned - all colleagues play a role in protecting our ethics and our independence, contributing ideas for the future and sharing in the rewards of success when the company is doing well.
+Job Type: Full-time, Regular role.
+
+Work Type: Hybrid role, must have flexibility to go on-site 1-2 days/week.
+
+Job Location: The successful candidate must be located in or around Toronto, ON.
+Recruitment Process Overview:
+ This salary range is based on an assessment of the local market and may vary depending on the successful candidate's location. This range is based on base salary and does not include additional bonus program and total rewards eligibility.
+Base Salary Range: $67,140 CAD - $74,600 CAD
+ Best of luck on your job search, and don't forget to follow us to learn more!
+We Are LushYouTube
+LinkedIn
+Find our Personal Privacy Policy details here.
+Lush Cosmetics North America respectfully recognizes that our business operates on Indigenous territory across Turtle Island. As a business headquartered in Canada, our largest facilities are located on the unceded territories of the Musqueam, Squamish and Tsleil-Waututh, as well as here on the lands of the Mississaugas of the Credit, Anishnabeg, Chippewa, Haudenosaunee and Wendat, and now home to many diverse First Nations, Inuit and Métis peoples.
+
+Our commitment to reconciliation and decolonization is guided by the Truth and Reconciliation Commission of Canada: Calls to Action #92. We recognize that our facilities, along with our settler and newcomer staff are guests on this land and as we act to repair past harm, we do it together in ally ship with Indigenous People everywhere, including staff, customers and with leadership from organizations and communities we work with.",False,False,False,False,False,False,False,False,2026-04-09T20:35:57.012299+00:00,linkedin_jobs_Software_Engineer_Toronto_Canada_2_3_week.csv,9
+li-4395908039,https://www.linkedin.com/jobs/view/4395908039/,Backend Engineer,Faire,"Toronto, ON (Hybrid)",,"About Faire
+
+Faire is an online wholesale marketplace built on the belief that the future is local - independent retailers around the globe are doing more revenue than Walmart and Amazon combined, but individually, they are small compared to these massive entities. At Faire, we're using the power of tech, data, and machine learning to connect this thriving community of entrepreneurs across the globe. Picture your favorite boutique in town - we help them discover the best products from around the world to sell in their stores. With the right tools and insights, we believe that we can level the playing field so that small businesses everywhere can compete with these big box and e-commerce giants.
+
+By supporting the growth of independent businesses, Faire is driving positive economic impact in local communities, globally. We're looking for smart, resourceful and passionate people to join us as we power the shop local movement. If you believe in community, come join ours.
+
+About The Role
+
+Imagine a world where every engineer at Faire can ship code faster, deploy confidently, and test seamlessly - because of the tools you build. Our Developer Productivity team makes that vision a reality, and we're looking for a back-end engineer to help take it even further.
+
+In this role, you will work on internal AI-powered tools, CI/CD pipelines, test automation, experimentation and translation frameworks, and other initiatives that streamline the development lifecycle. Your work will remove bottlenecks, improve reliability, and enable engineers across Faire to build at incredible speed.
+
+What You'll Do
+Build and maintain high-quality features for internal developer tooling.
+Identify pain points in engineering workflows and design both immediate fixes and long-term improvements.
+Experiment with LLMs and AI-powered automation to redefine how engineers write, test, and deploy code.
+Enhance the reliability and speed of development environments, CI/CD pipelines, and automation frameworks.
+Contribute to the platform roadmap, using data-driven insights to set priorities and measure impact.
+What We're Looking For
+2+ years of experience in back-end development (Java, Kotlin, or similar).
+Passion for developer experience, tooling, and automation.
+Interest in AI/LLMs and their applications in developer productivity.
+Strong understanding of CI/CD systems and cloud infrastructure (GitHub Actions, Buildkite, Docker, AWS, OCI, or similar).
+Ability to collaborate across teams, solve complex engineering problems, and drive efficiency.
+Curiosity and enthusiasm for exploring new tools and technologies to enhance development workflows.
+Bonus point for experience working with monorepos and large-scale codebase management.
+Salary Range
+
+Canada: the pay range for this role is $129,500 - $178,000 per year.
+
+This role will also be eligible for equity and benefits. Actual base pay will be determined based on permissible factors such as transferable skills, work experience, market demands, and primary work location. The base pay range provided is subject to change and may be modified in the future.
+
+Hybrid Faire employees currently go into the office 3 days per week on Tuesdays, Thursdays, and a third flex day of their choosing (Monday, Wednesday, or Friday). Additionally, hybrid in-office roles will have the flexibility to work remotely up to 4 weeks per year. Specific Workplace and Information Technology positions may require onsite attendance 5 days per week as will be indicated in the job posting.
+
+Why you'll love working at Faire
+We are entrepreneurs: Faire is being built for entrepreneurs, by entrepreneurs. We believe entrepreneurship is a calling and our mission is to empower entrepreneurs to chase their dreams. Every member of our team is taking part in the founding process.
+We are using technology and data to level the playing field: We are leveraging the power of product innovation and machine learning to connect brands and boutiques from all over the world, building a growing community of more than 350,000 small business owners.
+We build products our customers love: Everything we do is ultimately in the service of helping our customers grow their business because our goal is to grow the pie - not steal a piece from it. Running a small business is hard work, but using Faire makes it easy.
+We are curious and resourceful: Inquisitive by default, we explore every possibility, test every assumption, and develop creative solutions to the challenges at hand. We lead with curiosity and data in our decision making, and reason from a first principles mentality.
+Faire was founded in 2017 by a team of early product and engineering leads from Square. We're backed by some of the top investors in retail and tech including: Y Combinator, Lightspeed Venture Partners, Forerunner Ventures, Khosla Ventures, Sequoia Capital, Founders Fund, and DST Global. We have headquarters in San Francisco and Kitchener-Waterloo, and a global employee presence across offices in Toronto, London, and New York. To learn more about Faire and our customers, you can read more on our blog.
+
+Faire provides equal employment opportunities (EEO) to all employees and applicants for employment without regard to race, color, religion, sex, national origin, age, disability, genetics, sexual orientation, gender identity or gender expression.
+
+Faire is committed to providing access, equal opportunity and reasonable accommodation for individuals with disabilities in employment, its services, programs, and activities. Accommodations are available throughout the recruitment process and applicants with a disability may request to be accommodated throughout the recruitment process. We will work with all applicants to accommodate their individual accessibility needs. To request reasonable accommodation, please fill out our Accommodation Request Form (https://bit.ly/faire-form)
+
+Privacy
+
+For information about the type of personal data Faire collects from applicants, as well as your choices regarding the data collected about you, please visit Faire's Privacy Notice (https://www.faire.com/privacy)",False,False,False,False,False,False,False,False,2026-04-09T20:35:57.013736+00:00,linkedin_jobs_Software_Engineer_Toronto_Canada_2_3_week.csv,10
+li-4386817108,https://www.linkedin.com/jobs/view/4386817108/,Software Engineer - Full Stack,Veeva Systems,Canada (Remote),,"Veeva Systems is a mission-driven organization and pioneer in industry cloud, helping life sciences companies bring therapies to patients faster. As one of the fastest-growing SaaS companies in history, we surpassed $3B in revenue in our last fiscal year with extensive growth potential ahead.
+
+At the heart of Veeva are our values: Do the Right Thing, Customer Success, Employee Success, and Speed. We're not just any public company - we made history in 2021 by becoming a public benefit corporation (PBC), legally bound to balancing the interests of customers, employees, society, and investors.
+
+As a Work Anywhere company, we support your flexibility to work from home or in the office, so you can thrive in your ideal environment.
+
+Join us in transforming the life sciences industry, committed to making a positive impact on its customers, employees, and communities.
+
+The Role
+
+Our teams are hiring multiple talented Full-Stack Software Engineers to build innovative products in Life Sciences. You'll work with the latest front-end and back-end technologies as we tackle some of the biggest challenges facing the world today.
+
+We are looking for engineers that would thrive in a fast-paced, startup environment while having the stability of a successful, profitable company. You have extensive experience in Java and Javascript applications and the latest open-source technologies. You've ideally worked in enterprise software development or for a high-growth technology company.
+
+What You'll Do
+Participate in all aspects of the SDLC
+Collaborate with product managers, other engineers, and domain experts to design and develop cutting-edge applications in life science
+Collaborate with Quality Assurance engineers to ensure accurate and comprehensive testing coverage
+Contribute to troubleshooting and technical support of the product
+Requirements
+2+ years of experience in software product development
+Experience with Javascript front-end libraries such as React, Angular, or Vue
+Experience with backend development in Java
+Experience with CSS abstraction layers (e.g. SASS or JSS)
+Experience with RDBMS such as MySQL, Oracle, or MS SQL Server
+Strong communication skills
+EST and CST time zones are preferred
+BS in engineering/computer science or equivalent
+We are looking for strong mentors with a proven record of making your team better
+Nice to Have
+Previous experience working in an agile environment
+Experience with the Spring framework
+Experience with ES6
+Experience with Software-as-a-Service (SaaS) product development
+Experience with content management products and technologies
+Perks & Benefits
+Medical, dental, vision, and basic life insurance
+PTO and company-paid holidays
+Retirement programs
+1% charitable giving program
+Compensation
+Base pay: $100,000 - $175,000
+The salary range listed here has been provided to comply with local regulations and represents a potential base salary range for this role. Please note that actual salaries may vary within the range above or below, depending on experience and location. We look at compensation for each individual and base our offer on your unique qualifications, experience, and expected contributions. This position may also be eligible for other types of compensation in addition to base salary, such as variable bonus and/or stock bonus.
+Veeva's headquarters is located in the San Francisco Bay Area with offices in more than 15 countries around the world.
+
+Veeva is an equal opportunity employer. All qualified applicants will receive consideration for employment without regard to race, color, sex, sexual orientation, gender identity or expression, religion, national origin or ancestry, age, disability, marital status, pregnancy, protected veteran status, protected genetic information, political affiliation, or any other characteristics protected by local laws, regulations, or ordinances. If you need assistance or accommodation due to a disability or special need when applying for a role or in our recruitment process, please contact us at talent_accommodations@veeva.com.",False,False,False,False,False,False,False,False,2026-04-09T20:35:57.014711+00:00,linkedin_jobs_Software_Engineer_Toronto_Canada_2_3_week.csv,11
+li-4397405005,https://www.linkedin.com/jobs/view/4397405005/,Software Engineer Analyst - AI Trainer,DataAnnotation,Canada (Remote),,"Join the DataAnnotation team and contribute to developing cutting-edge AI systems, while enjoying the flexibility of remote work and setting your own schedule.
+
+We are looking for proficient programmers to help advance AI development. As a member of DataAnnotation's coding team, you'll be part of a growing community of over 100,000 professionals - including front-end, back-end, full-stack, machine learning, and other engineers - who are driving real-world impact in AI development.
+
+Our platform offers an engaging blend of flexibility and challenge: you'll work closely with state-of the art AI models to take on programming tasks that include creating and solving challenging coding problems, building beautiful apps with rich functionality, and synthesizing insights through data analysis and visualization. Your work directly contributes to refining intelligent systems that learn, adapt, and evolve. Some team members fit this work alongside a full-time role, while others treat it as their primary focus, choosing projects and schedules that align with their availability and goals.
+
+To get started, once you sign up for an account, you'll take a short assessment (this serves as our version of an interview). If you pass that assessment, you'll receive an email confirmation, and paid work will become available to you through our platform.
+
+Benefits
+Fully remote: work from anywhere in the US, Canada, UK, Ireland, Australia, and New Zealand.
+Flexible schedule: choose which projects you take on and when you work.
+Competitive pay: projects are paid hourly, up to $60 USD/hour. Opportunities for higher-paying projects are available with strong performance.
+Impact: help shape the future of AI technologies.
+Responsibilities
+Design and solve diverse coding problems used to train AI systems with an emphasis on Android development.
+Write clear, high-quality code snippets and detailed explanations.
+Evaluate AI-generated code for accuracy, performance, and clarity.
+Provide feedback that directly shapes the next generation of AI models.
+Qualifications
+Fluency in English (native or bilingual level).
+Preferred experience in Kotlin. Proficiency in at least one of other the following programming languages or frameworks: JavaScript, TypeScript, Python, C, C#, C++, React, Go, Java, or Swift.
+Excellent writing and grammar skills.
+A bachelor's degree (completed or in progress).
+Previous experience as a Software Developer, Coder, Software Engineer, or Programmer is preferred.
+Note: Payment is made via PayPal. We will never ask for any money from you. PayPal will handle any currency conversions from USD. This job is only available to those in the US, Canada, UK, Ireland, Australia, and New Zealand. Those located outside of these countries will not see work or assessments available on our site at this time.
+
+#SWE",False,False,False,False,False,False,False,False,2026-04-09T20:35:57.015469+00:00,linkedin_jobs_Software_Engineer_Toronto_Canada_2_3_week.csv,12
+li-4398321012,https://www.linkedin.com/jobs/view/4398321012/,EverCommerce - Data Engineer I,EverCommerce,"Ontario, Canada (Remote)",,"Role Overview
+
+We are seeking a Data Engineer I to support the development and maintenance of our modern data platform. This is an entry-level role ideal for someone looking to grow their career in data engineering.
+
+You will work closely with senior data engineers, analytics teams, and business stakeholders to help deliver reliable and high-quality data. This role focuses on learning best practices in data engineering while contributing to building scalable data pipelines and supporting analytics use cases.
+
+What You'll Do
+Assist in building and maintaining batch data pipelines
+Support data ingestion from internal and external sources
+Write and optimize SQL queries for data transformation and validation
+Help develop and maintain workflows using orchestration tools like Apache Airflow
+Support data modeling and transformation efforts using DBT
+Monitor data pipelines and assist in troubleshooting issues
+Contribute to data quality checks and validation processes
+Work with structured and semi-structured datasets
+Collaborate with analytics and business teams to support reporting needs
+Document data processes, pipelines, and best practices
+Learn and apply modern data platform tools and technologies
+Required Qualifications
+Bachelor's degree in Computer Science, Engineering, or related field (or equivalent experience)
+Basic knowledge of SQL and Python
+Understanding of data structures and databases
+Familiarity with ETL/ELT concepts and data pipelines
+Strong problem-solving and analytical skills
+Willingness to learn new tools and technologies
+Good communication and collaboration skills
+Nice to Have
+Exposure to tools like Apache Airflow, DBT, or Databricks
+Basic understanding of cloud platforms (AWS preferred)
+Familiarity with data warehousing or Lakehouse concepts
+Internship or project experience in data engineering or analytics
+Understanding of data quality and testing concepts
+Where
+
+This is a fully remote, US based position with minimal to no travel required. The EverCommerce team is distributed globally, with teams in the U.S., Canada, the U.K., Jordan, New Zealand, and Australia. With a widely distributed team, we are used to working remotely across different time zones. This role can be based anywhere in the United States or Canada - if you're close to one of our offices, we can set you up in-office or you can work 100% remotely. Please note that you must be eligible to work without sponsorship to qualify for this position, and this role may require travel to our Corporate Headquarters in Denver, Colorado, or to other office locations around North America.
+
+Benefits & Perks
+Flexibility to work where/how you want within your country of employment - in-office, remote, or hybrid
+Continued investment in your professional development
+Day 1 access to a robust health and wellness benefits package, including an annual wellness stipend.
+401k with up to a 4% match and immediate vesting
+Flexible and generous (FTO) time-off
+Employee Stock Purchase Program
+Compensation: The target base compensation for this position is $85,000 to $95,000 USD with an annual bonus plan in most US locations. Final offer amounts are determined by multiple factors including location, local market variances, and candidate experience and expertise, and may vary from the amounts listed above.
+
+EverCommerce is an equal opportunity employer and we value diversity at our company. We do not discriminate on the basis of race, religion, color, national origin, gender identity, sexual orientation, age, marital status, veteran status, or disability status. We look forward to reviewing your credentials and getting to know more about your experience!",False,False,False,False,False,False,False,False,2026-04-09T20:35:57.016313+00:00,linkedin_jobs_Software_Engineer_Toronto_Canada_2_3_week.csv,13
+li-4395387026,https://www.linkedin.com/jobs/view/4395387026/,Software Engineer,Genista Biosciences,Canada (Remote),,"Software Developer (Backend - Django / Python / MySQL/ MongoDB)
+Role: Individual Contributor (IC)
+Location: Canada
+🚀 Role Objective
+We are looking for a backend-focused engineer who enjoys building clean, scalable systems. You will take full ownership of features - from understanding requirements to deploying production-ready code - using a modern Python and API-driven stack.
+If you care about architecture, performance, clean database design, and well-documented APIs, you'll feel at home here.
+🔧 What You'll Work With
+Python (Core + Advanced Concepts)
+Django / Django REST Framework
+MySQL (Query optimization, indexing, performance tuning)
+MongoDB and RESTful APIs & system integrations
+SQL schema design and complex queries
+Deployment workflows & production environments
+This is a backend-heavy role. You'll be designing systems, not just writing endpoints.
+Responsibilities
+Design, develop, test, and deploy scalable backend features.
+Build secure, high-performance REST APIs.
+Write optimized SQL queries and design efficient MySQL schemas.
+Ensure code quality with proper documentation, testing, and clean architecture.
+Handle end-to-end ownership of features.
+Communicate progress, blockers, and technical trade-offs clearly.
+Collaborate with frontend and product teams to shape scalable solutions.
+Required Skills
+Worked on production systems with real traffic
+Handled database migrations and performance tuning
+Designed modular backend architecture
+Written unit/integration tests consistently
+ Qualification
+Strong hands-on experience with Django + DRF
+Deep understanding of Python fundamentals
+Solid knowledge of MongoDB, PostgreSQL and SQL optimization
+Experience designing scalable REST APIs
+Strong debugging and performance tuning skills
+Structured, disciplined coding practices
+Ability to take ownership without constant supervision
+2-7 Years of work Experience with B.tech or M.tech
+Pay range and compensation package
+Performance-based raise or bonus within 6 months.
+Equal Opportunity Statement
+We value engineers who: Own their work - no hand-holding required. Communicate clearly and professionally. Deliver high-quality code on time. Think before coding. Document properly. Take pride in clean architecture.
+Growth Path
+Opportunity to mentor junior developers.
+Path toward leading backend modules or small technical teams.
+Exposure to architectural decisions and system design.
+Why Join Us?
+Backend-focused environment (no shallow feature factory work).
+Real ownership and decision-making power.
+Remote-first flexibility.
+A culture that rewards delivery, discipline, and engineering excellence.",False,False,False,False,False,False,False,False,2026-04-09T20:35:57.017276+00:00,linkedin_jobs_Software_Engineer_Toronto_Canada_2_3_week.csv,14
+li-4395258279,https://www.linkedin.com/jobs/view/4395258279/,Associate Solutions Engineer | Housing,EliseAI,"Toronto, ON (On-site)",,"About EliseAI
+
+At EliseAI, we're improving the industries that matter most: housing and healthcare. Everyone needs a place to live and access to quality healthcare, yet both are often harder to secure than they should be.
+
+By integrating AI agents deeply into existing workflows, we make them more efficient, reduce costs, and improve the experience for everyone.
+
+Housing: We simplify how renters tour apartments, sign leases, submit maintenance requests, and stay connected with their property team - bringing everything they need for their home into one place.
+Healthcare: We make it easy to schedule appointments, complete intake forms, and we help patients communicate with providers, so everyone can focus on health instead of paperwork.
+With EliseAI, organizations reduce manual work, improve accessibility, and deliver a seamless experience across essential services. We recently raised a $250 million Series E round led by Andreessen Horowitz to accelerate this mission.
+
+About The Role
+
+EliseAI's Technical Solutions & Support team are subject matter experts responsible for solving issues and answering questions for our customers. Our Solutions & Support team members possess in-depth system knowledge on our individual client configurations and systems and configuration data access. The team works with other internal teams to troubleshoot customer issues and ensure the best possible customer experience.
+
+Key Responsibilities
+
+Deeply understand our systems, customers, and how they work best together:
+
+How we onboard clients and translate their preferences into our system's settings.
+How our integrations work with client email, calendar, CRM, and property management systems.
+How our clients' businesses work and how issues they report impact their operations.
+Provide Excellent, Customer-obsessed Support To Our Clients
+Quickly, clearly, and professionally communicate with clients to understand their issues, reproduction steps, and the business impact they're causing.
+Resolve issues by providing empathetic, over-the-top, extra-mile customer service.
+Prioritize your time according to the issue's impact on our clients' businesses.
+Advise clients on best practices for configuring and interacting with their AI Assistant.
+Investigate And Document Bugs
+Investigate issues' root cause and impact using SQL queries, logs, and other data sources.
+Write highly effective ticket summaries that provide clear descriptions of the issue, how to reproduce it, its business impact, and relevant documents that will help prioritize the issue and quickly solve it.
+Communicate bug fixes to our clients, confirm the issue is solved, and share these updates with your team members
+Requirements
+Bachelor's degree in Computer Science or equivalent field
+1-3 years of experience in similar role or field
+Experience with support software and CRMs (e.g., Zendesk, Salesforce) is a plus
+Demonstrated technical proficiency such as a computer science degree, bootcamp certificate, or previous work experience
+Bias towards data-driven decision-making and analytical skills
+Strong written and verbal communication skills
+Experience in a customer-facing role is a plus
+Willingness to work in person at our office 5 days a week
+Move at rocket speed, build something massive.
+
+We're scaling fast, solving real client problems with precision and ambition. Here, you own your impact; full autonomy, no micromanagement, no fluff. We hire the best, expect the best, and give you the masterclass of your career. It's hard, it's intense, and it's the most rewarding work you'll ever do. If you're hungry, driven, and ready to build something massive, climb aboard.
+
+Nice to haves include
+Computer Science degree, bootcamp certificate, or equivalent
+Experience building projects using low code / no code tools such as Retool
+Advanced knowledge of Google Sheets or Excel
+Familiarity with DataDog or other similar event-logging software
+Familiarity with Postman or other API testing tools
+Familiarity with Reporting tools such as Tableau
+Experience writing SQL queries
+Why Join
+
+Growth and impact. It's not often that you can get in on the ground floor of a funded (unicorn!) startup that's scaling so fast. That means that instead of following a playbook, you'll be writing it. Every single day you will be challenged to identify how we can scale and execute on it. You'll learn what works when you succeed and what doesn't when you fail. Either way, the rest of the team will be here to support you.
+
+Benefits
+
+In addition to the growth and impact you'll have at EliseAI, we offer competitive salaries along with the following benefits:
+
+Equity in the company
+Medical, Dental and Vision premiums covered at 100%
+Fully paid parental leave
+Commuter benefits
+401k benefits
+Fitness & home services stipend to cover part of your expenses so you can focus on what matters
+A collaborative in-office environment with an open floor plan, fully stocked kitchen, and all meals covered in the office
+Unlimited vacation and paid holidays
+Job Compensation Range
+
+The salary range for this role is $100,000 - $135,000 CAD. EliseAI offers a competitive total rewards package which includes base salary, equity, and a comprehensive benefits & perks package. Exact compensation is determined based on a number of factors, including experience, skill level, location, and qualifications which are assessed during the interview process. Additional details about total compensation and benefits will be provided by our Recruiting Team during the hiring process.
+
+EliseAI provides equal employment opportunities to all employees and applicants for employment and prohibits discrimination and harassment of any type without regard to race, color, religion, age, sex, national origin, disability status, genetics, protected veteran status, sexual orientation, gender identity or expression, or any other characteristic protected by federal, state or local laws.
+
+Please note that employment with EliseAI is on an ""at-will"" basis, which means that either the employee or the company may terminate the employment relationship at any time, with or without cause or notice.
+
+Pursuant to the San Francisco Fair Chance Ordinance, we will consider for employment qualified applicants with arrest and conviction records.
+
+If you need assistance and/or a reasonable accommodation in the application or recruiting process due to a disability, please contact us at recruiting@eliseai.com",False,False,False,False,False,False,False,False,2026-04-09T20:35:57.018621+00:00,linkedin_jobs_Software_Engineer_Toronto_Canada_2_3_week.csv,15
+li-4398605601,https://www.linkedin.com/jobs/view/4398605601/,Frontend Developer (Remote),Twine,Canada (Remote),,"Join a project to develop a newly branded front-end website for secure event ticket transfers in Ireland. The role involves building a user-friendly interface that connects seamlessly to an existing API, enabling safe and efficient ticket exchanges. The platform will serve a dedicated community of users who have relied on cost-price ticket exchanges for over a decade. The new site should reflect a fresh brand identity while aligning with the technical capabilities of the current platform, with a focus on security, usability, and responsiveness. The project is fully remote, with a build deadline of June 4th and testing to be completed by July 4th. This is a single project with the potential for future collaboration.
+
+Deliverables
+ Design and implement a responsive front-end website tailored to the Irish event ticketing market
+ Integrate the front-end with an existing API for secure ticket transactions
+ Ensure the user interface is intuitive, accessible, and aligns with the new brand identity
+ Collaborate with stakeholders to gather requirements and iterate on design
+ Conduct thorough testing to ensure reliability and security of the platform
+ Deliver the completed build by June 4th, with testing finalized by July 4th
+Requirements
+ Proven experience in front-end development, ideally with React, Vue, or similar frameworks
+ Strong understanding of API integration and secure transaction workflows
+ Ability to design and implement responsive, user-centric interfaces
+ Familiarity with modern web technologies (HTML5, CSS3, JavaScript/TypeScript)
+ Experience with version control systems such as Git
+ Excellent communication skills and ability to work independently in a remote setting
+ Availability to meet project deadlines and participate in feedback cycles
+ Knowledge of accessibility standards and best practices
+ Prior experience with ticketing or e-commerce platforms is a plus
+About Twine
+
+Twine is a leading freelance marketplace connecting top freelancers, consultants, and contractors with companies needing creative and tech expertise. Trusted by Fortune 500 companies and innovative startups alike, Twine enables companies to scale their teams globally.
+
+Our Mission
+
+Twine's mission is to empower creators and businesses to thrive in an AI-driven, freelance-first world.",False,False,False,False,False,False,False,False,2026-04-09T20:35:57.019198+00:00,linkedin_jobs_Software_Engineer_Toronto_Canada_2_3_week.csv,16
+li-4352363805,https://www.linkedin.com/jobs/view/4352363805/,"Engineer I - Front End, Data Visualization (Hybrid)",CrowdStrike,"Toronto, ON",,"As a global leader in cybersecurity, CrowdStrike protects the people, processes and technologies that drive modern organizations. Since 2011, our mission hasn't changed - we're here to stop breaches, and we've redefined modern security with the world's most advanced AI-native platform. We work on large scale distributed systems, processing almost 3 trillion events per day and this traffic is growing daily. Our customers span all industries, and they count on CrowdStrike to keep their businesses running, their communities safe and their lives moving forward. We're also a mission-driven company. We cultivate a culture that gives every CrowdStriker both the flexibility and autonomy to own their careers. We're always looking to add talented CrowdStrikers to the team who have limitless passion, a relentless focus on innovation and a fanatical commitment to our customers, our community and each other. Ready to join a mission that matters? The future of cybersecurity starts with you.
+
+About The Role:
+
+We're looking for a UI engineer to join our team and help build the nextgen data visualization framework for our new console. It's an exciting opportunity to help create engaging data-driven experiences that ultimately help our users visualize patterns and navigate threats in their environment. It's a role that will collaborate closely with product design and UI engineering. If you are passionate about working with large amounts of data and chart visualizations, this role is perfect for you.
+
+Candidate should be comfortable visiting the office twice a week once the development center is established.
+
+What You'll Do:
+Execute on the technical strategy for the front-end data visualization architecture with flexibility, scalability, security and performance in mind
+Design, build, and maintain single page application framework
+Participate in the code review process for your own code and that of your fellow UI Engineers
+Leverage your technical expertise to help the team make sound decisions around engineering, product design and direction
+Take initiative and build tools to improve your team's development experience
+Ensure code quality is maintained by writing by unit, integration and end-to-end tests.
+Collaborate with multidisciplinary teams such as UX designers, QA engineers, Product Managers, Data/API engineers, and others.
+Continually learn about the ever-evolving challenges and complexities of the cybersecurity industry as well as front-end engineering
+What You'll Need:
+Working knowledge of latest web standards and front-end engineering tools (HTML, CSS, Javascript, RESTful API, GraphQL, Typescript, Ember CLI, Node/NPM, Webpack, Responsive UI)
+Experience with data visualization libraries such as amCharts, HighCharts, D3.js or similar.
+Experience in building user centric and scalable UI design systems using atomic design principles
+Have a good understanding of Cloud Technologies and end to end delivery of data intensive SaaS products.
+Experience with Accessibility (a11y) best practices, tools and techniques such as compatibility with keyboard navigation, screen readers and WCAG guidelines.
+Experience with internationalization (i18n)
+Experience with front end frameworks such as Lit, Ember, React, Angular, or similar
+Experience with CSS frameworks such as Tailwind
+Experience with front end data-mocking services and tools
+Experience with data fetching and state management libraries
+Knowledge of CI/CD best practices and tools for solving build issues, improve/optimize build time.
+Good collaboration and communication skills in verbal and written formats.
+Be an advocate UX consistency, accessibility and empathy for the end user
+Bonus Points:
+Experience working with full featured data grid libraries such as AG Grid or others to build highly interactive, data intensive UIs.
+Familiarity with Amazon Web Services.
+Prior experience in cybersecurity.
+Experience with using and contributing to Open Source Libraries is a plus.
+#HTF
+
+Benefits Of Working At CrowdStrike:
+Market leader in compensation and equity awards
+Comprehensive physical and mental wellness programs
+Competitive vacation and holidays for recharge
+Paid parental and adoption leaves
+Professional development opportunities for all employees regardless of level or role
+Employee Networks, geographic neighborhood groups, and volunteer opportunities to build connections
+Vibrant office culture with world class amenities
+Great Place to Work Certified™ across the globe
+CrowdStrike is proud to be an equal opportunity employer. We are committed to fostering a culture of belonging where everyone is valued for who they are and empowered to succeed. We support veterans and individuals with disabilities through our affirmative action program.
+
+CrowdStrike is committed to providing equal employment opportunity for all employees and applicants for employment. The Company does not discriminate in employment opportunities or practices on the basis of race, color, creed, ethnicity, religion, sex (including pregnancy or pregnancy-related medical conditions), sexual orientation, gender identity, marital or family status, veteran status, age, national origin, ancestry, physical disability (including HIV and AIDS), mental disability, medical condition, genetic information, membership or activity in a local human rights commission, status with regard to public assistance, or any other characteristic protected by law. We base all employment decisions--including recruitment, selection, training, compensation, benefits, discipline, promotions, transfers, lay-offs, return from lay-off, terminations and social/recreational programs--on valid job requirements.
+
+If you need assistance accessing or reviewing the information on this website or need help submitting an application for employment or requesting an accommodation, please contact us at recruiting@crowdstrike.com for further assistance.
+
+Find out more about your rights as an applicant.
+
+CrowdStrike participates in the E-Verify program.
+
+Notice of E-Verify Participation
+
+Right to Work
+
+For detailed information about the U.S. benefits package, please click here.
+
+,
+
+Bonus Points:
+Experience working with full featured data grid libraries such as AG Grid or others to build highly interactive, data intensive UIs.
+Familiarity with Amazon Web Services.
+Prior experience in cybersecurity.
+Experience with using and contributing to Open Source Libraries is a plus.",False,False,False,False,False,False,False,False,2026-04-09T20:35:57.020806+00:00,linkedin_jobs_Software_Engineer_Toronto_Canada_2_3_week.csv,17
+li-4385622007,https://www.linkedin.com/jobs/view/4385622007/,"Associate Software Engineer (Web, SDK Platform)",Apryse,"Ontario, Canada (Remote)",,"The Role
+
+We are looking for a talented Associate Software Engineer to join our team and help build the future of document technology. In this role, you won't just be building UI components; you'll be working on a sophisticated document SDK used by millions of people daily. This is a ""career-defining"" opportunity to work with high-performance web technologies ( WebAssembly , Web Workers, and TypeScript) under the guidance of veteran engineers. If you are a curious developer who loves digging into the ""how"" and ""why"" of web performance and API design, you'll fit right in.
+
+Responsibilities
+ Feature Implementation: Build and maintain high-quality, testable code for our WebViewer UI and showcase applications.
+ SDK Support: Help solve technical challenges within our core document engine, focusing on rendering accuracy and programmatic document manipulation.
+ Collaborative Development: Work alongside Product Owners, UI/UX designers, and Senior Engineers to turn design specs into functional features.
+ Developer Success: Since our customers are fellow developers, you'll help write clear technical documentation and sample code that makes our SDK easy to use.
+ Quality Assurance: Take ownership of your code by writing unit and integration tests using Playwright and Jest.
+ Ecosystem Stewardship: Architect and maintain the interface between our proprietary ""Core"" engine and our open-source WebViewer UI . You will ensure the public codebase is modular, performant, and serves as the ""gold standard"" for customers building on our platform.
+Requirements
+ Experience: 1 - 3 years of professional experience in web development (internships count!).
+ Modern Web Stack: A strong grasp o f JavaScript and TypeScript. You should be comfortable with modern ES6+ syntax and best practices.
+ React Proficiency: Solid experience with React , including hooks and functional components. You understand the component lifecycle and how to manage state effectively.
+ Testing Fundamentals: A ""test-first"" mindset. You have experience with (or a strong desire to learn) testing frameworks like Jest, Playwright, or Storybook.
+ API Curiosity: Experience consuming RESTful APIs and a basic understanding of how client-server communication works.
+ A Builder's Mindset: A portfolio (GitHub, personal projects, or technical blogs) that shows you like to build things, break them, and fix them.
+ Communication: Clear verbal and written communication skills - essential for documenting technical workflows and collaborating with the team.
+ Agile & Iterative Mindset: Familiarity with Agile development practices (Scrum/Kanban). You understand how to work in sprints and value iterative software development.
+ Operational Discipline: You practice automation and continuous integration (CI) as a standard part of your workflow and value rapid iteration based on direct user feedback.
+ Balanced Autonomy: You are a collaborative team player who is equally comfortable working independently to see well-defined tasks through to completion.
+Preferred Experience
+ Experience with Node.js or other backend environments.
+ Exposure to low -level web technologies like Canvas API or Web Workers.
+ An interest in document formats like PDF, Office ( DocX /XLSX), or CAD.
+ Experience with mobile web optimization or building accessible (A11y) interfaces.
+ Experience with databases (NoSQL or SQL).
+ C++/Java and other languages.
+ Experience with mobile applications (Android / iOS).
+Benefits:
+Competitive salary commensurate with experience and qualifications.
+A comprehensive extended benefits package including health, dental and vision for you and your family, with company paid offerings.
+A great team environment and resources, supporting you to do the best work of your life and providing unlimited career growth potential.
+Highly autonomous and entrepreneurial environment.
+Annual recurring WFH allowance for you to purchase items you need for your home office.
+Ongoing support for learning development so you can master your craft.
+Work with the hardware you're most comfortable with (Windows or Mac).
+Diverse and inclusive workplace where we all learn from each other.
+Company Description
+
+As the industry-leading provider of document software development (SDK) technology powering everything from traditional desktop software to innovative web and mobile applications, at Apryse we are committed to delivering cutting-edge technology solutions that empower our clients to achieve their goals. With a broad international portfolio of combined companies, products, and leading technologies, we are actively changing the way the world works with documents to make work better and life simpler.
+
+Customers like IBM, Autodesk, DocuSign, Boeing, Microsoft (and many more!) come to us to realize their web and mobile strategies for document management, editing, and collaboration as the #1-ranked commercial document SDK of choice for companies worldwide. As a result, you can find our document technology in thousands of solutions, including those of household names, used by millions across virtually every industry. Our XODO app alone has 25M unique installs -- and counting -- and the highest ratings among PDF productivity apps on the largest online app marketplaces.
+
+Ready to join our team?
+
+If you are interested in helping Apryse deliver on its commitments and taking your career to the next level, we invite you to apply online now. Additionally, we view the above section as a guide, not a checklist. We welcome diverse and non-traditional backgrounds and encourage you to apply even if you do not have every requirement listed.
+
+The compensation for this position is commensurate upon experience, with a range between $80,000.00-$92,000.00 CAD in on target earnings. The top end of the range is reserved for candidates with extensive experience and a profile that strongly aligns with the senior expectations of this role.
+
+We are committed to a work environment that is inclusive to all and free of discrimination. It is our policy to be an equal opportunity employer without regard to race, color, religion, sex, age, national origin, disability, sexual orientation, gender identity or expression, genetic predisposition or carrier status, veteran status, citizenship status or any other factors prohibited by law. Apryse will provide reasonable accommodations for qualified individuals",False,False,False,False,False,False,False,False,2026-04-09T20:35:57.022860+00:00,linkedin_jobs_Software_Engineer_Toronto_Canada_2_3_week.csv,18
+li-4395482985,https://www.linkedin.com/jobs/view/4395482985/,Full Stack Software Developer,Autodesk,Canada (Remote),,"Job Requisition ID #
+
+25WD94123
+
+English posting follows
+
+25WD94123, Développeur de logiciels
+
+Aperçu du Poste
+
+Autodesk recherche un développeur logiciel expérimenté pour rejoindre l'équipe Architecture, Engineering and Construction (AEC) Platform Data. AEC Platform Data propose des services qui aident nos clients à accéder, utiliser et partager leur atout le plus précieux, leurs données, dans l'ensemble de leur écosystème. Vous ferez partie d'une équipe full stack hautement performante travaillant sur les services cloud utilisés par les clients d'Autodesk.
+
+Responsabilités
+Fournir des API, des services backend et des logiciels frontend en participant à toutes les phases du cycle de vie du développement logiciel, de la conception à la mise au point, en passant par les tests et la maintenance
+Collaborer avec les architectes produit, conception et logiciel afin de fournir progressivement des fonctionnalités qui satisfont nos clients internes et externes
+Garantir la qualité, la sécurité, la fiabilité, l'évolutivité et les performances du code grâce à des tests, des revues de code et le respect des meilleures pratiques
+Être un membre engagé et actif de l'équipe, apprendre, encadrer, être encadré et contribuer à l'amélioration de l'équipe en participant à des conversations et à des prises de décision respectueuses
+Participer aux cérémonies Scrum, notamment les réunions quotidiennes, la planification des sprints, les rétrospectives et les revues, afin de garantir une livraison et une amélioration continues
+Participer à la maintenance et au support continus des systèmes de production, notamment en prenant part à des rotations d'astreinte afin de garantir une haute disponibilité et une réponse rapide en cas d'incident
+Qualifications Minimales
+Licence ou master en informatique, ingénierie informatique ou dans un domaine connexe, ou expérience professionnelle équivalente
+Au moins deux ans d'expérience professionnelle progressive dans le développement/l'ingénierie de logiciels full stack
+Expérience avec une gamme de langages de programmation et de frameworks full stack (par exemple, JavaScript, Python, Java, C#, etc.)
+Connaissance des bases de données relationnelles et non relationnelles
+Expérience avec les frameworks et bibliothèques web (y compris React)
+Compréhension de l'architecture cloud, du serverless computing et des microservices, ainsi que des technologies de conteneurisation telles que Docker et des outils d'orchestration de conteneurs tels que Kubernetes ou AWS ECS
+Expérience dans l'utilisation, la conception et la mise en œuvre d'API REST
+Compétences et expérience dans l'utilisation de modèles de conception et compréhension des éléments fondamentaux d'une bonne architecture logicielle
+Expérience dans la mise en œuvre et la maintenance de processus de test automatisés pour garantir la qualité du code
+Expérience avec les bases de code GIT multi-référentiels, les frameworks de test et les pipelines CI/CD automatisés
+Une expérience avec les méthodologies Agile/Scrum est préférable
+Solides compétences en résolution de problèmes et capacité à travailler dans un environnement collaboratif
+Qualifications Souhaitées
+Expérience avec Node.js, TypeScript et PostgreSQL
+Expérience dans l'utilisation des services et technologies AWS (par exemple, EC2, ECS, Lambda, API Gateway, S3, RDS) avec une compréhension des principes de sécurité, des mécanismes d'authentification et d'autorisation.
+Expérience dans l'utilisation d'IDE basés sur l'IA (Cursor, Copilot agent mode, etc.)
+25WD94123, Software Developer
+
+Position Overview
+
+Autodesk is looking for an experienced  Software Developer  to join the Architecture, Engineering and Construction (AEC) Platform Data team. AEC Platform Data offers services that help our customers access, use and share their most valued asset, their data, across their entire ecosystem. You will be part of a high-performance full stack team working on cloud-based services used by Autodesk customers.
+
+Responsibilities
+Deliver APIs, backend services, and frontend software through participating in all phases of software development lifecycle from ideation and design to development, testing, and maintenance
+Partner with Product, Design, and software architects to incrementally deliver features that delight our internal and external customers
+Ensure code quality, security, reliability, scalability and performance through testing, code reviews, and following best practices
+Be an engaged and active member of the team, learn, mentor, be mentored and contribute to the improvement of the team by engaging in respectful conversations and decision makings
+Participate in Scrum ceremonies including daily stand-ups, sprint planning, retrospectives, and reviews to ensure continuous delivery and improvement
+Participate in ongoing maintenance and support of production systems, including taking part in on-call rotations to ensure high availability and rapid incident response
+Minimum Qualifications
+BS or MS in Computer Science, Computer Engineering, or a related field, or equivalent work experience
+2+ years of progressive, professional experience in full stack software development/engineering
+Experience with a range of full stack programming languages and frameworks (for example, JavaScript, Python, Java, C#, etc.)
+Knowledge of relational and non-relational databases
+Experience with web frameworks and libraries (including React )
+Understanding of cloud-based architecture, serverless computing, and microservices as well as containerization technologies like Docker and container orchestration tools like Kubernetes or AWS ECS
+Experience consuming, designing, and implementing REST APIs
+Skill and experience using design patterns and understand fundamental elements of good software architecture
+Experience implementing and maintaining automated testing processes to ensure code quality
+Experience with multi-repository GIT code bases, testing frameworks and automated CI/CD pipelines
+Experience with Agile/Scrum methodologies is preferred
+Strong problem-solving skills and the ability to work in a collaborative team environment
+Preferred Qualifications
+Experience with Node.js, TypeScript and PostgreSQL
+Experience in using AWS services and technologies (e.g., EC2, ECS, Lambda, API Gateway, S3, RDS) with an understanding of security principles, authentication, and authorization mechanisms
+Experience using AI powered IDEs (Cursor, Copilot agent mode, etc.)
+Learn More
+
+About Autodesk
+
+Welcome to Autodesk! Amazing things are created every day with our software - from the greenest buildings and cleanest cars to the smartest factories and biggest hit movies. We help innovators turn their ideas into reality, transforming not only how things are made, but what can be made.
+
+We take great pride in our culture here at Autodesk - it's at the core of everything we do. Our culture guides the way we work and treat each other, informs how we connect with customers and partners, and defines how we show up in the world.
+
+When you're an Autodesker, you can do meaningful work that helps build a better world designed and made for all. Ready to shape the world and your future? Join us!
+
+Salary transparency
+
+Salary is one part of Autodesk's competitive compensation package. For Canada-BC based roles, we expect a starting base salary between $88,000 and $128,700. Offers are based on the candidate's experience and geographic location, and may exceed this range. In addition to base salaries, our compensation package may include annual cash bonuses, commissions for sales roles, stock grants, and a comprehensive benefits package.
+
+Diversity & Belonging
+
+We take pride in cultivating a culture of belonging where everyone can thrive. Learn more here: https://www.autodesk.com/company/diversity-and-belonging
+
+Are you an existing contractor or consultant with Autodesk?
+
+Please search for open jobs and apply internally (not on this external site).",False,False,False,False,False,False,False,False,2026-04-09T20:35:57.025463+00:00,linkedin_jobs_Software_Engineer_Toronto_Canada_2_3_week.csv,19
+li-4395288819,https://www.linkedin.com/jobs/view/4395288819/,Software Engineer - Payments,Cloudbeds,Canada (Remote),,"What Makes Us Unique
+At Cloudbeds, we're not just building software, we're transforming hospitality. Our intelligently designed platform powers properties across 150 countries, processing billions in bookings annually. From independent properties to hotel groups, we help hoteliers transform operations and uplevel their commercial strategy through a unified platform that integrates with hundreds of partners. And we do it with a completely remote team. Imagine working alongside global innovators to build AI-powered solutions that solve hoteliers' biggest challenges. Since our founding in 2012, we've become the World's Best Hotel PMS Solutions Provider and landed on Deloitte's Technology Fast 500 again in 2024 - but we're just getting started.
+ How You'll Make an Impact:
+As a Software Engineer on the Payments team, you'll contribute to the infrastructure that powers billions in annual transaction volume across nearly 10,000 properties worldwide. You'll investigate and resolve issues across payment processing and reconciliation systems, improve test coverage and automation, and tackle the steady stream of fixes and improvements that keep a high-reliability platform running. You'll work in a domain where correctness matters and small details compound - and you'll grow your craft inside a team that holds a high engineering bar.
+Engineers who demonstrate strong judgment, reliability, and ownership earn increasing scope - including contributing to higher-impact projects across the payments platform.
+Our PaymentsTeam:
+At Cloudbeds, our Payments tribe builds the systems that keep money moving securely, efficiently, and globally for thousands of our customers. We love solving complex, interconnected problems, integrating with global partner APIs, designing for compliance and security, and constantly iterating on better, more scalable payment solutions.
+Working on Cloudbeds Payments means joining a supportive, collaborative group of engineers who are building the financial backbone of the industry, together.
+
+What You Bring to the Team:
+Ownership mindset: You take responsibility for the quality and reliability of your work. You don't wait to be told what needs fixing - you flag it, follow through, and close the loop with your team.Technical fundamentals: You understand the importance of writing clean, maintainable, and well-tested code. You care about getting the details right - naming, test coverage, edge cases - because you understand that's where reliability lives. You follow standards and code patterns.Integration aptitude: You're comfortable working with external APIs and can navigate documentation, debug integration issues, and build toward resilient interfaces - even when the partner side is unclear.Security and compliance awareness: You may not be a PCI expert, but you understand why it matters. You default to secure patterns and ask the right questions when you're unsure.Collaboration under pressure: You communicate clearly when things break, contribute to investigations without needing full context upfront, and stay composed in high-urgency moments.Continuous learning: You're ready to learn. You're curious about how systems connect beyond your immediate scope. You learn from senior engineers, absorb domain context quickly, and aren't shy about asking why.
+What Sets You Up for Success:
+2+ years of PHP/Java web application software engineering experience.
+Solid working knowledge of MySQL or PostgreSQL - you can write efficient queries and understand indexing basics.
+Exposure to event-driven architectures and/or microservices concepts; hands-on experience is a plus but not required.
+Familiarity with modern infrastructure tooling (e.g., DataDog, GitHub Actions, Kubernetes, Docker, AWS).
+Understands the value of logging, metrics, and monitoring, and actively contributes to observability in the systems they work on.
+Bonus Skills to Stand Out:
+Familiarity with PCI-DSS, GDPR, or other compliance frameworks - even if just operating within a compliant environment.
+Experience working in payments, fintech, or any domain where transaction accuracy and data integrity are non-negotiable.
+Exposure to Domain-Driven Design concepts or experience working within a codebase that follows its patterns.
+Hospitality or travel industry experience.
+ What to Expect - Your Journey with Us
+Behind Cloudbeds' revolutionary technology is a team of redefining what's possible in hospitality. We're 650+ employees across 40+ countries, bringing together elite engineers, AI architects, world-class designers, and hospitality veterans to solve challenges others haven't dared to tackle. Our diverse team speaks 30+ languages, but we all share one language: a passion for innovation and travel. From pioneering breakthroughs in machine learning to revolutionizing how hotels operate, we're not just watching the future of hospitality unfold - we're coding it, designing it, writing it and shipping it. If you're ready to work alongside some of the brightest minds in tech who are obsessed with using AI to transform a trillion-dollar industry, this is your chance to be part of something extraordinary.
+Learn more online at cloudbeds.com
+Company Awards to Check Out!
+Best All-In-One Hotel Management System | HotelTechAwards (2025)
+Overall 10 Best Places to Work | HotelTechAwards (2025)
+Most Loved Workplace® Certified (2024)
+Top 10 People's Choice(2024)
+Deloitte Technology Fast 500 (2024)
+ Discover our Benefits:
+Remote First, Remote Always
+PTO in accordance with local labor requirements
+Monthly Wellness Fridays - enjoy an extra long weekend every month
+Full Paid Parental Leave
+Home office stipend based on country of residency
+Professional development courses in Cloudbeds University
+Access to professional development, including manager training, upskilling and knowledge transfer.
+Everyone is Welcome - A Culture of Inclusion
+Cloudbeds is proud to be an Equal Opportunity Employer that celebrates the diversity in our global team! We do not discriminate based upon race, religion, color, national origin, gender (including pregnancy, childbirth, or related medical conditions), sexual orientation, gender identity, gender expression, age, status as a protected veteran, status as an individual with a disability, or other applicable legally protected characteristics.
+Cloudbeds is committed to the full inclusion of all qualified individuals. As part of this commitment, Cloudbeds will ensure that persons with disabilities are provided reasonable accommodations in the hiring process. We encourage deaf, hard of hearing, deaf-blind, and deaf-disabled individuals to apply. If reasonable accommodation is needed to participate in the job application or interview process or to perform essential job functions, please contact our HR team by phone at (858) 201-7832 or via email at accommodations@cloudbeds.com. Cloudbeds will provide an American Sign Language (ASL) interpreter where needed as a reasonable accommodation for the hiring processes.
+To all Staffing and Recruiting Agencies: Our Careers Site is only for individuals seeking a job at Cloudbeds. Staffing, recruiting agencies, and individuals being represented by an agency are not authorized to use this site or to submit applications, and any such submissions will be considered unsolicited. Cloudbeds does not accept unsolicited resumes or applications from agencies. Please do not forward resumes to our jobs alias, Cloudbeds employees, or any other company location. Cloudbeds is not responsible for any fees related to unsolicited resumes/applications.",False,False,False,False,False,False,False,False,2026-04-09T20:35:57.027291+00:00,linkedin_jobs_Software_Engineer_Toronto_Canada_2_3_week.csv,20
+li-4334678526,https://www.linkedin.com/jobs/view/4334678526/,Junior Ubuntu Software Engineer,Canonical,NAMER (Remote),,"Canonical is a leading provider of open source software and operating systems to the global enterprise and technology markets. Our platform, Ubuntu, is very widely used in breakthrough enterprise initiatives such as public cloud, data science, AI, engineering innovation and IoT. Our customers include the world's leading public cloud and silicon providers, and industry leaders in many sectors. The company is a pioneer of global distributed collaboration, with 1200+ colleagues in 75+ countries and very few office based roles. Teams meet two to four times yearly in person, in interesting locations around the world, to align on strategy and execution.
+
+The company is founder led, profitable and growing.
+
+We are hiring junior engineers to work across the breadth of our Ubuntu Engineering organisation - engineers who care deeply for quality, performance and resilience in software, engineers who are just as comfortable designing and engineering new software as they are packaging, integrating, testing and shipping the incredible catalog of open source software provided by the Ubuntu repositories.
+
+Our engineers integrate the freshest open source software, provide robust upgrade paths and engineer the future of Ubuntu. Ubuntu is not just the world's most deployed open source operating system, it's a platform that enables innovation for millions of users across the globe. Our community represents the full breadth of the developer experience; from students, hobbyists and freelancers to high performance engineering and creative teams in corporate and academic environments.
+
+The four key teams that ship Ubuntu are
+
+Foundations: maintaining foundational software: architectures, package managers, compilers, toolchains, bootloaders, filesystems and core utilities
+Server: leading the design, evolution and future of our Ubuntu Server distribution
+Desktop: driving Ubuntu Desktop, our future immutable desktop: Ubuntu Core Desktop, WSL, gaming technology, and a suite of modern applications for the desktop crafted with Flutter
+Debcrafters: a new team responsible for the forward movement, maintenance and overall health of the Ubuntu archive: one of the most abundant repositories of open source software available today
+Bring your existing expertise and learn new skills by working on one of the most prolific pieces of open source software. As an engineer working on Ubuntu you could work on any or all of the following categories:
+
+Development: design, build and ship new foundational systems software and applications in Rust, Go, Flutter, and Python
+Architecture: engineer the integration of open source from boot firmware to cloud applications deployment
+Packaging: a combination of Debian and Snap packaging to ship software in the distribution
+Automation: build and maintain the machinery responsible for building, testing and shipping Ubuntu
+Distro Engineering: the maintenance and evolution of a Linux distribution and its repositories
+If you have skills in those areas, or you have other skills you believe could contribute to Ubuntu, and you're keen to get started building your career in open source, then this is the role for you. Our junior career path caters for both new graduates and early careers engineers.
+
+At Canonical, you will have the opportunity to engage with and contribute to the broader open source community. We're looking for individuals who can help build a thriving community and contribute with enthusiasm and precision to a broad range of technologies.
+
+Location: We have remote roles open in every time zone.
+
+The role entails
+
+Based on the first round of interviews, we identify specific teams where you might be an excellent fit and conduct second-round interviews with those teams. Our engineers are:
+
+Designing, building and shipping software in Rust, Go, Python and C/C++
+Packaging, integrating, testing and uploading open source software to the Ubuntu repositories
+Debugging issues, then designing and delivering robust solutions
+Authoring and improving technical and community documentation
+Contributing to upstream and neighboring open source projects
+Collaborating as part of a globally distributed team
+Continuously learning and progressing their technical and professional skills
+What We Are Looking For In You
+An exceptional academic track record from both high school and university
+Undergraduate degree in Computer Science or STEM, or a compelling narrative about your alternative path
+Drive and a track record of going above and beyond expectations
+A passion for open source software
+Experience with Rust, Go, Python, Flutter or C/C++
+Professional written and spoken English
+Excellent communication and interpersonal skills
+Ability to travel twice a year, for company events up to two weeks each
+Nice-to-have Skills
+Familiarity with Linux distributions
+Familiarity with system debugging tools and techniques
+Familiarity with automation tooling and CI/CD systems
+Experience contributing to open source projects
+What We Offer You
+
+We consider geographical location, experience, and performance in shaping compensation worldwide. We revisit compensation annually (and more often for graduates and associates) to ensure we recognize outstanding performance. In addition to base pay, we offer a performance-driven annual bonus. We provide all team members with additional benefits, which reflect our values and ideals. We balance our programs to meet local needs and ensure fairness globally.
+
+Distributed work environment with twice-yearly team sprints in person
+Personal learning and development budget of USD 2,000 per year
+Annual compensation review
+Recognition rewards
+Annual holiday leave
+Maternity and paternity leave
+Team Member Assistance Program & Wellness Platform
+Opportunity to travel to new locations to meet colleagues
+Priority Pass, and travel upgrades for long haul company events
+About Canonical
+
+Canonical is a pioneering tech firm at the forefront of the global move to open source. As the company that publishes Ubuntu, one of the most important open source projects and the platform for AI, IoT and the cloud, we are changing the world on a daily basis. We recruit on a global basis and set a very high standard for people joining the company. We expect excellence - in order to succeed, we need to be the best at what we do. Canonical has been a remote-first company since its inception in 2004. Working here is a step into the future, and will challenge you to think differently, work smarter, learn new skills, and raise your game.
+
+Canonical is an equal opportunity employer
+
+We are proud to foster a workplace free from discrimination. Diversity of experience, perspectives, and background create a better work environment and better products. Whatever your identity, we will give your application fair consideration.",False,False,False,False,False,False,False,False,2026-04-09T20:35:57.028941+00:00,linkedin_jobs_Software_Engineer_Toronto_Canada_2_3_week.csv,21
+li-4398900910,https://www.linkedin.com/jobs/view/4398900910/,Data Scientist I,TD,"Toronto, ON (On-site)",,"Work Location:
+
+Toronto, Ontario, Canada
+
+Hours
+
+37.5
+
+Line Of Business
+
+Analytics, Insights, & Artificial Intelligence
+
+Pay Details
+
+$69,700 - $98,400 CAD
+
+TD is committed to providing fair and equitable compensation opportunities to all colleagues. Growth opportunities and skill development are defining features of the colleague experience at TD. Our compensation policies and practices have been designed to allow colleagues to progress through the salary range over time as they progress in their role. The base pay actually offered may vary based upon the candidate's skills and experience, job-related knowledge, geographic location, and other specific business and organizational needs.
+
+As a candidate, you are encouraged to ask compensation related questions and have an open dialogue with your recruiter who can provide you more specific details for this role.
+
+Job Description
+
+The incumbent is responsible for creating business requirements, within an agile working environment, supporting different stakeholders across TD Insurance. The ideal candidate has experience in working closely with different business partners gathering BI requirements for reporting and/or data usage.
+
+Job Functions
+Document Business Intelligence requirements for our Business partners;
+Document business rules and validate data mappings;
+Perform impact analysis.
+Liaise with different teams within Platforms and Technology or with other internal partners to ensure data availability and accuracy
+Collaborate with all members of the Agile team to achieve successful implementations
+Flexibility to support other team members
+Manage stakeholder expectations
+Must be able to understand different operational systems: systems functioning of related frontend systems or other backend databases what they contain (understanding available data, investigating data, etc ...).
+Must show strong adaptability to discuss with different stakeholders.
+Skills
+At least 2 years of relevant experience in Business Intelligence projects/Reporting.
+Good knowledge in data extraction and manipulation (Databricks, SQL or equivalent)
+Good communication: Bilingual (English and French).
+Good time management skills to support multiple initiatives of different complexity
+Demonstrate analytical skills and critical thinking
+Be quality conscious
+Can negotiate with business partners
+Work efficiently in a team setting
+Assets
+Knowledge of the Insurance Industry in Canada (Life & Health, Home, Auto)
+Jira/Confluence, Agile methodology
+Knowledge of Python
+Knowledge of Tableau or Power BI
+Who We Are
+
+TD is one of the world's leading global financial institutions and is the fifth largest bank in North America by branches/stores. Every day, we strive to make every interaction, product, and experience remarkably human and refreshingly simple for over 27 million households and businesses in Canada, the United States and around the world. More than 95,000 TD colleagues bring their skills, talent, and creativity to foster deeper relationships, ensure disciplined execution, and build a simpler, faster banking experience. TD is deeply committed to being a leader in client experience, that is why we believe that all colleagues, no matter where they work, are client facing. Together, we are reimagining what banking can be for our clients, colleagues and communities.
+
+Our Total Rewards Package
+
+Our Total Rewards package reflects the investments we make in our colleagues to help them and their families achieve their financial, physical, and mental well-being goals. Total Rewards at TD includes a base salary, variable compensation, and several other key plans such as health and well-being benefits, savings and retirement programs, paid time off, banking benefits and discounts, career development, and reward and recognition programs. Learn more
+
+Additional Information
+
+We're delighted that you're considering building a career with TD. Through regular development conversations, training programs, and a competitive benefits plan, we're committed to providing the support our colleagues need to thrive both at work and at home.
+
+Please be advised that this job opportunity is subject to provincial regulation for employment purposes. It is imperative to acknowledge that each province or territory within the jurisdiction of Canada may have its own set of regulations, requirements.
+
+Colleague Development
+
+If you're interested in a specific career path or are looking to build certain skills, we want to help you succeed. You'll have regular career, development, and performance conversations with your manager, as well as access to an online learning platform and a variety of mentoring programs to help you unlock future opportunities.
+
+If you're passionate about helping clients and building deep, lasting relationships, TD offers diverse career paths where you can grow your expertise and make a meaningful impact.
+
+We're committed to your success and foster a respectful workplace where diverse perspectives are valued, everyone has fair opportunities to grow, and you can unlock your full potential to achieve your career goals. Here at TD, we hire and develop the best.
+
+Training & Onboarding
+
+We will provide training and onboarding sessions to ensure that you've got everything you need to succeed in your new role.
+
+Interview Process
+
+We'll reach out to candidates of interest to schedule an interview. We do our best to communicate outcomes to all applicants by email or phone call.
+
+Accommodation
+
+Your accessibility is important to us. Please let us know if you'd like accommodations (including accessible meeting rooms, captioning for virtual interviews, etc.) to help us remove barriers so that you can participate throughout the interview process.
+
+We look forward to hearing from you!
+
+Language Requirement (Quebec Only)
+
+Sans Objet",False,False,False,False,False,False,False,False,2026-04-09T20:35:57.030361+00:00,linkedin_jobs_Software_Engineer_Toronto_Canada_2_3_week.csv,22
+li-4397338497,https://www.linkedin.com/jobs/view/4397338497/,Software Engineer - Social Login Integration : 26-00990,"Akraya, Inc.","Toronto, ON (On-site)",,"Primary Skills: NodeJS(Expert), React(Advanced), Database Management(Expert, Postgres/MongoDB), API Development(Expert), UX Design(Advanced)
+Contract Type: T4 Only
+Duration: 9+ Months with Possible Extension
+Location: Toronto, ON ( - Hybrid)
+Pay Range: CAD 50-55/Hr. on T4
+#LP
+
+Job Summary:
+We are inviting an adept Software Engineer to join our Login team based in Canada. The position aims to revamp the customer login experience by enhancing social connectivity integrations using cutting-edge technologies. Candidates should be proactive, independent, and ready to collaborate in an agile setting to elevate user experience and interface designs.
+
+Key Responsibilities:
+Collaborate with cross-functional teams in an agile environment to develop UX features.
+Design and implement functionalities focusing on social connection providers and their APIs.
+Assess and incorporate new technologies and third-party social connection SDKs.
+Resolve customer issues and bugs through effective troubleshooting.
+Continuously evaluate and enhance the integration processes and user interface.
+Must-Have Skills:
+Proficiency in HTML/CSS, React, and TypeScript/JavaScript.
+Extensive experience with Node.js and RESTful API development.
+Strong capabilities in unit, integration, and end-to-end testing frameworks and methodologies.
+Industry Experience:
+Experience in the Identity and Access Management (IAM) domain is highly preferred.
+Knowledge of application and cloud security best practices is beneficial.
+ABOUT AKRAYA
+Akraya is an award-winning IT staffing firm consistently recognized for our commitment to excellence and a thriving work environment. Most recently, we were recognized Stevie Employer of the Year 2025, SIA Best Staffing Firm to work for 2025, Inc 5000 Best Workspaces in US (2025 & 2024) and Glassdoor's Best Places to Work (2023 & 2022)!
+
+Industry Leaders in Tech Staffing
+As Talent solutions provider for Fortune 100 Organizations, Akraya's industry recognitions solidify our leadership position in the IT staffing space. We don't just connect you with great jobs, we connect you with a workplace that inspires!
+
+Join Akraya Today!
+Let us lead you to your dream career and experience the Akraya difference. Browse our open positions and join our team!",False,False,False,False,False,False,False,False,2026-04-09T20:35:57.030926+00:00,linkedin_jobs_Software_Engineer_Toronto_Canada_2_3_week.csv,23
+li-4399232460,https://www.linkedin.com/jobs/view/4399232460/,Data Scientist I,TD Securities,"Toronto, ON (On-site)",,"Work Location:
+
+Toronto, Ontario, Canada
+
+Hours
+
+37.5
+
+Line Of Business
+
+Analytics, Insights, & Artificial Intelligence
+
+Pay Details
+
+$69,700 - $98,400 CAD
+
+TD is committed to providing fair and equitable compensation opportunities to all colleagues. Growth opportunities and skill development are defining features of the colleague experience at TD. Our compensation policies and practices have been designed to allow colleagues to progress through the salary range over time as they progress in their role. The base pay actually offered may vary based upon the candidate's skills and experience, job-related knowledge, geographic location, and other specific business and organizational needs.
+
+As a candidate, you are encouraged to ask compensation related questions and have an open dialogue with your recruiter who can provide you more specific details for this role.
+
+Job Description
+
+The incumbent is responsible for creating business requirements, within an agile working environment, supporting different stakeholders across TD Insurance. The ideal candidate has experience in working closely with different business partners gathering BI requirements for reporting and/or data usage.
+
+Job Functions
+Document Business Intelligence requirements for our Business partners;
+Document business rules and validate data mappings;
+Perform impact analysis.
+Liaise with different teams within Platforms and Technology or with other internal partners to ensure data availability and accuracy
+Collaborate with all members of the Agile team to achieve successful implementations
+Flexibility to support other team members
+Manage stakeholder expectations
+Must be able to understand different operational systems: systems functioning of related frontend systems or other backend databases what they contain (understanding available data, investigating data, etc ...).
+Must show strong adaptability to discuss with different stakeholders.
+Skills
+At least 2 years of relevant experience in Business Intelligence projects/Reporting.
+Good knowledge in data extraction and manipulation (Databricks, SQL or equivalent)
+Good communication: Bilingual (English and French).
+Good time management skills to support multiple initiatives of different complexity
+Demonstrate analytical skills and critical thinking
+Be quality conscious
+Can negotiate with business partners
+Work efficiently in a team setting
+Assets
+Knowledge of the Insurance Industry in Canada (Life & Health, Home, Auto)
+Jira/Confluence, Agile methodology
+Knowledge of Python
+Knowledge of Tableau or Power BI
+Who We Are
+
+TD is one of the world's leading global financial institutions and is the fifth largest bank in North America by branches/stores. Every day, we strive to make every interaction, product, and experience remarkably human and refreshingly simple for over 27 million households and businesses in Canada, the United States and around the world. More than 95,000 TD colleagues bring their skills, talent, and creativity to foster deeper relationships, ensure disciplined execution, and build a simpler, faster banking experience. TD is deeply committed to being a leader in client experience, that is why we believe that all colleagues, no matter where they work, are client facing. Together, we are reimagining what banking can be for our clients, colleagues and communities.
+
+Our Total Rewards Package
+
+Our Total Rewards package reflects the investments we make in our colleagues to help them and their families achieve their financial, physical, and mental well-being goals. Total Rewards at TD includes a base salary, variable compensation, and several other key plans such as health and well-being benefits, savings and retirement programs, paid time off, banking benefits and discounts, career development, and reward and recognition programs. Learn more
+
+Additional Information
+
+We're delighted that you're considering building a career with TD. Through regular development conversations, training programs, and a competitive benefits plan, we're committed to providing the support our colleagues need to thrive both at work and at home.
+
+Please be advised that this job opportunity is subject to provincial regulation for employment purposes. It is imperative to acknowledge that each province or territory within the jurisdiction of Canada may have its own set of regulations, requirements.
+
+Colleague Development
+
+If you're interested in a specific career path or are looking to build certain skills, we want to help you succeed. You'll have regular career, development, and performance conversations with your manager, as well as access to an online learning platform and a variety of mentoring programs to help you unlock future opportunities.
+
+If you're passionate about helping clients and building deep, lasting relationships, TD offers diverse career paths where you can grow your expertise and make a meaningful impact.
+
+We're committed to your success and foster a respectful workplace where diverse perspectives are valued, everyone has fair opportunities to grow, and you can unlock your full potential to achieve your career goals. Here at TD, we hire and develop the best.
+
+Training & Onboarding
+
+We will provide training and onboarding sessions to ensure that you've got everything you need to succeed in your new role.
+
+Interview Process
+
+We'll reach out to candidates of interest to schedule an interview. We do our best to communicate outcomes to all applicants by email or phone call.
+
+Accommodation
+
+Your accessibility is important to us. Please let us know if you'd like accommodations (including accessible meeting rooms, captioning for virtual interviews, etc.) to help us remove barriers so that you can participate throughout the interview process.
+
+We look forward to hearing from you!
+
+Language Requirement (Quebec Only)
+
+Sans Objet",False,False,False,False,False,False,False,False,2026-04-09T20:35:57.032695+00:00,linkedin_jobs_Software_Engineer_Toronto_Canada_2_3_week.csv,24
+li-4376493365,https://www.linkedin.com/jobs/view/4376493365/,Full-Stack Engineer,LotusFlare,"Toronto, ON",,"LotusFlare is a provider of cloud-native SaaS products based in the heart of Silicon Valley. Founded by the team that helped Facebook reach over one billion users, LotusFlare was founded to make affordable mobile communications available to everyone on Earth.
+
+Today, LotusFlare focuses on designing, building, and continuously evolving a digital commerce and monetization platform that delivers valuable outcomes for enterprises. Our platform, Digital Network Operator® (DNO™) Cloud, is licensed to telecommunications services providers and supports millions of customers globally.
+
+LotusFlare has also designed and built the leading eSIM travel product - Nomad. Nomad provides global travelers with high-speed, affordable data connectivity in over 190 countries. Nomad is available as an iOS or Android app or via getnomad.app.
+
+Job Description And Responsibilities
+
+Every engineer is an integral part of our global engineering team and as such is directly responsible for more than half of a million users of our platforms. They are working on mission-critical, highly available distributed systems.
+
+Your day usually starts with a daily meeting/standup/quick sync-up
+Your daily responsibilities include the entire software cycle from developing/testing, to code reviews and maintaining/managing your code/application on production
+You closely collaborate with product and other functional engineering teams
+You take time out of your day to closely collaborate with your teammates, asking questions or providing answers
+You take ownership of the code you write
+You are experienced in the end-to-end software development lifecycle (design, implementation, debugging, testing, and maintenance)
+You have dealt with complex time-critical issues (production incidents or outages)
+You have worked on a product with a large user base
+You have a strong passion for scalable, highly available, distributed systems
+You make sure that the code you write is reusable, maintainable, and well-documented
+You are driven to deal with new challenges every day
+You have a knack for driving change, proposing new solutions, and challenging others' ideas
+You enjoy sharing your knowledge with other people, as well as learning from them
+Requirements
+2+ years of relevant experience with modern JavaScript frameworks, preferably Vue.js
+2+ years of experience in Typescript, Java, or any other OOP language
+Ability to develop and interact with RESTful APIs
+Knowledge and hands-on experience with modern JavaScript (ES2015 and newer)
+Knowledge and a good understanding of distributed systems and microservices
+Strong HTML5 and CSS3 skills
+Upper-intermediate-level of English
+Bonus Skills
+Experience with (any combination of) AWS, Redis, Kafka, and Cassandra would be a plus
+Experience with JavaScript preprocessors like TypeScript and Flow
+Experience with testing frameworks like Jest, Jasmin, Karma, Nightwatch.js, etc.
+Hands-on experience using Docker
+Benefits We Have For You
+ Competitive salary package
+ Paid lunch (In the office)
+ Private healthcare
+ Yearly bonus
+ Training and workshops
+ Truly flexible working hours
+ Top-of-the-class engineers to learn from and work with
+About Us
+
+At LotusFlare, we attract and keep amazing people by offering two key things:
+
+ Purposeful Work: Every team member sees how their efforts make a tangible, positive difference for our customers and partners.
+ Growth Opportunities: We provide the chance to develop professionally while mastering cutting-edge practices in cloud-native enterprise software.
+From the beginning, our mission has been to simplify technology to create better experiences for customers. Using an ""experience down"" approach, which prioritizes the customer's journey at every stage of development, our Digital Network Operator™ Cloud empowers communication service providers to achieve valuable business outcomes. DNO Cloud enables communication service providers to innovate freely, reduce operational costs, monetize network assets, engage customers on all digital channels, drive customer acquisition, and increase retention.
+
+With headquarters in Santa Clara, California, and five major offices worldwide, LotusFlare serves Deutsche Telekom, T-Mobile, A1, Globe Telecom, Liberty Latin America, Singtel, and other leading enterprises around the world.
+
+Website: www.lotusflare.com
+
+LinkedIn: https://www.linkedin.com/company/lotusflare
+
+Instagram: https://www.instagram.com/lifeatlotusflare/
+
+Twitter: https://twitter.com/lotus_flare",False,False,False,False,False,False,False,False,2026-04-09T20:35:57.034004+00:00,linkedin_jobs_Software_Engineer_Toronto_Canada_2_3_week.csv,25
