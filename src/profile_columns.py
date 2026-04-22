@@ -52,6 +52,12 @@ def infer_work_auth_flags(explicit_constraints: list[Any] | None) -> tuple[int |
     return work_auth_required, sponsorship_available
 
 
+def _bool_to_sqlite(value: bool | None) -> int | None:
+    if value is None:
+        return None
+    return 1 if value else 0
+
+
 def build_profile_columns(
     profile_payload: dict[str, Any],
     *,
@@ -70,7 +76,28 @@ def build_profile_columns(
     work_mode = profile_payload.get("work_mode") or "unknown"
 
     axes = default_axes_for_role_family(role_family)
-    work_auth_required, sponsorship_available = infer_work_auth_flags(explicit_constraints)
+
+    salary = profile_payload.get("salary") or {}
+
+    work_eligibility = profile_payload.get("work_eligibility") or {}
+    model_work_auth = work_eligibility.get("work_auth_required")
+    model_sponsorship = work_eligibility.get("sponsorship_available")
+
+    if model_work_auth is None and model_sponsorship is None:
+        work_auth_required, sponsorship_available = infer_work_auth_flags(explicit_constraints)
+    else:
+        work_auth_required = _bool_to_sqlite(model_work_auth)
+        sponsorship_available = _bool_to_sqlite(model_sponsorship)
+
+    model_degree = profile_payload.get("degree_required")
+    degree_required = (
+        _bool_to_sqlite(model_degree)
+        if model_degree is not None
+        else bool_from_requirement_list(education_requirements)
+    )
+
+    eligible_countries = work_eligibility.get("eligible_countries")
+    eligible_regions = work_eligibility.get("eligible_regions")
 
     return {
         "job_posting_id": job_posting_id,
@@ -90,13 +117,13 @@ def build_profile_columns(
         "location_scope": profile_payload.get("location_scope"),
         "work_auth_required": work_auth_required,
         "sponsorship_available": sponsorship_available,
-        "degree_required": bool_from_requirement_list(education_requirements),
+        "degree_required": degree_required,
         "years_min_soft": experience.get("years_min"),
-        "years_min_hard": None,
-        "salary_min": None,
-        "salary_max": None,
-        "salary_currency": None,
-        "salary_period": None,
+        "years_min_hard": experience.get("years_min_hard"),
+        "salary_min": salary.get("salary_min"),
+        "salary_max": salary.get("salary_max"),
+        "salary_currency": salary.get("salary_currency"),
+        "salary_period": salary.get("salary_period"),
         "salary_tier": infer_salary_tier(seniority),
         "axis_backend": axes["backend"],
         "axis_frontend": axes["frontend"],
@@ -104,6 +131,6 @@ def build_profile_columns(
         "axis_ai_data": axes["ai_data"],
         "axis_ownership": axes["ownership"],
         "axis_collaboration": axes["collaboration"],
-        "eligible_countries_json": None,
-        "eligible_regions_json": None,
+        "eligible_countries_json": json.dumps(eligible_countries) if eligible_countries else None,
+        "eligible_regions_json": json.dumps(eligible_regions) if eligible_regions else None,
     }

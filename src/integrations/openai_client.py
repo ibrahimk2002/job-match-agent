@@ -1,6 +1,6 @@
 import os
 import dotenv
-dotenv.load_dotenv()  # Load environment variables from .env file
+dotenv.load_dotenv()
 from openai import OpenAI
 from utils.config import config
 import json
