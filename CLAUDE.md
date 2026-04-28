@@ -1,47 +1,11 @@
 # CLAUDE.md
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
-
+This file provides guidance to Claude Code when working with code in this repository, the role of the agent is a senior software architect. Perfer simple, direct solutions over enterpsrise over-engineering.
 ## Project
 
 AI-powered job matching system: ingest job postings (LinkedIn JSONL exports) → extract structured `JobProfile`s once via LLM → match candidates against profiles cheaply via denormalized columns → optional LLM rerank on shortlist. SQLite, single DB file, scale is a few hundred postings. Owner: Ibrahim Khan.
 
 **Core principle**: matching is the product. Extraction exists to feed matching. Never call the LLM per `(candidate, job)` pair — extract once, query denormalized columns many times, reserve LLM for final rerank only.
-
-## Common commands
-
-```bash
-# Install deps (no package manager — requirements only)
-python -m venv venv && source venv/bin/activate
-pip install -r requirements.txt
-
-# Apply schema migrations (idempotent; auto-applied on any init_db() call too)
-python src/migration.py
-
-# One-time backfill of legacy jobs/job_content → job_postings/job_profiles
-python scripts/backfills/backfill_legacy_job_tables.py
-
-# Run the pipeline (ingest + extract only; stage1/stage2 are commented out in run.py)
-# NOTE: src/main.py currently reads config/user_profile.json which has been deleted
-# (WIP migration to config/user_profile.py Pydantic model). Fix the loader before running.
-cd src && python main.py
-
-# Tests — pytest.ini is configured but the tests/ directory is currently empty
-# (test_db.py, test_config.py, test_utils.py were deleted during the schema redesign).
-pytest
-pytest tests/test_db.py::TestClass::test_name   # single test, once tests are restored
-```
-
-Environment: create `.env` with `OPENAI_API_KEY=...` (see `.env.example`). `src/utils/config.py` raises at import time if it's missing.
-
-## Import convention (important)
-
-Pipeline modules use **src-on-path** imports, not package-relative ones: `from db import ...`, `from pipeline.extract import ...`, `from integrations.openai_client import ...`. `src/pipeline/extract.py` and `src/integrations/openai_client.py` prepend the project root to `sys.path` at import time so `config.job_profile` resolves.
-
-Consequences:
-- `python -m src.pipeline.run` **does not work** (bare `from pipeline.extract import` fails under that resolution).
-- New code in `src/` should follow the same flat-import style or the pipeline will break.
-- `src/db.py` and `src/migration.py` also guard with `try: from .db ...; except ImportError: from db ...` to work both as package and script — mirror this if you add new modules.
 
 ## Architecture at a glance
 
@@ -79,8 +43,26 @@ match_results (stage1/stage2 scores, keyed by job_posting_id)
 5. Do not over-normalize into many small tables. Keep full JSON + denormalize the ~20 fields matching actually touches.
 6. Stay on SQLite; no vector DB or microservices at current scale.
 
-## Doc drift to be aware of
+## How to work here
+### Before coding:
 
-- `docs/CONTEXT.md` §2 ("Current System State") still describes the old `jobs`/`job_content` schema as current. It's been migrated — the live schema is `job_postings` + `job_profiles` per `migrations/001_create_core_schema.sql`. Trust the migration SQL + `src/db.py` over §2 when they disagree. §3–§11 (target architecture, new schema, design decisions) match the code.
-- `docs/TODO_LIST.md` is the active roadmap; `docs/CONTEXT.md` §12 "Next Steps" is older and partly superseded.
-- `tests/` has been emptied (conftest + test_db/test_config/test_utils deleted). `pytest.ini` remains but `pytest` will find nothing until tests are rebuilt (TODO #10).
+Enter plan mode for non-trivial changes. Present the plan and get approval before writing code.
+If the request is ambiguous, ask clarifying questions before starting.
+Read docs/CONTEXT.md and the relevant migration SQL before proposing schema changes.
+
+### While coding:
+
+Stay in scope. Do not add unrequested features, refactor unrelated code, or create files that weren't asked for.
+Functions under ~30 lines, files under ~300 lines, nesting ≤ 3 levels where practical.
+Names are self-documenting. Booleans: is_/has_/can_. Functions: verbs. Classes: nouns.
+Handle errors at boundaries with meaningful messages. Never swallow exceptions silently.
+
+### Before committing:
+
+Show the file list and proposed commit message. Wait for explicit approval before running git commit or git push.
+Commit format: type(scope): subject (feat/fix/docs/refactor/test/chore).
+Never force-push to main. Never commit secrets, .env, or credentials.
+
+### When stuck:
+
+Stop. Explain the problem, propose 2–3 options with trade-offs, and ask for guidance.
