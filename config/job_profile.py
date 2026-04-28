@@ -92,7 +92,6 @@ class JobProfile(BaseModel):
         "backend", "frontend", "full_stack", "data", "ml",
         "devops", "qa", "mobile", "unknown"
     ]
-    role_subtype: str | None
     seniority: Literal[
         "intern", "new_grad", "junior", "mid", "senior",
         "staff", "principal", "unknown"
@@ -110,9 +109,9 @@ class JobProfile(BaseModel):
         default_factory=WorkEligibility,
         description="Work authorization and geographic eligibility.",
     )
-    degree_required: bool | None = Field(
+    degree_required: Literal[0, 1, 2, 3] | None = Field(
         None,
-        description="True if a degree is explicitly required. False if posting says no degree required. Null if not addressed.",
+        description="0=no degree required, 1=Bachelor's required, 2=Master's required, 3=PhD required. Null if not explicitly stated.",
     )
     summary: str
     must_have_requirements: list[str]
@@ -134,7 +133,6 @@ class ExtractionResult(BaseModel):
         "backend", "frontend", "full_stack", "data", "ml",
         "devops", "qa", "mobile", "unknown"
     ]
-    role_subtype: str | None
     seniority: Literal[
         "intern", "new_grad", "junior", "mid", "senior",
         "staff", "principal", "unknown"
@@ -152,9 +150,9 @@ class ExtractionResult(BaseModel):
         default_factory=WorkEligibility,
         description="Work authorization and geographic eligibility.",
     )
-    degree_required: bool | None = Field(
+    degree_required: Literal[0, 1, 2, 3] | None = Field(
         None,
-        description="True if a degree is explicitly required. False if posting says no degree required. Null if not addressed.",
+        description="0=no degree required, 1=Bachelor's required, 2=Master's required, 3=PhD required. Null if not explicitly stated.",
     )
     summary: str
     must_have_requirements: list[str]

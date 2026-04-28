@@ -5,15 +5,15 @@ from typing import Any
 
 def default_axes_for_role_family(role_family: str | None) -> dict[str, float]:
     presets = {
-        "backend": {"backend": 1.0, "frontend": 0.1, "platform": 0.45, "ai_data": 0.1, "ownership": 0.35, "collaboration": 0.35},
-        "frontend": {"backend": 0.1, "frontend": 1.0, "platform": 0.1, "ai_data": 0.05, "ownership": 0.3, "collaboration": 0.5},
-        "full_stack": {"backend": 0.75, "frontend": 0.75, "platform": 0.2, "ai_data": 0.1, "ownership": 0.45, "collaboration": 0.45},
-        "data": {"backend": 0.25, "frontend": 0.0, "platform": 0.35, "ai_data": 1.0, "ownership": 0.35, "collaboration": 0.3},
-        "ml": {"backend": 0.25, "frontend": 0.0, "platform": 0.3, "ai_data": 1.0, "ownership": 0.4, "collaboration": 0.3},
-        "devops": {"backend": 0.35, "frontend": 0.0, "platform": 1.0, "ai_data": 0.05, "ownership": 0.45, "collaboration": 0.35},
-        "qa": {"backend": 0.2, "frontend": 0.2, "platform": 0.2, "ai_data": 0.0, "ownership": 0.3, "collaboration": 0.75},
-        "mobile": {"backend": 0.2, "frontend": 0.65, "platform": 0.1, "ai_data": 0.05, "ownership": 0.35, "collaboration": 0.4},
-        "unknown": {"backend": 0.0, "frontend": 0.0, "platform": 0.0, "ai_data": 0.0, "ownership": 0.25, "collaboration": 0.25},
+        "backend":    {"backend": 1.0,  "frontend": 0.1,  "platform_cloud": 0.45, "ai_data": 0.1,  "security_reliability": 0.35, "product_sense": 0.35, "fullstack_span": 0.20},
+        "frontend":   {"backend": 0.1,  "frontend": 1.0,  "platform_cloud": 0.10, "ai_data": 0.05, "security_reliability": 0.30, "product_sense": 0.50, "fullstack_span": 0.20},
+        "full_stack": {"backend": 0.75, "frontend": 0.75, "platform_cloud": 0.20, "ai_data": 0.1,  "security_reliability": 0.45, "product_sense": 0.45, "fullstack_span": 1.00},
+        "data":       {"backend": 0.25, "frontend": 0.0,  "platform_cloud": 0.35, "ai_data": 1.0,  "security_reliability": 0.35, "product_sense": 0.30, "fullstack_span": 0.10},
+        "ml":         {"backend": 0.25, "frontend": 0.0,  "platform_cloud": 0.30, "ai_data": 1.0,  "security_reliability": 0.40, "product_sense": 0.30, "fullstack_span": 0.15},
+        "devops":     {"backend": 0.35, "frontend": 0.0,  "platform_cloud": 1.00, "ai_data": 0.05, "security_reliability": 0.45, "product_sense": 0.35, "fullstack_span": 0.30},
+        "qa":         {"backend": 0.2,  "frontend": 0.2,  "platform_cloud": 0.20, "ai_data": 0.0,  "security_reliability": 0.30, "product_sense": 0.75, "fullstack_span": 0.35},
+        "mobile":     {"backend": 0.2,  "frontend": 0.65, "platform_cloud": 0.10, "ai_data": 0.05, "security_reliability": 0.35, "product_sense": 0.40, "fullstack_span": 0.25},
+        "unknown":    {"backend": 0.0,  "frontend": 0.0,  "platform_cloud": 0.00, "ai_data": 0.0,  "security_reliability": 0.25, "product_sense": 0.25, "fullstack_span": 0.00},
     }
     return presets.get(role_family or "unknown", presets["unknown"])
 
@@ -91,7 +91,7 @@ def build_profile_columns(
 
     model_degree = profile_payload.get("degree_required")
     degree_required = (
-        _bool_to_sqlite(model_degree)
+        model_degree
         if model_degree is not None
         else bool_from_requirement_list(education_requirements)
     )
@@ -110,12 +110,11 @@ def build_profile_columns(
         "profile_json": json.dumps(profile_payload, sort_keys=True),
         "normalized_title": profile_payload.get("normalized_title") or "",
         "role_family": role_family,
-        "role_subtype": profile_payload.get("role_subtype"),
         "seniority": seniority,
         "employment_type": employment_type,
         "work_mode": work_mode,
         "location_scope": profile_payload.get("location_scope"),
-        "work_auth_required": work_auth_required,
+        "work_auth_required": work_auth_required if work_auth_required is not None else 0,
         "sponsorship_available": sponsorship_available,
         "degree_required": degree_required,
         "years_min_soft": experience.get("years_min"),
@@ -127,10 +126,11 @@ def build_profile_columns(
         "salary_tier": infer_salary_tier(seniority),
         "axis_backend": axes["backend"],
         "axis_frontend": axes["frontend"],
-        "axis_platform": axes["platform"],
+        "axis_platform_cloud": axes["platform_cloud"],
         "axis_ai_data": axes["ai_data"],
-        "axis_ownership": axes["ownership"],
-        "axis_collaboration": axes["collaboration"],
+        "axis_security_reliability": axes["security_reliability"],
+        "axis_product_sense": axes["product_sense"],
+        "axis_fullstack_span": axes["fullstack_span"],
         "eligible_countries_json": json.dumps(eligible_countries) if eligible_countries else None,
         "eligible_regions_json": json.dumps(eligible_regions) if eligible_regions else None,
     }
