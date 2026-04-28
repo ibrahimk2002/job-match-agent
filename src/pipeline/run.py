@@ -5,7 +5,7 @@ from pipeline.ingest import ingest_data
 from db import get_top_matches, init_db
 from utils.utils import setup_logging
 
-def run_pipeline(profile):
+def run_pipeline():
     init_db()
     print("Database initialized.")
     setup_logging()
