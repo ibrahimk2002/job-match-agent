@@ -7,9 +7,9 @@ if _PROJECT_ROOT not in sys.path:
     sys.path.insert(0, _PROJECT_ROOT)
 
 from config.job_profile import JobProfile, ProfileMeta
-from integrations.openai_client import extract_job_profile
+from integrations import extract_job_profile
 from db import get_pending_extraction, save_extraction, fail_extraction
-from utils.utils import log_info
+from utils import log_info
 
 
 DEFAULT_MODEL = "gpt-4.1-nano"

@@ -1,7 +1,7 @@
 import os
 
 from db import import_jobs_from_jsonl
-from utils.utils import log_info
+from utils import log_info
 
 
 def discover_report_jsonl_files(reports_dir: str) -> list[str]:

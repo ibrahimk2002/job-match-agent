@@ -2,7 +2,7 @@ import os
 import dotenv
 dotenv.load_dotenv()
 from openai import OpenAI
-from utils.config import config
+from utils import config
 import json
 
 import sys

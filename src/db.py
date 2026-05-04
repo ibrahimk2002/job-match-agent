@@ -6,10 +6,7 @@ import sqlite3
 from datetime import datetime, timezone
 from typing import Any
 
-try:
-    from .profile_columns import build_profile_columns
-except ImportError:
-    from profile_columns import build_profile_columns
+from profile_columns import build_profile_columns
 
 _PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 _LOG_PATH = os.path.join(_PROJECT_ROOT, "logs", "job_matcher.log")
