@@ -6,8 +6,8 @@ from pathlib import Path
 import pytest
 
 ROOT = Path(__file__).resolve().parent.parent
-# Order matters: src/ must come first so `import db` resolves to src/db.py,
-# not anything else. ROOT is needed for `from config.job_profile import ...`.
+# Order matters: ROOT comes first (for `from config.job_profile import ...`),
+# then src/ (for `import db`). No name collisions between the two.
 sys.path.insert(0, str(ROOT / "src"))
 sys.path.insert(0, str(ROOT))
 
