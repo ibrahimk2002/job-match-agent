@@ -28,9 +28,9 @@ match_results (stage1/stage2 scores, keyed by job_posting_id)
 | File | Why it matters |
 |------|---------------|
 | `src/db.py` | All CRUD + `compute_content_hash` + `apply_schema_migrations` (runs every `.sql` in `migrations/` on `init_db`). `JOB_PROFILE_COLUMNS` is the canonical column order for upsert. |
-| `src/profile_columns.py` | Turns an extracted `JobProfile` payload into the 30+ `job_profiles` columns. Radar axes are **currently hardcoded presets per `role_family`** (no real per-job axis extraction yet). `salary_*` fields almost always land as `None`. Work-auth flags are regex'd from `explicit_constraints`. |
+| `src/profile_columns.py` | Projects a `JobProfile` payload to all 30+ `job_profiles` columns. Reads six primary axes directly from `payload["axes"]` (no presets). Computes `axis_fullstack_span = round(min(2*min(backend,frontend), 1.0), 2)` — never from LLM. `salary_*` fields almost always land as `None`. **Upsert invariant:** `build_profile_columns` return keys must equal `JOB_PROFILE_COLUMNS − {"is_active"}` — enforced by `tests/test_profile_columns.py::test_build_columns_keys_match_db_constants`. |
 | `src/pipeline/extract.py` | Defines `SCHEMA_VERSION = "1.0"` and `DEFAULT_MODEL`; `prompt_version` parsed from first line of `src/prompts/extraction.txt` (`# prompt_version: X.X`). Those four values are the versioning tuple for re-extraction decisions. |
-| `config/job_profile.py` | `JobProfile`, `ExtractionResult`, `ProfileMeta`, `Skills`, `ExperienceRequirements`. V1 schema — lacks most matching-critical fields (salary, work auth, degree, axes); those live in `job_profiles` columns instead, computed by `profile_columns.py`. TODO is to promote them into the Pydantic model (`docs/TODO_LIST.md` #1). |
+| `config/job_profile.py` | `JobProfile`, `ExtractionResult`, `ProfileMeta`, `Axes`, `Skills`, `ExperienceRequirements`. `Axes` holds the six primary axis scores (no `axis_fullstack_span`). Both `ExtractionResult` and `JobProfile` carry an `axes: Axes` field. `salary_*`, `work_auth_required`, `degree_required` live in `job_profiles` columns, projected by `profile_columns.py`. |
 | `config/user_profile.py` | New WIP Pydantic `UserProfile` replacing the old `user_profile.json` (which has been deleted). Not yet wired into `src/cli.py`. |
 | `migrations/001_create_core_schema.sql` | Authoritative schema. `CREATE TABLE IF NOT EXISTS` makes `init_db()` idempotent. There is **no migration-version table** — ordering is purely alphabetical filename. |
 
@@ -66,3 +66,7 @@ Never force-push to main. Never commit secrets, .env, or credentials.
 ### When stuck:
 
 Stop. Explain the problem, propose 2–3 options with trade-offs, and ask for guidance.
+
+### Running tests:
+
+`pytest tests/ -v` — runs all unit tests. `tests/conftest.py` sets `sys.path` and provides the `temp_db` fixture, which monkeypatches `db._DB_PATH` to a tmpfile and calls `init_db()`. DB tests must use `temp_db`; never reference a real DB path in tests.

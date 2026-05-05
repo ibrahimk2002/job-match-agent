@@ -1,6 +1,6 @@
 # Extraction Stage Refactor Implementation Plan
 
-> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
+> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [x]`) syntax for tracking.
 
 **Goal:** Refactor the extraction stage so the LLM produces axis scores (no presets), the schemas align across `ExtractionResult` ↔ `JobProfile` ↔ `job_profiles` table, and `responses.parse()` calls are structured for prompt caching with `prompt_cache_key`.
 
@@ -43,7 +43,7 @@ The codebase currently has no tests. Set up minimal infrastructure so subsequent
 **Files:**
 - Create: `tests/conftest.py`
 
-- [ ] **Step 1: Write the conftest**
+- [x] **Step 1: Write the conftest**
 
 ```python
 # tests/conftest.py
@@ -79,12 +79,12 @@ def temp_db(monkeypatch):
         pass
 ```
 
-- [ ] **Step 2: Sanity-check the fixture loads**
+- [x] **Step 2: Sanity-check the fixture loads**
 
 Run: `cd /home/ibrahim/Documents/job-match-agent && pytest --collect-only 2>&1 | tail -5`
 Expected: `no tests ran` (or similar) — fixture file imports cleanly with no errors.
 
-- [ ] **Step 3: Commit**
+- [x] **Step 3: Commit**
 
 ```bash
 git add tests/conftest.py
@@ -101,7 +101,7 @@ Standalone model. No coupling to `ExtractionResult` yet — add separately so th
 - Modify: `config/job_profile.py`
 - Create: `tests/test_job_profile_schema.py`
 
-- [ ] **Step 1: Write the failing test**
+- [x] **Step 1: Write the failing test**
 
 ```python
 # tests/test_job_profile_schema.py
@@ -142,12 +142,12 @@ def test_axes_does_not_have_fullstack_span_field():
     assert "fullstack_span" not in Axes.model_fields
 ```
 
-- [ ] **Step 2: Run test to verify it fails**
+- [x] **Step 2: Run test to verify it fails**
 
 Run: `pytest tests/test_job_profile_schema.py -v`
 Expected: FAIL with `ImportError: cannot import name 'Axes' from 'config.job_profile'`
 
-- [ ] **Step 3: Add the `Axes` model**
+- [x] **Step 3: Add the `Axes` model**
 
 Edit `config/job_profile.py`. After the existing `ExperienceRequirements` class and before `EvidenceSnippet`, insert:
 
@@ -161,12 +161,12 @@ class Axes(BaseModel):
     axis_product_ownership: float
 ```
 
-- [ ] **Step 4: Run test to verify it passes**
+- [x] **Step 4: Run test to verify it passes**
 
 Run: `pytest tests/test_job_profile_schema.py -v`
 Expected: 3 passed.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add config/job_profile.py tests/test_job_profile_schema.py
@@ -181,7 +181,7 @@ git commit -m "feat: add Axes pydantic model with six primary axes"
 - Modify: `config/job_profile.py`
 - Modify: `tests/test_job_profile_schema.py`
 
-- [ ] **Step 1: Write the failing test**
+- [x] **Step 1: Write the failing test**
 
 Append to `tests/test_job_profile_schema.py`:
 
@@ -258,12 +258,12 @@ def test_job_profile_carries_axes_through():
     assert profile.axes.axis_backend == 0.9
 ```
 
-- [ ] **Step 2: Run test to verify failures**
+- [x] **Step 2: Run test to verify failures**
 
 Run: `pytest tests/test_job_profile_schema.py -v`
 Expected: 3 new tests FAIL because `axes` is not yet on `ExtractionResult`/`JobProfile`.
 
-- [ ] **Step 3: Add `axes` to both models**
+- [x] **Step 3: Add `axes` to both models**
 
 Edit `config/job_profile.py`. In the `JobProfile` class, after `evidence_snippets: list[EvidenceSnippet]` and before `profile_meta: ProfileMeta`, insert:
 
@@ -277,12 +277,12 @@ In the `ExtractionResult` class, after `evidence_snippets: list[EvidenceSnippet]
     axes: Axes
 ```
 
-- [ ] **Step 4: Run tests to verify they pass**
+- [x] **Step 4: Run tests to verify they pass**
 
 Run: `pytest tests/test_job_profile_schema.py -v`
 Expected: 6 passed.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add config/job_profile.py tests/test_job_profile_schema.py
@@ -301,7 +301,7 @@ This is one atomic step because partial renames break the upsert (the dict from 
 - Modify: `src/profile_columns.py` (preset dict keys + the return-dict keys)
 - Create: `tests/test_migrations.py`
 
-- [ ] **Step 1: Write the failing migration test**
+- [x] **Step 1: Write the failing migration test**
 
 ```python
 # tests/test_migrations.py
@@ -328,12 +328,12 @@ def test_axis_fullstack_span_column_still_exists(temp_db):
     assert "axis_fullstack_span" in cols
 ```
 
-- [ ] **Step 2: Run test to verify it fails**
+- [x] **Step 2: Run test to verify it fails**
 
 Run: `pytest tests/test_migrations.py -v`
 Expected: `test_axis_columns_use_canonical_names` FAILS — `axis_platform_cloud` and `axis_product_sense` are still present.
 
-- [ ] **Step 3: Create migration 003**
+- [x] **Step 3: Create migration 003**
 
 ```sql
 -- migrations/003_rename_axes.sql
@@ -342,7 +342,7 @@ ALTER TABLE job_profiles RENAME COLUMN axis_platform_cloud TO axis_platform;
 ALTER TABLE job_profiles RENAME COLUMN axis_product_sense  TO axis_product_ownership;
 ```
 
-- [ ] **Step 4: Update `JOB_PROFILE_COLUMNS` in `src/db.py`**
+- [x] **Step 4: Update `JOB_PROFILE_COLUMNS` in `src/db.py`**
 
 In `src/db.py`, replace the two lines:
 
@@ -365,7 +365,7 @@ with
     "axis_product_ownership",
 ```
 
-- [ ] **Step 5: Update preset & return-dict keys in `src/profile_columns.py`**
+- [x] **Step 5: Update preset & return-dict keys in `src/profile_columns.py`**
 
 In `default_axes_for_role_family`, every dict value uses keys `"backend"`, `"frontend"`, `"platform_cloud"`, `"ai_data"`, `"security_reliability"`, `"product_sense"`, `"fullstack_span"`. Rename the two affected keys: `"platform_cloud"` → `"platform"`, `"product_sense"` → `"product_ownership"`. (Find/replace across all 9 preset rows.)
 
@@ -375,12 +375,12 @@ In `build_profile_columns`'s returned dict, change:
 
 (`axis_fullstack_span` and the others stay as-is for now.)
 
-- [ ] **Step 6: Run all tests to verify**
+- [x] **Step 6: Run all tests to verify**
 
 Run: `pytest tests/ -v`
 Expected: all tests pass — migrations apply, columns rename, schema tests still green.
 
-- [ ] **Step 7: Commit**
+- [x] **Step 7: Commit**
 
 ```bash
 git add migrations/003_rename_axes.sql src/db.py src/profile_columns.py tests/test_migrations.py
@@ -397,7 +397,7 @@ This task is the heart of the refactor. After this step, `profile_columns.py` is
 - Modify: `src/profile_columns.py`
 - Create: `tests/test_profile_columns.py`
 
-- [ ] **Step 1: Write the failing tests**
+- [x] **Step 1: Write the failing tests**
 
 ```python
 # tests/test_profile_columns.py
@@ -522,12 +522,12 @@ def test_build_columns_keys_match_db_constants():
     assert set(cols.keys()) == set(db.JOB_PROFILE_COLUMNS) - {"is_active"}
 ```
 
-- [ ] **Step 2: Run tests to verify failure**
+- [x] **Step 2: Run tests to verify failure**
 
 Run: `pytest tests/test_profile_columns.py -v`
 Expected: most fail — `fullstack_span` not exported, axes still come from presets, work_auth still goes through regex fallback when `explicit_constraints` mentions auth.
 
-- [ ] **Step 3: Rewrite `src/profile_columns.py`**
+- [x] **Step 3: Rewrite `src/profile_columns.py`**
 
 Replace the file contents with:
 
@@ -619,12 +619,12 @@ def build_profile_columns(
     }
 ```
 
-- [ ] **Step 4: Run all tests to verify**
+- [x] **Step 4: Run all tests to verify**
 
 Run: `pytest tests/ -v`
 Expected: all tests pass — including the cross-check that `cols.keys() == JOB_PROFILE_COLUMNS - {"is_active"}` (db.py adds `is_active` itself in `save_extraction`).
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add src/profile_columns.py tests/test_profile_columns.py
@@ -641,7 +641,7 @@ No automated test. The prompt loads at module import in Task 9; smoke test in Ta
 - Modify: `src/prompts/extraction.txt` (full rewrite)
 - Reads from: `docs/AXIS_MEASURE_SKILL.md`, `docs/references/calibration_anchors.md`
 
-- [ ] **Step 1: Compose the prompt by running this Python one-shot**
+- [x] **Step 1: Compose the prompt by running this Python one-shot**
 
 This script reads the canonical sources, splices them into a fixed template, and writes `src/prompts/extraction.txt`. It is deterministic — re-running produces identical output (modulo source-file edits).
 
@@ -750,7 +750,7 @@ PY
 
 Expected output: `wrote src/prompts/extraction.txt (NNNN chars)` where NNNN is roughly 7000-9000.
 
-- [ ] **Step 2: Verify prompt parses**
+- [x] **Step 2: Verify prompt parses**
 
 Run:
 ```bash
@@ -768,7 +768,7 @@ print('OK')
 ```
 Expected: `version='2.0' chars=...` then `OK`.
 
-- [ ] **Step 3: Commit**
+- [x] **Step 3: Commit**
 
 ```bash
 git add src/prompts/extraction.txt
