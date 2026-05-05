@@ -1,3 +1,13 @@
-from .openai_client import get_openai_client, call_llm, extract_job_profile
+from .openai_client import (
+    MalformedOutputError,
+    call_llm,
+    extract_job_profile,
+    get_openai_client,
+)
 
-__all__ = ["get_openai_client", "call_llm", "extract_job_profile"]
+__all__ = [
+    "MalformedOutputError",
+    "call_llm",
+    "extract_job_profile",
+    "get_openai_client",
+]
