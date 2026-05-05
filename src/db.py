@@ -78,9 +78,27 @@ def init_db() -> None:
 
 
 def apply_schema_migrations(conn: sqlite3.Connection) -> None:
+    conn.executescript(
+        """
+        CREATE TABLE IF NOT EXISTS schema_migrations (
+            filename   TEXT PRIMARY KEY,
+            applied_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+        );
+        """
+    )
+    applied = {
+        row[0]
+        for row in conn.execute("SELECT filename FROM schema_migrations").fetchall()
+    }
     for path in sorted(_migration_paths()):
+        filename = os.path.basename(path)
+        if filename in applied:
+            continue
         with open(path, "r", encoding="utf-8") as handle:
             conn.executescript(handle.read())
+        conn.execute(
+            "INSERT INTO schema_migrations (filename) VALUES (?)", (filename,)
+        )
     conn.commit()
 
 
