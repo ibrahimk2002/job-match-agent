@@ -50,11 +50,41 @@ def extract_job_data():
         model_version=DEFAULT_MODEL,
     )
 
+    stats = {
+        "processed": 0,
+        "succeeded": 0,
+        "failed": 0,
+        "input_tokens": 0,
+        "cached_tokens": 0,
+    }
+
     for job in pending:
-        _process_one(job)
+        stats["processed"] += 1
+        _process_one(job, stats)
+
+    if stats["processed"] == 0:
+        log_info("extract: no pending jobs")
+        return
+
+    pct = (
+        100.0 * stats["cached_tokens"] / stats["input_tokens"]
+        if stats["input_tokens"] > 0
+        else 0.0
+    )
+    log_info(
+        f"extract: processed={stats['processed']} "
+        f"succeeded={stats['succeeded']} failed={stats['failed']} "
+        f"input_tokens={stats['input_tokens']} "
+        f"cached_tokens={stats['cached_tokens']} ({pct:.1f}%)"
+    )
+    print(
+        f"Extraction summary: {stats['succeeded']}/{stats['processed']} "
+        f"jobs, cached {stats['cached_tokens']}/{stats['input_tokens']} "
+        f"tokens ({pct:.1f}%)"
+    )
 
 
-def _process_one(job: dict) -> None:
+def _process_one(job: dict, stats: dict) -> None:
     db_job_id = job['job_posting_id']
     source_id = job['source_id']
     raw_text = job.get('raw_text')
@@ -62,6 +92,7 @@ def _process_one(job: dict) -> None:
     if not raw_text or not raw_text.strip():
         fail_extraction(db_job_id, "missing_description")
         log_info(f"Extraction skipped for job_id {db_job_id}: missing_description")
+        stats["failed"] += 1
         return
 
     job_text = raw_text
@@ -75,11 +106,12 @@ def _process_one(job: dict) -> None:
     print(f"Processing job_id {db_job_id} with source_id {source_id}")
 
     extraction_result = None
+    usage = None
     last_err: Exception | None = None
     last_kind: str | None = None
     for attempt in (1, 2):
         try:
-            extraction_result, _usage = _attempt_extraction(job_text)
+            extraction_result, usage = _attempt_extraction(job_text)
             break
         except (MalformedOutputError, ValidationError) as e:
             last_err = e
@@ -98,7 +130,21 @@ def _process_one(job: dict) -> None:
         err_msg = f"{last_kind}: {last_err}"
         fail_extraction(db_job_id, err_msg)
         log_info(f"Extraction failed for job_id {db_job_id} after retry: {err_msg}")
+        stats["failed"] += 1
         return
+
+    if usage is not None:
+        input_tokens = getattr(usage, "input_tokens", 0) or 0
+        details = getattr(usage, "input_tokens_details", None)
+        cached = getattr(details, "cached_tokens", 0) if details is not None else 0
+        cached = cached or 0
+        stats["input_tokens"] += input_tokens
+        stats["cached_tokens"] += cached
+        pct = 100.0 * cached / input_tokens if input_tokens > 0 else 0.0
+        log_info(
+            f"extract: posting_id={db_job_id} model={DEFAULT_MODEL} "
+            f"input={input_tokens} cached={cached} ({pct:.1f}%)"
+        )
 
     profile_meta = ProfileMeta(
         schema_version=SCHEMA_VERSION,
@@ -112,6 +158,7 @@ def _process_one(job: dict) -> None:
         **extraction_result.model_dump(),
     )
     save_extraction(db_job_id, profile)
+    stats["succeeded"] += 1
     log_info(
         f"Extracted data for job_id {db_job_id}: "
         f"{profile.role_family} / {profile.seniority}"
