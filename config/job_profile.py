@@ -26,6 +26,15 @@ class ExperienceRequirements(BaseModel):
     )
 
 
+class Axes(BaseModel):
+    axis_backend: float
+    axis_frontend: float
+    axis_platform: float
+    axis_ai_data: float
+    axis_security_reliability: float
+    axis_product_ownership: float
+
+
 class EvidenceSnippet(BaseModel):
     field: str
     quote: str
