@@ -8,7 +8,7 @@ if _PROJECT_ROOT not in sys.path:
 
 from pydantic import ValidationError
 
-from config.job_profile import JobProfile, ProfileMeta
+from config import JobProfile, ProfileMeta
 from integrations import extract_job_profile, MalformedOutputError
 from db import get_pending_extraction, save_extraction, fail_extraction
 from utils import log_info

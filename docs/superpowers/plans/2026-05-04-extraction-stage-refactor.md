@@ -784,7 +784,7 @@ The rubric is duplicated into the prompt for caching. Mark the source-of-truth s
 **Files:**
 - Modify: `docs/AXIS_MEASURE_SKILL.md` (top of file)
 
-- [ ] **Step 1: Add a sync note**
+- [x] **Step 1: Add a sync note**
 
 Open `docs/AXIS_MEASURE_SKILL.md`. After the YAML frontmatter (the closing `---` on line 4) and before the `# JD Competency Scorer` H1, insert:
 
@@ -795,7 +795,7 @@ Open `docs/AXIS_MEASURE_SKILL.md`. After the YAML frontmatter (the closing `---`
 > update `extraction.txt` and bump its `# prompt_version:` line.**
 ```
 
-- [ ] **Step 2: Commit**
+- [x] **Step 2: Commit**
 
 ```bash
 git add docs/AXIS_MEASURE_SKILL.md
@@ -814,7 +814,7 @@ A typed exception (`MalformedOutputError`) is added so the caller in Task 10 can
 - Modify: `src/integrations/openai_client.py`
 - Modify: `src/integrations/__init__.py`
 
-- [ ] **Step 1: Replace `extract_job_profile` and add `MalformedOutputError`**
+- [x] **Step 1: Replace `extract_job_profile` and add `MalformedOutputError`**
 
 In `src/integrations/openai_client.py`, add the exception class near the top (after the imports, before `get_openai_client`):
 
@@ -881,7 +881,7 @@ def extract_job_profile(
     return parsed, response.usage
 ```
 
-- [ ] **Step 2: Export `MalformedOutputError` from the integrations package**
+- [x] **Step 2: Export `MalformedOutputError` from the integrations package**
 
 Replace the contents of `src/integrations/__init__.py` with:
 
@@ -901,7 +901,7 @@ __all__ = [
 ]
 ```
 
-- [ ] **Step 3: Verify the module still imports cleanly**
+- [x] **Step 3: Verify the module still imports cleanly**
 
 Run:
 ```bash
@@ -919,7 +919,7 @@ print('OK')
 ```
 Expected: `OK`.
 
-- [ ] **Step 4: Commit**
+- [x] **Step 4: Commit**
 
 ```bash
 git add src/integrations/openai_client.py src/integrations/__init__.py
@@ -935,7 +935,7 @@ No automated test. The smoke test in Task 11 verifies wiring; module-level promp
 **Files:**
 - Modify: `src/pipeline/extract.py`
 
-- [ ] **Step 1: Replace constants and the loop signature**
+- [x] **Step 1: Replace constants and the loop signature**
 
 Replace the contents of `src/pipeline/extract.py` with:
 
@@ -1060,7 +1060,7 @@ def _process_one(job: dict) -> None:
     )
 ```
 
-- [ ] **Step 2: Verify module imports cleanly**
+- [x] **Step 2: Verify module imports cleanly**
 
 Run:
 ```bash
@@ -1077,12 +1077,12 @@ print('OK')
 ```
 Expected: `OK`.
 
-- [ ] **Step 3: Run unit tests to ensure nothing regressed**
+- [x] **Step 3: Run unit tests to ensure nothing regressed**
 
 Run: `pytest tests/ -v`
 Expected: all tests pass (no extract.py-touching tests, but the import chain must stay healthy).
 
-- [ ] **Step 4: Commit**
+- [x] **Step 4: Commit**
 
 ```bash
 git add src/pipeline/extract.py
@@ -1098,7 +1098,7 @@ Adds the cached-token accounting required by the issue's ≥30% acceptance crite
 **Files:**
 - Modify: `src/pipeline/extract.py`
 
-- [ ] **Step 1: Add accumulator state and update `_process_one`**
+- [x] **Step 1: Add accumulator state and update `_process_one`**
 
 Edit `src/pipeline/extract.py` to make `_process_one` accept a stats dict and update it. Replace `extract_job_data` and `_process_one` with:
 
@@ -1225,7 +1225,7 @@ def _process_one(job: dict, stats: dict) -> None:
     )
 ```
 
-- [ ] **Step 2: Verify module imports cleanly and `_process_one` signature is correct**
+- [x] **Step 2: Verify module imports cleanly and `_process_one` signature is correct**
 
 Run:
 ```bash
@@ -1241,12 +1241,12 @@ print('OK')
 ```
 Expected: `OK`.
 
-- [ ] **Step 3: Run all tests**
+- [x] **Step 3: Run all tests**
 
 Run: `pytest tests/ -v`
 Expected: all green.
 
-- [ ] **Step 4: Commit**
+- [x] **Step 4: Commit**
 
 ```bash
 git add src/pipeline/extract.py
@@ -1261,14 +1261,14 @@ Verifies the full pipeline against the real OpenAI API on a small sample. This i
 
 **Files:** none (run-only)
 
-- [ ] **Step 1: Make a working copy of the DB**
+- [x] **Step 1: Make a working copy of the DB**
 
 ```bash
 cd /home/ibrahim/Documents/job-match-agent
 cp data/job_matcher.db data/job_matcher.db.before-issue13
 ```
 
-- [ ] **Step 2: Apply migrations to the live DB**
+- [x] **Step 2: Apply migrations to the live DB**
 
 ```bash
 cd /home/ibrahim/Documents/job-match-agent
@@ -1282,14 +1282,14 @@ print('migrations applied')
 ```
 Expected: `migrations applied`. If migration 003 fails because the previous DB run had partially renamed columns, restore from `.before-issue13` and investigate.
 
-- [ ] **Step 3: Verify the renamed columns**
+- [x] **Step 3: Verify the renamed columns**
 
 ```bash
 sqlite3 data/job_matcher.db "PRAGMA table_info(job_profiles);" | grep axis_
 ```
 Expected output includes `axis_platform`, `axis_product_ownership`, `axis_fullstack_span`. Should NOT include `axis_platform_cloud` or `axis_product_sense`.
 
-- [ ] **Step 4: Run the pipeline on a small sample**
+- [x] **Step 4: Run the pipeline on a small sample**
 
 The cleanest way to limit blast radius is to run extraction on a few jobs. The whole pipeline:
 
@@ -1305,7 +1305,7 @@ Expected:
 - Final summary line: `extract: processed=N succeeded=M failed=K input_tokens=... cached_tokens=... (X%)`.
 - On a fresh-after-version-bump run, the **first** call's `cached` will be ~0; **subsequent** calls in the same run should report cached% ≥ 30. The run summary will reflect the average.
 
-- [ ] **Step 5: Spot-check the resulting data**
+- [x] **Step 5: Spot-check the resulting data**
 
 ```bash
 sqlite3 data/job_matcher.db "
@@ -1326,7 +1326,7 @@ Expected:
 - `axis_fullstack_span` for a backend-heavy row equals `2 * frontend` rounded; for a balanced row equals `1.0`.
 - No row is the canned preset 0.45/0.10/0.45/0.30/0.45/0.20 — that confirms the LLM is scoring, not the dropped fallback.
 
-- [ ] **Step 6: Verify the cache acceptance criterion**
+- [x] **Step 6: Verify the cache acceptance criterion**
 
 ```bash
 tail -20 logs/job_matcher.log | grep "extract: processed="
@@ -1338,7 +1338,7 @@ If the cache % is below 30% on a multi-job run, root-cause possibilities:
 2. Job descriptions are very long, dwarfing the cached prefix. Compare `input_tokens` to ~2k (the prefix size) — if every JD is 10k+ tokens, even 100% prefix cache caps the ratio at ~20%.
 3. The `prompt_cache_key` is changing per call (it's a constant, but worth verifying with `python -c "from pipeline.extract import _PROMPT_CACHE_KEY; print(_PROMPT_CACHE_KEY)"`).
 
-- [ ] **Step 7: Restore safety**
+- [x] **Step 7: Restore safety**
 
 If anything looks wrong, restore the original DB:
 
