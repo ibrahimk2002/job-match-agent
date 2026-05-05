@@ -5,15 +5,15 @@ from typing import Any
 
 def default_axes_for_role_family(role_family: str | None) -> dict[str, float]:
     presets = {
-        "backend":    {"backend": 1.0,  "frontend": 0.1,  "platform_cloud": 0.45, "ai_data": 0.1,  "security_reliability": 0.35, "product_sense": 0.35, "fullstack_span": 0.20},
-        "frontend":   {"backend": 0.1,  "frontend": 1.0,  "platform_cloud": 0.10, "ai_data": 0.05, "security_reliability": 0.30, "product_sense": 0.50, "fullstack_span": 0.20},
-        "full_stack": {"backend": 0.75, "frontend": 0.75, "platform_cloud": 0.20, "ai_data": 0.1,  "security_reliability": 0.45, "product_sense": 0.45, "fullstack_span": 1.00},
-        "data":       {"backend": 0.25, "frontend": 0.0,  "platform_cloud": 0.35, "ai_data": 1.0,  "security_reliability": 0.35, "product_sense": 0.30, "fullstack_span": 0.10},
-        "ml":         {"backend": 0.25, "frontend": 0.0,  "platform_cloud": 0.30, "ai_data": 1.0,  "security_reliability": 0.40, "product_sense": 0.30, "fullstack_span": 0.15},
-        "devops":     {"backend": 0.35, "frontend": 0.0,  "platform_cloud": 1.00, "ai_data": 0.05, "security_reliability": 0.45, "product_sense": 0.35, "fullstack_span": 0.30},
-        "qa":         {"backend": 0.2,  "frontend": 0.2,  "platform_cloud": 0.20, "ai_data": 0.0,  "security_reliability": 0.30, "product_sense": 0.75, "fullstack_span": 0.35},
-        "mobile":     {"backend": 0.2,  "frontend": 0.65, "platform_cloud": 0.10, "ai_data": 0.05, "security_reliability": 0.35, "product_sense": 0.40, "fullstack_span": 0.25},
-        "unknown":    {"backend": 0.0,  "frontend": 0.0,  "platform_cloud": 0.00, "ai_data": 0.0,  "security_reliability": 0.25, "product_sense": 0.25, "fullstack_span": 0.00},
+        "backend":    {"backend": 1.0,  "frontend": 0.1,  "platform": 0.45, "ai_data": 0.1,  "security_reliability": 0.35, "product_ownership": 0.35, "fullstack_span": 0.20},
+        "frontend":   {"backend": 0.1,  "frontend": 1.0,  "platform": 0.10, "ai_data": 0.05, "security_reliability": 0.30, "product_ownership": 0.50, "fullstack_span": 0.20},
+        "full_stack": {"backend": 0.75, "frontend": 0.75, "platform": 0.20, "ai_data": 0.1,  "security_reliability": 0.45, "product_ownership": 0.45, "fullstack_span": 1.00},
+        "data":       {"backend": 0.25, "frontend": 0.0,  "platform": 0.35, "ai_data": 1.0,  "security_reliability": 0.35, "product_ownership": 0.30, "fullstack_span": 0.10},
+        "ml":         {"backend": 0.25, "frontend": 0.0,  "platform": 0.30, "ai_data": 1.0,  "security_reliability": 0.40, "product_ownership": 0.30, "fullstack_span": 0.15},
+        "devops":     {"backend": 0.35, "frontend": 0.0,  "platform": 1.00, "ai_data": 0.05, "security_reliability": 0.45, "product_ownership": 0.35, "fullstack_span": 0.30},
+        "qa":         {"backend": 0.2,  "frontend": 0.2,  "platform": 0.20, "ai_data": 0.0,  "security_reliability": 0.30, "product_ownership": 0.75, "fullstack_span": 0.35},
+        "mobile":     {"backend": 0.2,  "frontend": 0.65, "platform": 0.10, "ai_data": 0.05, "security_reliability": 0.35, "product_ownership": 0.40, "fullstack_span": 0.25},
+        "unknown":    {"backend": 0.0,  "frontend": 0.0,  "platform": 0.00, "ai_data": 0.0,  "security_reliability": 0.25, "product_ownership": 0.25, "fullstack_span": 0.00},
     }
     return presets.get(role_family or "unknown", presets["unknown"])
 
@@ -126,10 +126,10 @@ def build_profile_columns(
         "salary_tier": infer_salary_tier(seniority),
         "axis_backend": axes["backend"],
         "axis_frontend": axes["frontend"],
-        "axis_platform_cloud": axes["platform_cloud"],
+        "axis_platform": axes["platform"],
         "axis_ai_data": axes["ai_data"],
         "axis_security_reliability": axes["security_reliability"],
-        "axis_product_sense": axes["product_sense"],
+        "axis_product_ownership": axes["product_ownership"],
         "axis_fullstack_span": axes["fullstack_span"],
         "eligible_countries_json": json.dumps(eligible_countries) if eligible_countries else None,
         "eligible_regions_json": json.dumps(eligible_regions) if eligible_regions else None,
