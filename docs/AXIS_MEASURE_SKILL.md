@@ -3,6 +3,11 @@ name: jd-competency-scorer
 description: Score software engineering job descriptions on a fixed set of competency axes to produce a weighted skill distribution profile of the ideal candidate. Use this skill whenever a user pastes a job description, job posting, or role spec and asks to profile it, rank the skills it emphasizes, compare it against other roles, produce a competency vector, assess candidate fit, or weight required skills — even if they don't use the word "score." Also trigger for requests like "what kind of engineer does this role want," "break down this JD by skill area," or when multiple JDs are provided for comparison.
 ---
 
+> **⚠ Sync note:** This document is the source of truth for axis names,
+> definitions, scoring philosophy, and calibration. Its body is embedded
+> verbatim into `src/prompts/extraction.txt`. **When you edit this file,
+> update `extraction.txt` and bump its `# prompt_version:` line.**
+
 # JD Competency Scorer
 
 ## What this skill does
