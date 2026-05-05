@@ -15,33 +15,33 @@ Output is machine-readable JSON only. No prose unless the user explicitly asks f
 
 Scores are not probabilities and do not need to sum to 1. They measure emphasis, independently per axis.
 
-### 1. `backend_systems` — server-side engineering
+### 1. `axis_backend` — server-side engineering
 API design, distributed services, microservices, databases (SQL and NoSQL), caching, queuing, pub/sub, backend languages (Java/Go/Python/Node/Kotlin/Rust), scalability. Score high when the role is primarily about building services that power APIs, process data, or handle scale.
 
-### 2. `frontend_product` — user-facing engineering
+### 2. `axis_frontend` — user-facing engineering
 Modern JS/TS frameworks (React, Vue, Angular), HTML/CSS, UI component libraries, browser performance, design-to-code translation, UX polish. Score high when the role ships pixels to end users and cares about visual craft.
 
-### 3. `platform_cloud` — cloud & infrastructure
+### 3. `axis_platform` — cloud & infrastructure
 Kubernetes, containerization, serverless (Workers, Lambda, Cloud Functions), IaC (Terraform, CloudFormation, Ansible), cloud platforms (AWS/GCP/Azure) used at the infra level rather than incidentally, service mesh, platform engineering. Score high when the role builds ON or FOR cloud/container infrastructure, not when it merely deploys to it.
 
-### 4. `ai_data` — AI, ML, and data systems
+### 4. `axis_ai_data` — AI, ML, and data systems
 Two sub-scopes, both count toward this single axis:
 - **AI/ML**: LLMs, GenAI tools, agents, RAG, prompt engineering, fine-tuning, MLOps, model serving.
 - **Data systems**: SQL/data pipelines, analytics, warehousing, streaming data, telemetry processing, real-time event processing.
 
 Score high when data or AI is the product's substance (e.g., Glean's AI search, Illumio's telemetry ingestion). Score low when data handling is incidental CRUD.
 
-### 5. `security_reliability` — production rigor & security
+### 5. `axis_security_reliability` — production rigor & security
 Security-domain work (Zero Trust, microsegmentation, auth, export-controlled systems), operational ownership (on-call, incident response, RCA), SRE/observability, trust & safety, compliance, testing discipline (TDD, CI/CD rigor), resilience engineering. Score high when the role is either in a security-native company OR explicitly owns production operations.
 
-### 6. `product_sense` — product-minded engineering
+### 6. `axis_product_ownership` — product-minded engineering
 Collaboration with PM/design, end-to-end feature ownership from spec through launch, A/B testing and experimentation, user-facing metrics (activation, adoption, retention, KPIs), growth engineering. Score high when the JD explicitly describes working with product managers, designers, and business metrics — not when it only implies it.
 
 ### 7. `fullstack_span` — derived shape metric
 This axis is NOT scored independently. Compute it as:
 
 ```
-fullstack_span = 2 × min(backend_systems, frontend_product)
+fullstack_span = 2 × min(axis_backend, axis_frontend)
 ```
 
 Clamped to `[0.0, 1.0]`. A role that is 0.9 backend / 0.0 frontend has span 0.0 (fully specialized). A role that is 0.8/0.8 has span 1.0 (true fullstack). This makes the metric mathematically honest — it rewards balance only, and can't double-count backend strength as fullstack breadth.
@@ -53,7 +53,7 @@ The scores measure **emphasis on this competency in the role as described**, not
 - The candidate's own skill level
 - Whether a keyword appears once
 
-A JD that says "experience with cloud a plus" in a backend-heavy role should get `platform_cloud ≈ 0.3–0.4`, not 0.7, because cloud is peripheral. A JD built around Kubernetes service delivery gets `platform_cloud ≈ 0.85+`.
+A JD that says "experience with cloud a plus" in a backend-heavy role should get `axis_platform ≈ 0.3–0.4`, not 0.7, because cloud is peripheral. A JD built around Kubernetes service delivery gets `axis_platform ≈ 0.85+`.
 
 ### Signal weighting (in descending importance)
 
@@ -61,11 +61,11 @@ A JD that says "experience with cloud a plus" in a backend-heavy role should get
 2. **Required qualifications** — must-haves. Strong signal.
 3. **Team/role framing** — "Growth Engineering team" or "backend software engineering team" sets the center of gravity.
 4. **Preferred/nice-to-have qualifications** — weaker signal; contribute maybe half-weight.
-5. **Boilerplate company mission copy** — near zero. Cloudflare's "better Internet" mission doesn't mean every Cloudflare role scores high on `security_reliability`.
+5. **Boilerplate company mission copy** — near zero. Cloudflare's "better Internet" mission doesn't mean every Cloudflare role scores high on `axis_security_reliability`.
 
 ### Common scoring traps to avoid
 
-- **Company ≠ role.** A security company hiring a frontend engineer still has `frontend_product` high and `security_reliability` moderate (not maxed). A payments company hiring a generalist doesn't auto-score high on `security_reliability`.
+- **Company ≠ role.** A security company hiring a frontend engineer still has `axis_frontend` high and `axis_security_reliability` moderate (not maxed). A payments company hiring a generalist doesn't auto-score high on `axis_security_reliability`.
 - **Tech stack ≠ emphasis.** "We use React" in a backend role doesn't make it fullstack. Look at what the person will *own*.
 - **Mentions ≠ centrality.** A long list of "nice to haves" covering ten areas should not all score 0.6+. Most should be 0.2–0.4; centrality is rare.
 - **Don't let generous scoring smear everything to the middle.** Good scoring has contrast. A pure backend role should have near-zero frontend, not 0.3 "just in case."
@@ -85,7 +85,7 @@ Quick reference (scores shown as rounded `ba / fe / pc / ai / sr / ps`; `fullsta
 | OpenAI Full Stack | 0.78 | 0.78 | 0.65 | 0.45 | 0.70 | 0.80 | 1.00 |
 | Visa New Grad SWE | 0.55 | 0.45 | 0.55 | 0.70 | 0.80 | 0.50 | 0.90 |
 
-(Note: `product_sense` values here are newly calibrated for this axis. Read the full anchor file before scoring anything ambiguous.)
+(Note: `axis_product_ownership` values here are newly calibrated for this axis. Read the full anchor file before scoring anything ambiguous.)
 
 ## Output format
 
@@ -97,12 +97,12 @@ Default output is a single JSON object per JD. When multiple JDs are provided in
 {
   "role_label": "Short human-readable label, e.g., 'Cloudflare Growth SWE'",
   "scores": {
-    "backend_systems": 0.00,
-    "frontend_product": 0.00,
-    "platform_cloud": 0.00,
-    "ai_data": 0.00,
-    "security_reliability": 0.00,
-    "product_sense": 0.00,
+    "axis_backend": 0.00,
+    "axis_frontend": 0.00,
+    "axis_platform": 0.00,
+    "axis_ai_data": 0.00,
+    "axis_security_reliability": 0.00,
+    "axis_product_ownership": 0.00,
     "fullstack_span": 0.00
   }
 }
@@ -110,7 +110,7 @@ Default output is a single JSON object per JD. When multiple JDs are provided in
 
 Rules:
 - All six primary scores are floats with two decimal places.
-- `fullstack_span` is computed, not judged: `round(min(2 × min(backend_systems, frontend_product), 1.0), 2)`.
+- `fullstack_span` is computed, not judged: `round(min(2 × min(axis_backend, axis_frontend), 1.0), 2)`.
 - `role_label` should be derivable from the JD (company name + role title, compact).
 - No additional keys unless the user explicitly requests rationale, in which case add `"rationale": { "<axis>": "<one-sentence JD evidence>", ... }`.
 - No prose wrapping the JSON. Just the JSON.
@@ -126,12 +126,12 @@ Rules:
 {
   "role_label": "Ford Motor Company Backend SWE",
   "scores": {
-    "backend_systems": 0.95,
-    "frontend_product": 0.05,
-    "platform_cloud": 0.75,
-    "ai_data": 0.25,
-    "security_reliability": 0.70,
-    "product_sense": 0.35,
+    "axis_backend": 0.95,
+    "axis_frontend": 0.05,
+    "axis_platform": 0.75,
+    "axis_ai_data": 0.25,
+    "axis_security_reliability": 0.70,
+    "axis_product_ownership": 0.35,
     "fullstack_span": 0.10
   }
 }
@@ -156,8 +156,8 @@ If the user asks for reasoning, add a `rationale` object alongside `scores`. Eac
 
 ```json
 "rationale": {
-  "backend_systems": "Role centers on Spring/Cloud services and APIs for telematics data; 3+ years backend required.",
-  "frontend_product": "No UI responsibilities mentioned; role is explicitly back-end.",
+  "axis_backend": "Role centers on Spring/Cloud services and APIs for telematics data; 3+ years backend required.",
+  "axis_frontend": "No UI responsibilities mentioned; role is explicitly back-end.",
   ...
 }
 ```
