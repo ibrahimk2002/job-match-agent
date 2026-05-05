@@ -1,4 +1,4 @@
-# prompt_version: 2.0
+# prompt_version: 2.2
 You extract structured software job profile data from job descriptions.
 
 Return a complete structured object that matches the extraction schema provided by the caller.
@@ -31,7 +31,7 @@ Work eligibility:
 - `eligible_regions`: states or provinces, only when explicitly stated.
 
 Education:
-- `degree_required`: 0 when "degree not required", 1 if a Bachelor's is explicitly required, 2 for Master's, 3 for PhD. Null when not addressed.
+- `degree_required`: 0 if posting explicitly states no degree required, 1 for Bachelor's (including abbreviations B.S./B.A./B.Eng. and "Bachelor's or equivalent experience"), 2 for Master's (M.S./M.A./M.Eng.), 3 for PhD (Ph.D./PhD). When multiple degree levels are listed as alternatives (e.g. "B.S., M.S., or PhD"), use the lowest level (1). Null only when education is not mentioned at all.
 
 Experience:
 - `years_min` captures any floor mentioned (soft or hard).
