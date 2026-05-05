@@ -133,6 +133,7 @@ class JobProfile(BaseModel):
     explicit_constraints: list[str]
     extraction_confidence: float
     evidence_snippets: list[EvidenceSnippet]
+    axes: Axes
     profile_meta: ProfileMeta
 
 
@@ -174,3 +175,4 @@ class ExtractionResult(BaseModel):
     explicit_constraints: list[str]
     extraction_confidence: float
     evidence_snippets: list[EvidenceSnippet]
+    axes: Axes
