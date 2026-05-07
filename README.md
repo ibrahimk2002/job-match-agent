@@ -29,13 +29,13 @@
 
 ## 📸 Product Preview
 
-> Desktop screenshots coming soon.
+> UI Mocks and Product Demo
 
 <table>
   <tr>
-    <td align="center"><strong>Onboarding</strong><br /><sub>Resume upload + preferences</sub><br /><br /><img src="./docs/screenshots/desktop-onboarding.png" alt="Onboarding screenshot" width="100%" /></td>
-    <td align="center"><strong>Match Results</strong><br /><sub>Ranked jobs + explanations</sub><br /><br /><img src="./docs/screenshots/desktop-results.png" alt="Results screenshot" width="100%" /></td>
-    <td align="center"><strong>Job Detail</strong><br /><sub>Axis breakdown + shortlist</sub><br /><br /><img src="./docs/screenshots/desktop-detail.png" alt="Job detail screenshot" width="100%" /></td>
+    <td align="center"><strong>Onboarding</strong><br /><sub>Resume upload + preferences</sub><br /><br /><img src="./public/Upload.png" alt="Onboarding screenshot" width="100%" /></td>
+    <td align="center"><strong>Match Results</strong><br /><sub>Ranked jobs + explanations</sub><br /><br /><img src="./public/Matches.png" alt="Results screenshot" width="100%" /></td>
+    <td align="center"><strong>Skill Analysis</strong><br /><sub>Axis breakdown + skill gaps</sub><br /><br /><img src="./public/Skills Analysis.png" alt="Skill Analysis screenshot" width="100%" /></td>
   </tr>
 </table>
 
