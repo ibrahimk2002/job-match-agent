@@ -1,45 +1,14 @@
-# prompt_version: 2.2
-You extract structured software job profile data from job descriptions.
+---
+name: jd-competency-scorer
+description: Score software engineering job descriptions on a fixed set of competency axes to produce a weighted skill distribution profile of the ideal candidate. Use this skill whenever a user pastes a job description, job posting, or role spec and asks to profile it, rank the skills it emphasizes, compare it against other roles, produce a competency vector, assess candidate fit, or weight required skills — even if they don't use the word "score." Also trigger for requests like "what kind of engineer does this role want," "break down this JD by skill area," or when multiple JDs are provided for comparison.
+---
 
-Return a complete structured object that matches the extraction schema provided by the caller.
+> **⚠ Sync note:** This document is the source of truth for axis names,
+> definitions, scoring philosophy, and calibration. Its body is embedded
+> verbatim into `src/prompts/extraction.txt`. **When you edit this file,
+> update `extraction.txt` and bump its `# prompt_version:` line.**
 
-Rules:
-- Use only evidence from the provided job text.
-- Do not invent company details, requirements, compensation, location, or technologies.
-- If a nullable field is unknown, return null.
-- If a list field has no strong evidence, return an empty list.
-- Use enum values exactly as defined in the schema.
-- Use "unknown" enum values only when the signal is genuinely ambiguous.
-- `must_have_requirements` should include explicit requirements; uncertain requirements go to `preferred_requirements`.
-- `evidence_snippets` should contain short verbatim quotes supporting key inferences.
-- `extraction_confidence` must be a float in [0.0, 1.0].
-
-Quality bar:
-- Keep `summary` concise and factual.
-- Classify skills into the correct category buckets.
-- Ensure consistency between `seniority`, `responsibilities`, and `experience_requirements`.
-
-Salary and compensation:
-- Extract `salary_min`/`salary_max` only from explicit numeric figures. Do not estimate.
-- `salary_currency`: derive from context ($ -> USD, C$ -> CAD, GBP, etc.) or null.
-- `salary_period`: choose from "annual", "hourly", "monthly", "project". Default to "annual" for salaried roles when the period is implicit. Null only if truly ambiguous.
-
-Work eligibility:
-- `work_auth_required`: true only when the posting uses language like "must be authorized", "legally permitted to work". Null if not stated.
-- `sponsorship_available`: false when posting says "no sponsorship", "cannot sponsor". True when sponsorship is explicitly offered. Null when not mentioned.
-- `eligible_countries`: ISO alpha-2 codes only. Populate only when the posting explicitly restricts geography.
-- `eligible_regions`: states or provinces, only when explicitly stated.
-
-Education:
-- `degree_required`: 0 if posting explicitly states no degree required, 1 for Bachelor's (including abbreviations B.S./B.A./B.Eng. and "Bachelor's or equivalent experience"), 2 for Master's (M.S./M.A./M.Eng.), 3 for PhD (Ph.D./PhD). When multiple degree levels are listed as alternatives (e.g. "B.S., M.S., or PhD"), use the lowest level (1). Null only when education is not mentioned at all.
-
-Experience:
-- `years_min` captures any floor mentioned (soft or hard).
-- `years_min_hard`: use only when posting uses mandatory language ("must have X years", "X years required").
-
-================================================================================
-## Axis scoring rubric
-================================================================================
+# JD Competency Scorer
 
 ## What this skill does
 
@@ -197,36 +166,3 @@ If the user asks for reasoning, add a `rationale` object alongside `scores`. Eac
   ...
 }
 ```
-
-Note: emit only the 6 primary axes (axis_backend, axis_frontend, axis_platform, axis_ai_data, axis_security_reliability, axis_product_ownership). axis_fullstack_span is computed downstream -- do NOT emit it.
-
-================================================================================
-## Few-shot anchor
-================================================================================
-
-## 2. Ford Motor Company — Software Engineer (Telematics Backend)
-
-**Scores:** backend 0.95 / frontend 0.05 / platform_cloud 0.75 / ai_data 0.25 / security_reliability 0.70 / product_sense 0.35 / fullstack_span 0.10
-
-**Center of gravity:** Backend-only Spring/Cloud services powering APIs that execute commands on vehicles.
-
-**Reasoning:**
-- `backend_systems = 0.95`: "Back-end software engineering team"; Java/Spring Boot/Kotlin/Node; APIs, microservices, pub/sub. Pure specialist backend.
-- `frontend_product = 0.05`: No UI work at all; the role's entire purpose is services behind web/mobile/API clients. Token score just for existing in the same team as clients.
-- `platform_cloud = 0.75`: GCP experience required, AWS/Azure nice-to-have; serverless, caching, queuing all called out. Real cloud emphasis but as a consumer, not platform builder.
-- `ai_data = 0.25`: Telematics data processing/storage is genuine data work but routine CRUD-style; no ML/AI content. Slightly above floor.
-- `security_reliability = 0.70`: "Secure set of APIs," incident/problem/change management, RCA, TDD, CI/CD all explicit. Strong operational rigor in a vehicle-safety context.
-- `product_sense = 0.35`: Works with PMs and stakeholders, participates in requirements and user stories, but role framing is solidly execution/delivery rather than shaping product direction.
-- `fullstack_span = 0.10`: `2 × min(0.95, 0.05) = 0.10`. Fully specialized backend; correctly penalized.
-
-Expected axes block for the Ford anchor:
-{
-  "axes": {
-    "axis_backend": 0.95,
-    "axis_frontend": 0.05,
-    "axis_platform": 0.75,
-    "axis_ai_data": 0.25,
-    "axis_security_reliability": 0.70,
-    "axis_product_ownership": 0.35
-  }
-}
