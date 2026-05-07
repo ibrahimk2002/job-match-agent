@@ -22,7 +22,7 @@
   <a href="#-features">✨ Features</a> •
   <a href="#-how-it-works">🧠 How It Works</a> •
   <a href="#-scoring-model">📊 Scoring</a> •
-  <a href="https://github.com/YOUR_USERNAME/YOUR_REPO">🚀 Project</a>
+  <a href="https://github.com/users/ibrahimk2002/projects/1/views/1">🚀 Project</a>
 </p>
 
 ---
