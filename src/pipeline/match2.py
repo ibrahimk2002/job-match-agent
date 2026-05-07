@@ -1,8 +1,8 @@
 import json
 import os
-from integrations import call_llm
+from integrations.openai_client import call_llm
 from db import get_jobs_for_stage2, save_stage2_result
-from utils import log_info
+from utils.utils import log_info
 
 def run_stage2_matching(profile):
     jobs = get_jobs_for_stage2()

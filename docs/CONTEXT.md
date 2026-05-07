@@ -63,8 +63,8 @@ This is an AI-powered job matching system that connects candidate profiles (from
 ### What exists now:
 
 **Database (SQLite)**:
-- `job_content` table: raw description text, title, link, id, salary
-- `job_profiles` table: job_profile (extracted job columns) 
+- `jobs` table: posting metadata (title, company, location, url, posted_date, source_file)
+- `job_content` table: raw description text, `profile_json` (extracted JobProfile), extraction status, promotion columns (role_family, seniority, work_mode, extraction_confidence)
 - `match_results` table: stage1 and stage2 scores for each job
 - `user_actions` table: user application tracking (unused)
 

@@ -95,8 +95,3 @@ CREATE INDEX IF NOT EXISTS idx_job_postings_content_hash ON job_postings(content
 CREATE INDEX IF NOT EXISTS idx_job_profiles_lookup ON job_profiles(job_posting_id, is_active);
 CREATE INDEX IF NOT EXISTS idx_job_profiles_filters ON job_profiles(role_family, seniority, work_mode, employment_type);
 CREATE UNIQUE INDEX IF NOT EXISTS ux_job_profiles_active ON job_profiles(job_posting_id) WHERE is_active = 1;
-
-CREATE TABLE IF NOT EXISTS schema_migrations (
-    filename   TEXT PRIMARY KEY,
-    applied_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
-);

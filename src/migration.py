@@ -1,4 +1,7 @@
-from db import init_db
+try:
+    from .db import init_db
+except ImportError:
+    from db import init_db
 
 
 def main() -> None:

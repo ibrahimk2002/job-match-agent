@@ -1,8 +1,8 @@
 import os
 import dotenv
-dotenv.load_dotenv()
+dotenv.load_dotenv()  # Load environment variables from .env file
 from openai import OpenAI
-from utils import config
+from utils.config import config
 import json
 
 import sys
@@ -13,16 +13,6 @@ if _PROJECT_ROOT not in sys.path:
 
 from config.job_profile import JobProfile
 from config.job_profile import ExtractionResult
-
-
-class MalformedOutputError(RuntimeError):
-    """Raised when the LLM's response cannot be parsed into ExtractionResult.
-
-    Distinguishes 'the model returned bad output' from 'the API call failed'
-    so the extraction loop can apply the right error label.
-    """
-    pass
-
 
 def get_openai_client() -> OpenAI:
     return OpenAI(api_key=config.OPENAI_API_KEY)
@@ -41,51 +31,25 @@ def call_llm(prompt: str):
         raise RuntimeError(f"OpenAI call failed: {e}") from e
 
 
-def extract_job_profile(
-    system_prompt: str,
-    job_text: str,
-    *,
-    model: str,
-    prompt_cache_key: str,
-):
+def extract_job_profile(system_prompt: str, job_text: str, model: str = "gpt-4.1-nano") -> ExtractionResult:
     """
-    Extract structured job data via OpenAI Responses Structured Outputs.
-
-    Returns a tuple of (parsed: ExtractionResult, usage: ResponseUsage). The usage
-    object is required by the caller to track cached_tokens / input_tokens for
-    observability — this is how we verify the >=30% cache target from issue #13.
-
-    Uses an explicit input array (role: "system" + role: "user") so the system
-    prompt is part of the cacheable prefix. `prompt_cache_key` ensures consistent
-    cache routing across calls within a run.
-
-    Errors:
-    - Network / rate-limit / 5xx: propagate the SDK exception unchanged.
-    - LLM returned no parseable structured output: raise MalformedOutputError.
+    Extract structured job data using Responses Structured Outputs.
+    Returns a validated ExtractionResult object.
     """
     client = get_openai_client()
-    response = client.responses.parse(
-        model=model,
-        input=[
-            {
-                "role": "system",
-                "content": [{"type": "input_text", "text": system_prompt}],
-            },
-            {
-                "role": "user",
-                "content": [
-                    {
-                        "type": "input_text",
-                        "text": f"<job_description>\n{job_text}\n</job_description>",
-                    }
-                ],
-            },
-        ],
-        text_format=ExtractionResult,
-        prompt_cache_key=prompt_cache_key,
-    )
+    try:
+        response = client.responses.parse(
+            model=model,
+            input=[
+                {"role": "system", "content": system_prompt},
+                {"role": "user", "content": job_text},
+            ],
+            text_format=ExtractionResult,
+        )
+    except Exception as e:
+        raise RuntimeError(f"Structured extraction request failed: {e}") from e
 
     parsed = getattr(response, "output_parsed", None)
     if parsed is None:
-        raise MalformedOutputError("Model returned no parsed structured output")
-    return parsed, response.usage
+        raise RuntimeError("Model returned no parsed structured output")
+    return parsed

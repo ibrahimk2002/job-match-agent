@@ -6,7 +6,10 @@ import sqlite3
 from datetime import datetime, timezone
 from typing import Any
 
-from profile_columns import build_profile_columns
+try:
+    from .profile_columns import build_profile_columns
+except ImportError:
+    from profile_columns import build_profile_columns
 
 _PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 _LOG_PATH = os.path.join(_PROJECT_ROOT, "logs", "job_matcher.log")
@@ -34,6 +37,7 @@ JOB_PROFILE_COLUMNS = [
     "profile_json",
     "normalized_title",
     "role_family",
+    "role_subtype",
     "seniority",
     "employment_type",
     "work_mode",
@@ -52,9 +56,8 @@ JOB_PROFILE_COLUMNS = [
     "axis_frontend",
     "axis_platform",
     "axis_ai_data",
-    "axis_security_reliability",
-    "axis_product_ownership",
-    "axis_fullstack_span",
+    "axis_ownership",
+    "axis_collaboration",
     "eligible_countries_json",
     "eligible_regions_json",
 ]
@@ -78,27 +81,9 @@ def init_db() -> None:
 
 
 def apply_schema_migrations(conn: sqlite3.Connection) -> None:
-    conn.executescript(
-        """
-        CREATE TABLE IF NOT EXISTS schema_migrations (
-            filename   TEXT PRIMARY KEY,
-            applied_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
-        );
-        """
-    )
-    applied = {
-        row[0]
-        for row in conn.execute("SELECT filename FROM schema_migrations").fetchall()
-    }
     for path in sorted(_migration_paths()):
-        filename = os.path.basename(path)
-        if filename in applied:
-            continue
         with open(path, "r", encoding="utf-8") as handle:
             conn.executescript(handle.read())
-        conn.execute(
-            "INSERT INTO schema_migrations (filename) VALUES (?)", (filename,)
-        )
     conn.commit()
 
 

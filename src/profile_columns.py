@@ -1,10 +1,21 @@
 import json
+import re
 from typing import Any
 
 
-def fullstack_span(axis_backend: float, axis_frontend: float) -> float:
-    """Derived axis from AXIS_MEASURE_SKILL.md: 2 * min(backend, frontend), clamped."""
-    return round(min(2 * min(axis_backend, axis_frontend), 1.0), 2)
+def default_axes_for_role_family(role_family: str | None) -> dict[str, float]:
+    presets = {
+        "backend": {"backend": 1.0, "frontend": 0.1, "platform": 0.45, "ai_data": 0.1, "ownership": 0.35, "collaboration": 0.35},
+        "frontend": {"backend": 0.1, "frontend": 1.0, "platform": 0.1, "ai_data": 0.05, "ownership": 0.3, "collaboration": 0.5},
+        "full_stack": {"backend": 0.75, "frontend": 0.75, "platform": 0.2, "ai_data": 0.1, "ownership": 0.45, "collaboration": 0.45},
+        "data": {"backend": 0.25, "frontend": 0.0, "platform": 0.35, "ai_data": 1.0, "ownership": 0.35, "collaboration": 0.3},
+        "ml": {"backend": 0.25, "frontend": 0.0, "platform": 0.3, "ai_data": 1.0, "ownership": 0.4, "collaboration": 0.3},
+        "devops": {"backend": 0.35, "frontend": 0.0, "platform": 1.0, "ai_data": 0.05, "ownership": 0.45, "collaboration": 0.35},
+        "qa": {"backend": 0.2, "frontend": 0.2, "platform": 0.2, "ai_data": 0.0, "ownership": 0.3, "collaboration": 0.75},
+        "mobile": {"backend": 0.2, "frontend": 0.65, "platform": 0.1, "ai_data": 0.05, "ownership": 0.35, "collaboration": 0.4},
+        "unknown": {"backend": 0.0, "frontend": 0.0, "platform": 0.0, "ai_data": 0.0, "ownership": 0.25, "collaboration": 0.25},
+    }
+    return presets.get(role_family or "unknown", presets["unknown"])
 
 
 def infer_salary_tier(seniority: str | None) -> int | None:
@@ -19,10 +30,26 @@ def infer_salary_tier(seniority: str | None) -> int | None:
     return None
 
 
-def _bool_to_sqlite(value: bool | None) -> int | None:
-    if value is None:
+def bool_from_requirement_list(requirements: list[Any] | None) -> int | None:
+    if requirements is None:
         return None
-    return 1 if value else 0
+    return 1 if len(requirements) > 0 else 0
+
+
+def infer_work_auth_flags(explicit_constraints: list[Any] | None) -> tuple[int | None, int | None]:
+    if not explicit_constraints:
+        return None, None
+
+    joined = " ".join(str(item).lower() for item in explicit_constraints)
+    sponsorship_available = None
+    work_auth_required = None
+
+    if "sponsorship" in joined:
+        sponsorship_available = 0 if re.search(r"no\s+sponsorship|without\s+sponsorship|unable\s+to\s+sponsor", joined) else 1
+    if re.search(r"authorized to work|work authorization|required to work|eligible to work", joined):
+        work_auth_required = 1
+
+    return work_auth_required, sponsorship_available
 
 
 def build_profile_columns(
@@ -34,24 +61,21 @@ def build_profile_columns(
 ) -> dict[str, Any]:
     profile_meta = profile_payload.get("profile_meta") or {}
     experience = profile_payload.get("experience_requirements") or {}
+    explicit_constraints = profile_payload.get("explicit_constraints") or []
+    education_requirements = profile_payload.get("education_requirements") or []
 
     role_family = profile_payload.get("role_family") or "unknown"
     seniority = profile_payload.get("seniority") or "unknown"
     employment_type = profile_payload.get("employment_type") or "unknown"
     work_mode = profile_payload.get("work_mode") or "unknown"
 
-    axes = profile_payload["axes"]  # required field on JobProfile; KeyError = contract violation
-
-    salary = profile_payload.get("salary") or {}
-    work_eligibility = profile_payload.get("work_eligibility") or {}
-
-    eligible_countries = work_eligibility.get("eligible_countries")
-    eligible_regions = work_eligibility.get("eligible_regions")
+    axes = default_axes_for_role_family(role_family)
+    work_auth_required, sponsorship_available = infer_work_auth_flags(explicit_constraints)
 
     return {
         "job_posting_id": job_posting_id,
         "content_hash": content_hash,
-        "schema_version": profile_meta.get("schema_version") or "2.0",
+        "schema_version": profile_meta.get("schema_version") or "1.0",
         "prompt_version": profile_meta.get("prompt_version") or "unknown",
         "model_version": profile_meta.get("model") or "unknown",
         "extracted_at": extracted_at or profile_meta.get("generated_at"),
@@ -59,27 +83,27 @@ def build_profile_columns(
         "profile_json": json.dumps(profile_payload, sort_keys=True),
         "normalized_title": profile_payload.get("normalized_title") or "",
         "role_family": role_family,
+        "role_subtype": profile_payload.get("role_subtype"),
         "seniority": seniority,
         "employment_type": employment_type,
         "work_mode": work_mode,
         "location_scope": profile_payload.get("location_scope"),
-        "work_auth_required": _bool_to_sqlite(work_eligibility.get("work_auth_required")),
-        "sponsorship_available": _bool_to_sqlite(work_eligibility.get("sponsorship_available")),
-        "degree_required": profile_payload.get("degree_required"),
+        "work_auth_required": work_auth_required,
+        "sponsorship_available": sponsorship_available,
+        "degree_required": bool_from_requirement_list(education_requirements),
         "years_min_soft": experience.get("years_min"),
-        "years_min_hard": experience.get("years_min_hard"),
-        "salary_min": salary.get("salary_min"),
-        "salary_max": salary.get("salary_max"),
-        "salary_currency": salary.get("salary_currency"),
-        "salary_period": salary.get("salary_period"),
+        "years_min_hard": None,
+        "salary_min": None,
+        "salary_max": None,
+        "salary_currency": None,
+        "salary_period": None,
         "salary_tier": infer_salary_tier(seniority),
-        "axis_backend": axes["axis_backend"],
-        "axis_frontend": axes["axis_frontend"],
-        "axis_platform": axes["axis_platform"],
-        "axis_ai_data": axes["axis_ai_data"],
-        "axis_security_reliability": axes["axis_security_reliability"],
-        "axis_product_ownership": axes["axis_product_ownership"],
-        "axis_fullstack_span": fullstack_span(axes["axis_backend"], axes["axis_frontend"]),
-        "eligible_countries_json": json.dumps(eligible_countries) if eligible_countries else None,
-        "eligible_regions_json": json.dumps(eligible_regions) if eligible_regions else None,
+        "axis_backend": axes["backend"],
+        "axis_frontend": axes["frontend"],
+        "axis_platform": axes["platform"],
+        "axis_ai_data": axes["ai_data"],
+        "axis_ownership": axes["ownership"],
+        "axis_collaboration": axes["collaboration"],
+        "eligible_countries_json": None,
+        "eligible_regions_json": None,
     }
