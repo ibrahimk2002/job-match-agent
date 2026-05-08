@@ -141,7 +141,7 @@ Quick reference (scores shown as rounded `ba / fe / pc / ai / sr / ps`; `fullsta
 | Illumio Cloud SWE | 0.92 | 0.02 | 0.95 | 0.40 | 0.90 | 0.30 | 0.04 |
 | OpenAI Full Stack | 0.78 | 0.78 | 0.65 | 0.45 | 0.70 | 0.80 | 1.00 |
 | Visa New Grad SWE | 0.55 | 0.45 | 0.55 | 0.70 | 0.80 | 0.50 | 0.90 |
-| Junior Python Backend (execution framing) | 0.40 | 0.05 | 0.20 | 0.15 | 0.30 | 0.25 | 0.08 |
+| Junior Python Backend (execution framing) | 0.40 | 0.05 | 0.20 | 0.15 | 0.30 | 0.25 | 0.10 |
 | Senior Python Backend (architect framing) | 0.80 | 0.05 | 0.40 | 0.20 | 0.65 | 0.45 | 0.10 |
 
 (Note: `axis_product_ownership` values here are newly calibrated for this axis. Read the full anchor file before scoring anything ambiguous.)
@@ -264,6 +264,7 @@ Expected axes block for the Ford anchor:
 - `axis_backend = 0.40`: Python backend work is real and primary, but verb framing ("implement", "contribute", "fix") signals execution depth, not design ownership.
 - `axis_platform = 0.20`: Backend service deployment implies basic cloud use; no infra signals.
 - `axis_security_reliability = 0.30`: Unit tests and API correctness are explicit, but no on-call or security focus.
+- `axis_product_ownership = 0.25`: Execution-focused role; no design authority or cross-functional influence signals.
 
 ## 4. Senior Python Backend (architect framing)
 
