@@ -123,7 +123,7 @@ def extract_resume(pdf_path: str, email: str) -> None:
         log_info(f"resume: truncating {len(raw_text)} chars to {_MAX_INPUT_CHARS}")
     resume_text = raw_text[:_MAX_INPUT_CHARS]
 
-    content_hash = hashlib.sha256(raw_text.encode()).hexdigest()
+    content_hash = hashlib.sha256(resume_text.encode()).hexdigest()
     user_id = get_or_create_user(email)
 
     active = get_active_user_profile(user_id)
