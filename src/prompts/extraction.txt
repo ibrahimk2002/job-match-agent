@@ -1,4 +1,4 @@
-# prompt_version: 2.2
+# prompt_version: 2.3
 You extract structured software job profile data from job descriptions.
 
 Return a complete structured object that matches the extraction schema provided by the caller.
@@ -99,6 +99,27 @@ A JD that says "experience with cloud a plus" in a backend-heavy role should get
 4. **Preferred/nice-to-have qualifications** — weaker signal; contribute maybe half-weight.
 5. **Boilerplate company mission copy** — near zero. Cloudflare's "better Internet" mission doesn't mean every Cloudflare role scores high on `axis_security_reliability`.
 
+### Experience-depth signals (v2.3 addition)
+
+**Explicit experience requirement:** If the posting states required years for a domain (e.g., "5+ years of backend experience"), weight that axis upward to reflect expected depth, not just keyword emphasis. "3+ years required" is a depth signal; "experience with" is not.
+
+**Responsibility-framing signal:** The verb choice and scope in responsibilities reveal the seniority depth the role expects. Apply this as a modifier on top of topic signals:
+
+| Tier | Indicator verbs / patterns | Depth weight |
+|---|---|---|
+| Junior | build, implement, write, assist, contribute to, support | low (0.2–0.4) |
+| Mid | develop, maintain, improve, collaborate on design | moderate (0.4–0.6) |
+| Senior | design, architect, lead, own, drive, define standards, mentor, make technical decisions | high (0.6–0.85) |
+| Staff+ | set technical direction, define roadmap, influence org-wide strategy | very high (0.8–1.0) |
+
+**Same domain, different seniority — expected score difference:**
+
+Backend role, junior framing: "Implement and test backend API features using Python"
+→ axis_backend ≈ 0.35–0.50 (work is real but scope is execution, not design)
+
+Backend role, senior framing: "Architect and own the backend platform, establish coding standards, mentor 3–5 engineers"
+→ axis_backend ≈ 0.70–0.85 (design ownership + mentorship signals senior depth)
+
 ### Common scoring traps to avoid
 
 - **Company ≠ role.** A security company hiring a frontend engineer still has `axis_frontend` high and `axis_security_reliability` moderate (not maxed). A payments company hiring a generalist doesn't auto-score high on `axis_security_reliability`.
@@ -120,6 +141,8 @@ Quick reference (scores shown as rounded `ba / fe / pc / ai / sr / ps`; `fullsta
 | Illumio Cloud SWE | 0.92 | 0.02 | 0.95 | 0.40 | 0.90 | 0.30 | 0.04 |
 | OpenAI Full Stack | 0.78 | 0.78 | 0.65 | 0.45 | 0.70 | 0.80 | 1.00 |
 | Visa New Grad SWE | 0.55 | 0.45 | 0.55 | 0.70 | 0.80 | 0.50 | 0.90 |
+| Junior Python Backend (execution framing) | 0.40 | 0.05 | 0.20 | 0.15 | 0.30 | 0.25 | 0.08 |
+| Senior Python Backend (architect framing) | 0.80 | 0.05 | 0.40 | 0.20 | 0.65 | 0.45 | 0.10 |
 
 (Note: `axis_product_ownership` values here are newly calibrated for this axis. Read the full anchor file before scoring anything ambiguous.)
 
@@ -230,3 +253,26 @@ Expected axes block for the Ford anchor:
     "axis_product_ownership": 0.35
   }
 }
+
+## 3. Junior Python Backend (execution framing)
+
+**JD excerpt:** "Implement and test RESTful API endpoints in Python. Contribute to backend services. Fix bugs and write unit tests. 0–2 years experience."
+
+**Scores:** backend 0.40 / frontend 0.05 / platform 0.20 / ai_data 0.15 / security_reliability 0.30 / product_ownership 0.25
+
+**Rationale:**
+- `axis_backend = 0.40`: Python backend work is real and primary, but verb framing ("implement", "contribute", "fix") signals execution depth, not design ownership.
+- `axis_platform = 0.20`: Backend service deployment implies basic cloud use; no infra signals.
+- `axis_security_reliability = 0.30`: Unit tests and API correctness are explicit, but no on-call or security focus.
+
+## 4. Senior Python Backend (architect framing)
+
+**JD excerpt:** "Architect and own our backend platform serving 50M requests/day. Define coding standards and system design patterns. Lead technical design reviews. Mentor 3–5 engineers. 7+ years of backend experience required."
+
+**Scores:** backend 0.80 / frontend 0.05 / platform 0.40 / ai_data 0.20 / security_reliability 0.65 / product_ownership 0.45
+
+**Rationale:**
+- `axis_backend = 0.80`: "Architect and own" + explicit 7+ years requirement + system design ownership. Same technology domain as the junior role, but scored 0.40 higher due to depth signals.
+- `axis_platform = 0.40`: "50M requests/day" implies significant cloud/infra involvement even without explicit Kubernetes mention.
+- `axis_security_reliability = 0.65`: Scale + design ownership + "define standards" implies strong reliability posture.
+- `axis_product_ownership = 0.45`: Technical leadership that shapes what gets built, not just how.
