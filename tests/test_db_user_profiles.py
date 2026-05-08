@@ -19,7 +19,7 @@ def test_user_profiles_table_exists(temp_db):
     cols = _column_names(temp_db, "user_profiles")
     expected = [
         "id", "user_id", "content_hash", "schema_version", "prompt_version",
-        "model_version", "is_active", "invalidated_reason", "profile_json",
+        "model_version", "is_active", "invalidated_at", "invalidated_reason", "profile_json",
         "full_name", "total_years_experience", "current_level", "primary_role_family",
         "axis_backend", "axis_frontend", "axis_platform", "axis_ai_data",
         "axis_security_reliability", "axis_product_ownership", "axis_fullstack_span",

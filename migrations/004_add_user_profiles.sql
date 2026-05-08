@@ -12,6 +12,7 @@ CREATE TABLE IF NOT EXISTS user_profiles (
     prompt_version            TEXT NOT NULL,
     model_version             TEXT NOT NULL,
     is_active                 INTEGER NOT NULL DEFAULT 1,
+    invalidated_at            DATETIME,
     invalidated_reason        TEXT,
     profile_json              TEXT NOT NULL,
 
@@ -55,5 +56,5 @@ CREATE TABLE IF NOT EXISTS user_profiles (
     created_at                TEXT DEFAULT (datetime('now'))
 );
 
-CREATE UNIQUE INDEX IF NOT EXISTS uq_user_profiles_active
+CREATE UNIQUE INDEX IF NOT EXISTS ux_user_profiles_active
     ON user_profiles(user_id) WHERE is_active = 1;
