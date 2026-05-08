@@ -1,11 +1,11 @@
 def test_user_profile_models_are_importable():
     from config.user_profile import (
-        ResumeAxes, ResumeSkills, WorkExperience, ResumeEducation,
+        ResumeSkills, WorkExperience, ResumeEducation,
         CareerPreferences, ResumeWorkAuth, ResumeExtractionResult, UserProfile,
     )
-    from config.job_profile import ProfileMeta
+    from config.job_profile import Axes, EvidenceSnippet, ProfileMeta
 
-    axes = ResumeAxes(
+    axes = Axes(
         axis_backend=0.7, axis_frontend=0.1, axis_platform=0.3,
         axis_ai_data=0.2, axis_security_reliability=0.3, axis_product_ownership=0.2,
     )
@@ -45,7 +45,7 @@ def test_user_profile_models_are_importable():
         ),
         work_auth=ResumeWorkAuth(canada=True, us=False, sponsorship_needed=None),
         extraction_confidence=0.85,
-        evidence_snippets=[{"field": "primary_role_family", "quote": "built REST APIs"}],
+        evidence_snippets=[EvidenceSnippet(field="primary_role_family", quote="built REST APIs")],
     )
     assert profile.full_name == "Jane Doe"
     assert profile.meta.schema_version == "1.0"

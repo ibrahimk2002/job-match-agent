@@ -1,15 +1,6 @@
 from pydantic import BaseModel
 
-from config.job_profile import ProfileMeta  # reused unchanged
-
-
-class ResumeAxes(BaseModel):
-    axis_backend: float
-    axis_frontend: float
-    axis_platform: float
-    axis_ai_data: float
-    axis_security_reliability: float
-    axis_product_ownership: float
+from config.job_profile import Axes, EvidenceSnippet, ProfileMeta  # reused unchanged
 
 
 class ResumeSkills(BaseModel):
@@ -58,14 +49,14 @@ class ResumeExtractionResult(BaseModel):
     total_years_experience: float
     current_level: str              # "student"|"junior"|"mid"|"senior"|"staff"|"principal"
     primary_role_family: str        # "backend"|"frontend"|"fullstack"|"platform"|"ai_ml"|"security"|"product"
-    axes: ResumeAxes
+    axes: Axes
     skills: ResumeSkills
     work_experience: list[WorkExperience]
     education: ResumeEducation
     preferences: CareerPreferences
     work_auth: ResumeWorkAuth
     extraction_confidence: float
-    evidence_snippets: list[dict]
+    evidence_snippets: list[EvidenceSnippet]
 
 
 class UserProfile(BaseModel):
@@ -74,11 +65,11 @@ class UserProfile(BaseModel):
     total_years_experience: float
     current_level: str
     primary_role_family: str
-    axes: ResumeAxes
+    axes: Axes
     skills: ResumeSkills
     work_experience: list[WorkExperience]
     education: ResumeEducation
     preferences: CareerPreferences
     work_auth: ResumeWorkAuth
     extraction_confidence: float
-    evidence_snippets: list[dict]
+    evidence_snippets: list[EvidenceSnippet]
