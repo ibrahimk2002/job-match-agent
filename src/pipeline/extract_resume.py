@@ -17,6 +17,7 @@ from config.user_profile import UserProfile
 from db import get_or_create_user, get_active_user_profile, save_resume_extraction
 from integrations import extract_resume_profile, MalformedOutputError
 from user_profile_columns import build_profile_columns
+from utils import log_info
 
 
 SCHEMA_VERSION = "1.0"
@@ -70,34 +71,13 @@ def _log_usage(user_id: int, usage) -> None:
     details = getattr(usage, "input_tokens_details", None)
     cached = getattr(details, "cached_tokens", 0) if details is not None else 0
     pct = 100.0 * cached / input_tokens if input_tokens > 0 else 0.0
-    import logging
-    logging.info(
-        "resume: user_id=%s model=%s input=%s cached=%s (%.1f%%)",
-        user_id, DEFAULT_MODEL, input_tokens, cached, pct,
+    log_info(
+        f"resume: user_id={user_id} model={DEFAULT_MODEL} "
+        f"input={input_tokens} cached={cached} ({pct:.1f}%)"
     )
 
 
-def extract_resume(pdf_path: str, email: str) -> None:
-    raw_text = _extract_pdf_text(pdf_path)
-    if not raw_text.strip():
-        print("Warning: no extractable text — scanned or image-only PDF")
-        sys.exit(2)
-
-    if len(raw_text) > _MAX_INPUT_CHARS:
-        import logging
-        logging.info("resume: truncating %s chars to %s", len(raw_text), _MAX_INPUT_CHARS)
-    resume_text = raw_text[:_MAX_INPUT_CHARS]
-
-    content_hash = hashlib.sha256(raw_text.encode()).hexdigest()
-    user_id = get_or_create_user(email)
-
-    active = get_active_user_profile(user_id)
-    if active and _is_current(active, content_hash):
-        import logging
-        logging.info("resume: user_id=%s already up to date, skipping", user_id)
-        print("Profile is already up to date.")
-        return
-
+def _run_extraction_and_save(user_id: int, resume_text: str, content_hash: str) -> UserProfile:
     extraction_result = None
     usage = None
     last_err: Exception | None = None
@@ -109,13 +89,11 @@ def extract_resume(pdf_path: str, email: str) -> None:
         except (MalformedOutputError, ValidationError) as e:
             last_err = e
             last_kind = "malformed_output"
-            import logging
-            logging.info("resume: attempt %s (%s): %s", attempt, last_kind, e)
+            log_info(f"resume: attempt {attempt} ({last_kind}): {e}")
         except Exception as e:
             last_err = e
             last_kind = "api_error"
-            import logging
-            logging.info("resume: attempt %s (%s): %s", attempt, last_kind, e)
+            log_info(f"resume: attempt {attempt} ({last_kind}): {e}")
 
     if extraction_result is None:
         raise RuntimeError(f"Resume extraction failed: {last_kind}: {last_err}")
@@ -133,6 +111,28 @@ def extract_resume(pdf_path: str, email: str) -> None:
     columns = build_profile_columns(profile)
     save_resume_extraction(user_id, profile, columns, content_hash=content_hash)
     _log_usage(user_id, usage)
+    return profile
+
+
+def extract_resume(pdf_path: str, email: str) -> None:
+    raw_text = _extract_pdf_text(pdf_path)
+    if not raw_text.strip():
+        raise ValueError("no extractable text — scanned or image-only PDF")
+
+    if len(raw_text) > _MAX_INPUT_CHARS:
+        log_info(f"resume: truncating {len(raw_text)} chars to {_MAX_INPUT_CHARS}")
+    resume_text = raw_text[:_MAX_INPUT_CHARS]
+
+    content_hash = hashlib.sha256(raw_text.encode()).hexdigest()
+    user_id = get_or_create_user(email)
+
+    active = get_active_user_profile(user_id)
+    if active and _is_current(active, content_hash):
+        log_info(f"resume: user_id={user_id} already up to date, skipping")
+        print("Profile is already up to date.")
+        return
+
+    profile = _run_extraction_and_save(user_id, resume_text, content_hash)
 
     if profile.extraction_confidence < 0.5:
         print(f"Warning: low extraction confidence ({profile.extraction_confidence:.2f}) — review profile")
