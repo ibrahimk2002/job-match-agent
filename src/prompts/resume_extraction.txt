@@ -1,4 +1,4 @@
-# prompt_version: 1.0
+# prompt_version: 2.0
 You extract structured candidate profile data from software engineering resumes.
 
 Return a complete ResumeExtractionResult object matching the schema provided by the caller.
@@ -45,6 +45,8 @@ Work authorization:
 - `canada` and `us` are booleans indicating legal authorization to work (true = authorized).
 - `sponsorship_needed`: true if they require sponsorship, false if they explicitly state they don't, null if unstated.
 
+Degree Level:
+- 0 if explicitly states no degree, 1 for Bachelor's (including abbreviations B.S./B.A./B.Eng. and "Bachelor's"), 2 for Master's (M.S./M.A./M.Eng.), 3 for PhD (Ph.D./PhD). When multiple degree levels are listed (e.g. "B.S., M.S. PhD"), use the highest level (3). Null only when education is not mentioned at all.
 ================================================================================
 ## Axis scoring rubric
 ================================================================================

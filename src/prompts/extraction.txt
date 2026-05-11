@@ -1,4 +1,4 @@
-# prompt_version: 2.3
+# prompt_version: 2.4
 You extract structured software job profile data from job descriptions.
 
 Return a complete structured object that matches the extraction schema provided by the caller.
@@ -99,26 +99,32 @@ A JD that says "experience with cloud a plus" in a backend-heavy role should get
 4. **Preferred/nice-to-have qualifications** — weaker signal; contribute maybe half-weight.
 5. **Boilerplate company mission copy** — near zero. Cloudflare's "better Internet" mission doesn't mean every Cloudflare role scores high on `axis_security_reliability`.
 
-### Experience-depth signals (v2.3 addition)
+### Depth × centrality scoring (v2.4)
 
-**Explicit experience requirement:** If the posting states required years for a domain (e.g., "5+ years of backend experience"), weight that axis upward to reflect expected depth, not just keyword emphasis. "3+ years required" is a depth signal; "experience with" is not.
+Axis scores encode **both topic centrality and required depth** in a single value. Use the table below as the primary guide. Locate the depth tier for a given axis, then position within the range based on how central that axis is to the role.
 
-**Responsibility-framing signal:** The verb choice and scope in responsibilities reveal the seniority depth the role expects. Apply this as a modifier on top of topic signals:
+| Required depth | Explicit YOE signal | Verb-framing proxy | Primary domain range | Secondary domain |
+|---|---|---|---|---|
+| Junior | 0–2 years | implement, contribute, assist, support | 0.30 – 0.50 | ~0.5× of primary |
+| Mid | 3–5 years | develop, maintain, improve, collaborate on design | 0.50 – 0.70 | ~0.5× of primary |
+| Senior | 6–8 years | design, architect, lead, own, drive, mentor | 0.70 – 0.85 | ~0.5× of primary |
+| Staff/Expert | 8–11+ years | set technical direction, define roadmap, org-wide influence | 0.85 – 1.0 | ~0.5× of primary |
+| Peripheral | not owned, briefly mentioned | — | 0.02 – 0.25 | — |
 
-| Tier | Indicator verbs / patterns | Depth weight |
-|---|---|---|
-| Junior | build, implement, write, assist, contribute to, support | low (0.2–0.4) |
-| Mid | develop, maintain, improve, collaborate on design | moderate (0.4–0.6) |
-| Senior | design, architect, lead, own, drive, define standards, mentor, make technical decisions | high (0.6–0.85) |
-| Staff+ | set technical direction, define roadmap, influence org-wide strategy | very high (0.8–1.0) |
+**When no explicit YOE is stated:** use the verb-framing proxy column to determine depth tier.
 
-**Same domain, different seniority — expected score difference:**
+**When verb framing significantly exceeds the stated YOE floor** (e.g., a JD states "2+ years" but asks for architecture ownership and mentoring): use verb framing as the primary signal. Stated YOE minimums are floors, not ceilings.
 
-Backend role, junior framing: "Implement and test backend API features using Python"
-→ axis_backend ≈ 0.35–0.50 (work is real but scope is execution, not design)
+**Same domain, different depth — expected score range:**
 
-Backend role, senior framing: "Architect and own the backend platform, establish coding standards, mentor 3–5 engineers"
-→ axis_backend ≈ 0.70–0.85 (design ownership + mentorship signals senior depth)
+Backend role, junior depth (0–2 years / "implement and contribute"):
+→ axis_backend ≈ 0.30–0.50
+
+Backend role, senior depth (6–8 years / "architect and own, mentor engineers"):
+→ axis_backend ≈ 0.70–0.85
+
+Backend role, expert depth (8–11+ years / "set technical direction, org-wide"):
+→ axis_backend ≈ 0.85–1.0
 
 ### Common scoring traps to avoid
 
@@ -135,16 +141,19 @@ Quick reference (scores shown as rounded `ba / fe / pc / ai / sr / ps`; `fullsta
 
 | Anchor | ba | fe | pc | ai | sr | ps | span |
 |---|---|---|---|---|---|---|---|
-| Cloudflare Growth SWE | 0.60 | 0.90 | 0.65 | 0.30 | 0.75 | 0.90 | 1.00 |
-| Ford Telematics Backend | 0.95 | 0.05 | 0.75 | 0.25 | 0.70 | 0.35 | 0.10 |
-| Glean Backend SWE | 0.90 | 0.20 | 0.45 | 0.55 | 0.45 | 0.65 | 0.40 |
-| Illumio Cloud SWE | 0.92 | 0.02 | 0.95 | 0.40 | 0.90 | 0.30 | 0.04 |
-| OpenAI Full Stack | 0.78 | 0.78 | 0.65 | 0.45 | 0.70 | 0.80 | 1.00 |
-| Visa New Grad SWE | 0.55 | 0.45 | 0.55 | 0.70 | 0.80 | 0.50 | 0.90 |
+| Cloudflare Growth SWE | 0.60 | 0.85 | 0.60 | 0.25 | 0.68 | 0.88 | 1.00 |
+| Ford Telematics Backend | 0.65 | 0.05 | 0.48 | 0.18 | 0.58 | 0.30 | 0.10 |
+| Glean Backend SWE | 0.78 | 0.15 | 0.38 | 0.50 | 0.40 | 0.62 | 0.30 |
+| Illumio Cloud SWE | 0.82 | 0.02 | 0.90 | 0.38 | 0.88 | 0.28 | 0.04 |
+| OpenAI Full Stack | 0.75 | 0.75 | 0.58 | 0.40 | 0.65 | 0.78 | 1.00 |
+| Visa New Grad SWE | 0.32 | 0.30 | 0.22 | 0.45 | 0.42 | 0.22 | 0.60 |
+| Greenway Health Entry SWE | 0.35 | 0.20 | 0.08 | 0.05 | 0.18 | 0.18 | 0.40 |
+| First Street Fullstack | 0.55 | 0.70 | 0.42 | 0.25 | 0.35 | 0.65 | 1.00 |
+| Haystack SWE (sparse) | 0.38 | 0.08 | 0.15 | 0.10 | 0.45 | 0.10 | 0.16 |
 | Junior Python Backend (execution framing) | 0.40 | 0.05 | 0.20 | 0.15 | 0.30 | 0.25 | 0.10 |
 | Senior Python Backend (architect framing) | 0.80 | 0.05 | 0.40 | 0.20 | 0.65 | 0.45 | 0.10 |
 
-(Note: `axis_product_ownership` values here are newly calibrated for this axis. Read the full anchor file before scoring anything ambiguous.)
+(Read the full anchor file at `references/calibration_anchors.md` before scoring anything ambiguous.)
 
 ## Output format
 
@@ -229,28 +238,30 @@ Note: emit only the 6 primary axes (axis_backend, axis_frontend, axis_platform, 
 
 ## 2. Ford Motor Company — Software Engineer (Telematics Backend)
 
-**Scores:** backend 0.95 / frontend 0.05 / platform_cloud 0.75 / ai_data 0.25 / security_reliability 0.70 / product_sense 0.35 / fullstack_span 0.10
+**Scores:** backend 0.65 / frontend 0.05 / platform_cloud 0.48 / ai_data 0.18 / security_reliability 0.58 / product_ownership 0.30 / fullstack_span 0.10
 
-**Center of gravity:** Backend-only Spring/Cloud services powering APIs that execute commands on vehicles.
+**Depth signal:** Explicit "3+ years" backend (mid tier), "1+ year" cloud (junior tier).
+
+**Center of gravity:** Backend-only Spring/Cloud services powering APIs that execute commands on vehicles, at mid-level depth.
 
 **Reasoning:**
-- `backend_systems = 0.95`: "Back-end software engineering team"; Java/Spring Boot/Kotlin/Node; APIs, microservices, pub/sub. Pure specialist backend.
-- `frontend_product = 0.05`: No UI work at all; the role's entire purpose is services behind web/mobile/API clients. Token score just for existing in the same team as clients.
-- `platform_cloud = 0.75`: GCP experience required, AWS/Azure nice-to-have; serverless, caching, queuing all called out. Real cloud emphasis but as a consumer, not platform builder.
-- `ai_data = 0.25`: Telematics data processing/storage is genuine data work but routine CRUD-style; no ML/AI content. Slightly above floor.
-- `security_reliability = 0.70`: "Secure set of APIs," incident/problem/change management, RCA, TDD, CI/CD all explicit. Strong operational rigor in a vehicle-safety context.
-- `product_sense = 0.35`: Works with PMs and stakeholders, participates in requirements and user stories, but role framing is solidly execution/delivery rather than shaping product direction.
-- `fullstack_span = 0.10`: `2 × min(0.95, 0.05) = 0.10`. Fully specialized backend; correctly penalized.
+- `axis_backend = 0.65`: Pure backend topic (Java/Spring Boot/Kotlin/Node; APIs, microservices, pub/sub) + mid depth (3+ years). Topic centrality is maximum but depth is mid, not expert.
+- `axis_frontend = 0.05`: No UI work at all. Token floor score.
+- `axis_platform = 0.48`: GCP required, AWS/Azure nice-to-have; cloud is real but secondary. Junior depth (1+ year) caps the score below mid.
+- `axis_ai_data = 0.18`: Telematics CRUD; no ML/AI content. Peripheral.
+- `axis_security_reliability = 0.58`: "Secure set of APIs," RCA, TDD, CI/CD explicit; no on-call ownership. Mid-depth operational rigor.
+- `axis_product_ownership = 0.30`: Participates in requirements and user stories; execution/delivery framing.
+- `fullstack_span = 0.10`: `2 × min(0.65, 0.05) = 0.10`. Fully specialized backend.
 
 Expected axes block for the Ford anchor:
 {
   "axes": {
-    "axis_backend": 0.95,
+    "axis_backend": 0.65,
     "axis_frontend": 0.05,
-    "axis_platform": 0.75,
-    "axis_ai_data": 0.25,
-    "axis_security_reliability": 0.70,
-    "axis_product_ownership": 0.35
+    "axis_platform": 0.48,
+    "axis_ai_data": 0.18,
+    "axis_security_reliability": 0.58,
+    "axis_product_ownership": 0.30
   }
 }
 

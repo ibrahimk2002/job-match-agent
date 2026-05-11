@@ -53,16 +53,31 @@ Clamped to `[0.0, 1.0]`. A role that is 0.9 backend / 0.0 frontend has span 0.0 
 
 ## Scoring philosophy
 
-The scores measure **emphasis on this competency in the role as described**, not:
-- How hard the work is
-- The candidate's own skill level
-- Whether a keyword appears once
+The scores measure **expected competency depth from the ideal candidate** — combining two dimensions:
+1. **Topic centrality** — how central is this competency to the role (a backend role makes backend its primary axis)
+2. **Required depth** — at what experience level is it expected (0-2 yrs junior vs. 8-11+ yrs expert)
 
-A JD that says "experience with cloud a plus" in a backend-heavy role should get `axis_platform ≈ 0.3–0.4`, not 0.7, because cloud is peripheral. A JD built around Kubernetes service delivery gets `axis_platform ≈ 0.85+`.
+A JD that says "experience with cloud a plus" in a backend-heavy role should get `axis_platform ≈ 0.25–0.35`, not 0.7, because cloud is peripheral at low depth. A JD built around Kubernetes ownership at senior level gets `axis_platform ≈ 0.85+`.
 
-### Signal weighting (in descending importance)
+### Depth × centrality scoring table
 
-1. **Core responsibilities section** — what the person will actually do day-to-day. This is the strongest signal.
+Use this as the primary scoring guide. Locate the depth tier for a given axis, then position within the range based on how central that axis is to the role.
+
+| Required depth | Explicit YOE signal | Verb-framing proxy | Primary domain range | Secondary domain |
+|---|---|---|---|---|
+| Junior | 0–2 years | implement, contribute, assist, support | 0.30 – 0.50 | ~0.5× of primary |
+| Mid | 3–5 years | develop, maintain, improve, collaborate on design | 0.50 – 0.70 | ~0.5× of primary |
+| Senior | 6–8 years | design, architect, lead, own, drive, mentor | 0.70 – 0.85 | ~0.5× of primary |
+| Staff/Expert | 8–11+ years | set technical direction, define roadmap, org-wide influence | 0.85 – 1.0 | ~0.5× of primary |
+| Peripheral | not owned, briefly mentioned | — | 0.02 – 0.25 | — |
+
+**When no explicit YOE is stated:** use the verb-framing proxy column to determine depth tier.
+
+**When verb framing significantly exceeds the stated YOE floor** (e.g., a JD states "2+ years" but asks for architecture ownership and mentoring): use verb framing as the primary signal. Stated YOE minimums are floors, not ceilings.
+
+**Signal source weighting** (use to determine topic centrality within a tier):
+
+1. **Core responsibilities section** — what the person will actually do day-to-day. Strongest signal.
 2. **Required qualifications** — must-haves. Strong signal.
 3. **Team/role framing** — "Growth Engineering team" or "backend software engineering team" sets the center of gravity.
 4. **Preferred/nice-to-have qualifications** — weaker signal; contribute maybe half-weight.
@@ -83,14 +98,19 @@ Quick reference (scores shown as rounded `ba / fe / pc / ai / sr / ps`; `fullsta
 
 | Anchor | ba | fe | pc | ai | sr | ps | span |
 |---|---|---|---|---|---|---|---|
-| Cloudflare Growth SWE | 0.60 | 0.90 | 0.65 | 0.30 | 0.75 | 0.90 | 1.00 |
-| Ford Telematics Backend | 0.95 | 0.05 | 0.75 | 0.25 | 0.70 | 0.35 | 0.10 |
-| Glean Backend SWE | 0.90 | 0.20 | 0.45 | 0.55 | 0.45 | 0.65 | 0.40 |
-| Illumio Cloud SWE | 0.92 | 0.02 | 0.95 | 0.40 | 0.90 | 0.30 | 0.04 |
-| OpenAI Full Stack | 0.78 | 0.78 | 0.65 | 0.45 | 0.70 | 0.80 | 1.00 |
-| Visa New Grad SWE | 0.55 | 0.45 | 0.55 | 0.70 | 0.80 | 0.50 | 0.90 |
+| Cloudflare Growth SWE | 0.60 | 0.85 | 0.60 | 0.25 | 0.68 | 0.88 | 1.00 |
+| Ford Telematics Backend | 0.65 | 0.05 | 0.48 | 0.18 | 0.58 | 0.30 | 0.10 |
+| Glean Backend SWE | 0.78 | 0.15 | 0.38 | 0.50 | 0.40 | 0.62 | 0.30 |
+| Illumio Cloud SWE | 0.82 | 0.02 | 0.90 | 0.38 | 0.88 | 0.28 | 0.04 |
+| OpenAI Full Stack | 0.75 | 0.75 | 0.58 | 0.40 | 0.65 | 0.78 | 1.00 |
+| Visa New Grad SWE | 0.32 | 0.30 | 0.22 | 0.45 | 0.42 | 0.22 | 0.60 |
+| Greenway Health Entry SWE | 0.35 | 0.20 | 0.08 | 0.05 | 0.18 | 0.18 | 0.40 |
+| First Street Fullstack | 0.55 | 0.70 | 0.42 | 0.25 | 0.35 | 0.65 | 1.00 |
+| Haystack SWE (sparse) | 0.38 | 0.08 | 0.15 | 0.10 | 0.45 | 0.10 | 0.16 |
+| Junior Python Backend (execution framing) | 0.40 | 0.05 | 0.20 | 0.15 | 0.30 | 0.25 | 0.10 |
+| Senior Python Backend (architect framing) | 0.80 | 0.05 | 0.40 | 0.20 | 0.65 | 0.45 | 0.10 |
 
-(Note: `axis_product_ownership` values here are newly calibrated for this axis. Read the full anchor file before scoring anything ambiguous.)
+(Read the full anchor file at `references/calibration_anchors.md` before scoring anything ambiguous.)
 
 ## Output format
 
