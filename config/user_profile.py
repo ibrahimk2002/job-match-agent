@@ -22,6 +22,14 @@ class WorkExperience(BaseModel):
     key_contributions: list[str]
 
 
+class PersonalProject(BaseModel):
+    name: str
+    description: str
+    tech_stack: list[str]
+    key_contributions: list[str]
+    approximate_years: float | None  # null if ongoing or duration unknown
+
+
 class ResumeEducation(BaseModel):
     degree_level: int   # 0=none/trade, 1=bachelor, 2=master, 3=phd
     fields: list[str]
@@ -52,6 +60,7 @@ class ResumeExtractionResult(BaseModel):
     axes: Axes
     skills: ResumeSkills
     work_experience: list[WorkExperience]
+    personal_projects: list[PersonalProject] = []
     education: ResumeEducation
     preferences: CareerPreferences
     work_auth: ResumeWorkAuth
@@ -68,6 +77,7 @@ class UserProfile(BaseModel):
     axes: Axes
     skills: ResumeSkills
     work_experience: list[WorkExperience]
+    personal_projects: list[PersonalProject] = []
     education: ResumeEducation
     preferences: CareerPreferences
     work_auth: ResumeWorkAuth

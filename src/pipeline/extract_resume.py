@@ -20,7 +20,7 @@ from user_profile_columns import build_profile_columns
 from utils import log_info
 
 
-SCHEMA_VERSION = "1.0"
+SCHEMA_VERSION = "1.1"
 DEFAULT_MODEL = "gpt-4.1-nano"
 _MAX_INPUT_CHARS = 60_000
 

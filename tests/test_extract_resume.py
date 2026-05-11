@@ -143,6 +143,52 @@ def test_extract_resume_saves_profile_with_denormalized_columns(temp_db, monkeyp
         conn.close()
 
 
+def test_extract_resume_persists_personal_projects_in_profile_json(temp_db, monkeypatch, tmp_path):
+    import sqlite3
+    import pipeline.extract_resume as extract_module
+    from config.user_profile import PersonalProject
+
+    fake_pdf = tmp_path / "resume_projects.pdf"
+    fake_pdf.write_bytes(b"%PDF fake content")
+
+    project = PersonalProject(
+        name="open-source-tool",
+        description="A CLI tool for automating file organisation.",
+        tech_stack=["Python", "Click", "SQLite"],
+        key_contributions=["Designed plugin architecture", "Published on PyPI"],
+        approximate_years=0.5,
+    )
+    base_result = _make_fake_extraction_result()
+    fake_result = base_result.model_copy(update={"personal_projects": [project]})
+
+    fake_usage = MagicMock()
+    fake_usage.input_tokens = 300
+    fake_usage.input_tokens_details = None
+
+    monkeypatch.setattr(extract_module, "_extract_pdf_text", lambda path: "Jane Doe resume with projects")
+    monkeypatch.setattr(extract_module, "_attempt_extraction", lambda text: (fake_result, fake_usage))
+
+    extract_module.extract_resume(str(fake_pdf), "projects@example.com")
+
+    conn = sqlite3.connect(temp_db)
+    conn.row_factory = sqlite3.Row
+    try:
+        user = conn.execute("SELECT id FROM users WHERE email = 'projects@example.com'").fetchone()
+        assert user is not None
+        row = conn.execute(
+            "SELECT profile_json FROM user_profiles WHERE user_id = ? AND is_active = 1",
+            (user["id"],),
+        ).fetchone()
+        assert row is not None
+        profile_json = json.loads(row["profile_json"])
+        projects = profile_json.get("personal_projects", [])
+        assert len(projects) == 1
+        assert projects[0]["name"] == "open-source-tool"
+        assert "SQLite" in projects[0]["tech_stack"]
+    finally:
+        conn.close()
+
+
 def test_extract_resume_skips_if_already_current(temp_db, monkeypatch, tmp_path, capsys):
     import pipeline.extract_resume as extract_module
 
