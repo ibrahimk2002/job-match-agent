@@ -63,17 +63,21 @@ A JD that says "experience with cloud a plus" in a backend-heavy role should get
 
 Use this as the primary scoring guide. Locate the depth tier for a given axis, then position within the range based on how central that axis is to the role.
 
-| Required depth | Explicit YOE signal | Verb-framing proxy | Primary domain range | Secondary domain |
-|---|---|---|---|---|
-| Junior | 0–2 years | implement, contribute, assist, support | 0.30 – 0.50 | ~0.5× of primary |
-| Mid | 3–5 years | develop, maintain, improve, collaborate on design | 0.50 – 0.70 | ~0.5× of primary |
-| Senior | 6–8 years | design, architect, lead, own, drive, mentor | 0.70 – 0.85 | ~0.5× of primary |
-| Staff/Expert | 8–11+ years | set technical direction, define roadmap, org-wide influence | 0.85 – 1.0 | ~0.5× of primary |
-| Peripheral | not owned, briefly mentioned | — | 0.02 – 0.25 | — |
+| Required depth | Seniority label | Explicit YOE | Verb-framing proxy | Primary domain range | Secondary domain |
+|---|---|---|---|---|---|
+| Junior | new grad, entry level, junior, associate | 0–2 years | implement, contribute, assist, support | 0.30 – 0.50 | ~0.5× of primary |
+| Mid | mid-level, intermediate | 3–5 years | develop, maintain, improve, collaborate on design | 0.50 – 0.70 | ~0.5× of primary |
+| Senior | senior | 6–8 years | design, architect, lead, own, drive, mentor | 0.70 – 0.85 | ~0.5× of primary |
+| Staff/Expert | staff, principal, lead, director | 8–11+ years | set technical direction, define roadmap, org-wide influence | 0.85 – 1.0 | ~0.5× of primary |
+| Peripheral | — | not owned, briefly mentioned | — | 0.02 – 0.25 | — |
 
-**When no explicit YOE is stated:** use the verb-framing proxy column to determine depth tier.
+**Determine depth tier in this order:**
 
-**When verb framing significantly exceeds the stated YOE floor** (e.g., a JD states "2+ years" but asks for architecture ownership and mentoring): use verb framing as the primary signal. Stated YOE minimums are floors, not ceilings.
+1. **Seniority label** (in the title or posting body): new grad / entry level / junior / associate → Junior tier; mid-level / intermediate → Mid tier; senior → Senior tier; staff / principal / lead / director → Staff/Expert tier. The label sets a **hard tier ceiling** — the description and requirements can position scores within the tier, not above it.
+2. **Verb framing** in the responsibilities section, when no seniority label is present.
+3. **YOE range in requirements**, when neither label nor verb framing gives a clear signal. Note: YOE in a requirements list describes minimum eligibility, not expected depth — "1–3 years of REST/HTTP experience" on a new-grad posting is a topic signal, not a tier signal.
+
+**When verb framing significantly exceeds the stated YOE floor** and no seniority label is present (e.g., "2+ years" but asks for architecture ownership and mentoring): use verb framing as the primary signal.
 
 **Signal source weighting** (use to determine topic centrality within a tier):
 
@@ -89,6 +93,7 @@ Use this as the primary scoring guide. Locate the depth tier for a given axis, t
 - **Tech stack ≠ emphasis.** "We use React" in a backend role doesn't make it fullstack. Look at what the person will *own*.
 - **Mentions ≠ centrality.** A long list of "nice to haves" covering ten areas should not all score 0.6+. Most should be 0.2–0.4; centrality is rare.
 - **Don't let generous scoring smear everything to the middle.** Good scoring has contrast. A pure backend role should have near-zero frontend, not 0.3 "just in case."
+- **Seniority label overrides the requirements list.** A new grad or entry-level posting may list "experience with HTTP, REST, SQL, cloud" as requirements. That is a topics list, not a depth signal. The label is the depth anchor. Score at junior tier (0.30–0.50) regardless of how technical the requirements look.
 
 ## Calibration anchors
 
