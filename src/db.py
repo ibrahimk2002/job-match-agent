@@ -446,6 +446,79 @@ def get_active_job_profile(job_posting_id: int) -> dict[str, Any] | None:
     return dict(row) if row is not None else None
 
 
+def get_or_create_user(email: str) -> int:
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    try:
+        cursor.execute(
+            "INSERT OR IGNORE INTO users (email) VALUES (?)",
+            (email,),
+        )
+        conn.commit()
+        cursor.execute("SELECT id FROM users WHERE email = ?", (email,))
+        return cursor.fetchone()["id"]
+    finally:
+        cursor.close()
+        conn.close()
+
+
+def get_active_user_profile(user_id: int) -> dict | None:
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    try:
+        cursor.execute(
+            "SELECT * FROM user_profiles WHERE user_id = ? AND is_active = 1",
+            (user_id,),
+        )
+        row = cursor.fetchone()
+        return dict(row) if row is not None else None
+    finally:
+        cursor.close()
+        conn.close()
+
+
+def save_resume_extraction(user_id: int, profile, columns: dict, *, content_hash: str) -> None:
+    fixed = {
+        "user_id": user_id,
+        "content_hash": content_hash,
+        "schema_version": profile.meta.schema_version,
+        "prompt_version": profile.meta.prompt_version,
+        "model_version": profile.meta.model,
+        "is_active": 1,
+        "profile_json": profile.model_dump_json(),
+    }
+    all_cols = {**fixed, **columns}
+    col_names = list(all_cols.keys())
+    col_sql = ", ".join(col_names)
+    placeholders = ", ".join(["?"] * len(col_names))
+
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    try:
+        cursor.execute(
+            """
+            UPDATE user_profiles
+            SET is_active = 0,
+                invalidated_at = CURRENT_TIMESTAMP,
+                invalidated_reason = 'superseded'
+            WHERE user_id = ? AND is_active = 1
+            """,
+            (user_id,),
+        )
+        cursor.execute(
+            f"INSERT INTO user_profiles ({col_sql}) VALUES ({placeholders})",
+            [all_cols[c] for c in col_names],
+        )
+        conn.commit()
+        logging.info("Saved resume extraction for user_id: %s", user_id)
+    except Exception:
+        conn.rollback()
+        raise
+    finally:
+        cursor.close()
+        conn.close()
+
+
 def get_jobs_for_stage1():
     conn = get_db_connection()
     cursor = conn.cursor()

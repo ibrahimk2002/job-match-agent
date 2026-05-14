@@ -53,16 +53,35 @@ Clamped to `[0.0, 1.0]`. A role that is 0.9 backend / 0.0 frontend has span 0.0 
 
 ## Scoring philosophy
 
-The scores measure **emphasis on this competency in the role as described**, not:
-- How hard the work is
-- The candidate's own skill level
-- Whether a keyword appears once
+The scores measure **expected competency depth from the ideal candidate** — combining two dimensions:
+1. **Topic centrality** — how central is this competency to the role (a backend role makes backend its primary axis)
+2. **Required depth** — at what experience level is it expected (0-2 yrs junior vs. 8-11+ yrs expert)
 
-A JD that says "experience with cloud a plus" in a backend-heavy role should get `axis_platform ≈ 0.3–0.4`, not 0.7, because cloud is peripheral. A JD built around Kubernetes service delivery gets `axis_platform ≈ 0.85+`.
+A JD that says "experience with cloud a plus" in a backend-heavy role should get `axis_platform ≈ 0.25–0.35`, not 0.7, because cloud is peripheral at low depth. A JD built around Kubernetes ownership at senior level gets `axis_platform ≈ 0.85+`.
 
-### Signal weighting (in descending importance)
+### Depth × centrality scoring table
 
-1. **Core responsibilities section** — what the person will actually do day-to-day. This is the strongest signal.
+Use this as the primary scoring guide. Locate the depth tier for a given axis, then position within the range based on how central that axis is to the role.
+
+| Required depth | Seniority label | Explicit YOE | Verb-framing proxy | Primary domain range | Secondary domain |
+|---|---|---|---|---|---|
+| Junior | new grad, entry level, junior, associate | 0–2 years | implement, contribute, assist, support | 0.30 – 0.50 | ~0.5× of primary |
+| Mid | mid-level, intermediate | 3–5 years | develop, maintain, improve, collaborate on design | 0.50 – 0.70 | ~0.5× of primary |
+| Senior | senior | 6–8 years | design, architect, lead, own, drive, mentor | 0.70 – 0.85 | ~0.5× of primary |
+| Staff/Expert | staff, principal, lead, director | 8–11+ years | set technical direction, define roadmap, org-wide influence | 0.85 – 1.0 | ~0.5× of primary |
+| Peripheral | — | not owned, briefly mentioned | — | 0.02 – 0.25 | — |
+
+**Determine depth tier in this order:**
+
+1. **Seniority label** (in the title or posting body): new grad / entry level / junior / associate → Junior tier; mid-level / intermediate → Mid tier; senior → Senior tier; staff / principal / lead / director → Staff/Expert tier. The label sets a **hard tier ceiling** — the description and requirements can position scores within the tier, not above it.
+2. **Verb framing** in the responsibilities section, when no seniority label is present.
+3. **YOE range in requirements**, when neither label nor verb framing gives a clear signal. Note: YOE in a requirements list describes minimum eligibility, not expected depth — "1–3 years of REST/HTTP experience" on a new-grad posting is a topic signal, not a tier signal.
+
+**When verb framing significantly exceeds the stated YOE floor** and no seniority label is present (e.g., "2+ years" but asks for architecture ownership and mentoring): use verb framing as the primary signal.
+
+**Signal source weighting** (use to determine topic centrality within a tier):
+
+1. **Core responsibilities section** — what the person will actually do day-to-day. Strongest signal.
 2. **Required qualifications** — must-haves. Strong signal.
 3. **Team/role framing** — "Growth Engineering team" or "backend software engineering team" sets the center of gravity.
 4. **Preferred/nice-to-have qualifications** — weaker signal; contribute maybe half-weight.
@@ -74,6 +93,7 @@ A JD that says "experience with cloud a plus" in a backend-heavy role should get
 - **Tech stack ≠ emphasis.** "We use React" in a backend role doesn't make it fullstack. Look at what the person will *own*.
 - **Mentions ≠ centrality.** A long list of "nice to haves" covering ten areas should not all score 0.6+. Most should be 0.2–0.4; centrality is rare.
 - **Don't let generous scoring smear everything to the middle.** Good scoring has contrast. A pure backend role should have near-zero frontend, not 0.3 "just in case."
+- **Seniority label overrides the requirements list.** A new grad or entry-level posting may list "experience with HTTP, REST, SQL, cloud" as requirements. That is a topics list, not a depth signal. The label is the depth anchor. Score at junior tier (0.30–0.50) regardless of how technical the requirements look.
 
 ## Calibration anchors
 
@@ -83,14 +103,19 @@ Quick reference (scores shown as rounded `ba / fe / pc / ai / sr / ps`; `fullsta
 
 | Anchor | ba | fe | pc | ai | sr | ps | span |
 |---|---|---|---|---|---|---|---|
-| Cloudflare Growth SWE | 0.60 | 0.90 | 0.65 | 0.30 | 0.75 | 0.90 | 1.00 |
-| Ford Telematics Backend | 0.95 | 0.05 | 0.75 | 0.25 | 0.70 | 0.35 | 0.10 |
-| Glean Backend SWE | 0.90 | 0.20 | 0.45 | 0.55 | 0.45 | 0.65 | 0.40 |
-| Illumio Cloud SWE | 0.92 | 0.02 | 0.95 | 0.40 | 0.90 | 0.30 | 0.04 |
-| OpenAI Full Stack | 0.78 | 0.78 | 0.65 | 0.45 | 0.70 | 0.80 | 1.00 |
-| Visa New Grad SWE | 0.55 | 0.45 | 0.55 | 0.70 | 0.80 | 0.50 | 0.90 |
+| Cloudflare Growth SWE | 0.60 | 0.85 | 0.60 | 0.25 | 0.68 | 0.88 | 1.00 |
+| Ford Telematics Backend | 0.65 | 0.05 | 0.48 | 0.18 | 0.58 | 0.30 | 0.10 |
+| Glean Backend SWE | 0.78 | 0.15 | 0.38 | 0.50 | 0.40 | 0.62 | 0.30 |
+| Illumio Cloud SWE | 0.82 | 0.02 | 0.90 | 0.38 | 0.88 | 0.28 | 0.04 |
+| OpenAI Full Stack | 0.75 | 0.75 | 0.58 | 0.40 | 0.65 | 0.78 | 1.00 |
+| Visa New Grad SWE | 0.32 | 0.30 | 0.22 | 0.45 | 0.42 | 0.22 | 0.60 |
+| Greenway Health Entry SWE | 0.35 | 0.20 | 0.08 | 0.05 | 0.18 | 0.18 | 0.40 |
+| First Street Fullstack | 0.55 | 0.70 | 0.42 | 0.25 | 0.35 | 0.65 | 1.00 |
+| Haystack SWE (sparse) | 0.38 | 0.08 | 0.15 | 0.10 | 0.45 | 0.10 | 0.16 |
+| Junior Python Backend (execution framing) | 0.40 | 0.05 | 0.20 | 0.15 | 0.30 | 0.25 | 0.10 |
+| Senior Python Backend (architect framing) | 0.80 | 0.05 | 0.40 | 0.20 | 0.65 | 0.45 | 0.10 |
 
-(Note: `axis_product_ownership` values here are newly calibrated for this axis. Read the full anchor file before scoring anything ambiguous.)
+(Read the full anchor file at `references/calibration_anchors.md` before scoring anything ambiguous.)
 
 ## Output format
 

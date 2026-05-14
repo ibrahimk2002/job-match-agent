@@ -3,3 +3,4 @@ openai
 requests
 pytest
 pytest-cov
+pypdf
