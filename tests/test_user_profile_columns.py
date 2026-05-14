@@ -2,11 +2,11 @@ import pytest
 
 
 def _make_profile():
-    from config.user_profile import (
+    from models.user_profile import (
         UserProfile, ResumeSkills,
         ResumeEducation, CareerPreferences, ResumeWorkAuth,
     )
-    from config.job_profile import ProfileMeta, Axes
+    from models.job_profile import ProfileMeta, Axes
     return UserProfile(
         meta=ProfileMeta(
             schema_version="1.0", prompt_version="1.0",

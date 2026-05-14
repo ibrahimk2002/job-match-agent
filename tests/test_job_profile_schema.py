@@ -1,7 +1,7 @@
 import pytest
 from pydantic import ValidationError
 
-from config.job_profile import Axes, ExtractionResult, JobProfile
+from models.job_profile import Axes, ExtractionResult, JobProfile
 
 
 def test_axes_accepts_six_primary_axis_fields():

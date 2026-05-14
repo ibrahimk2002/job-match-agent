@@ -5,7 +5,7 @@ def test_extract_resume_profile_raises_on_null_output():
     """MalformedOutputError is raised when output_parsed is None."""
     from integrations import MalformedOutputError
     from integrations.openai_client import extract_resume_profile
-    from config.user_profile import ResumeExtractionResult
+    from models.user_profile import ResumeExtractionResult
 
     mock_response = MagicMock()
     mock_response.output_parsed = None
@@ -28,7 +28,7 @@ def test_extract_resume_profile_raises_on_null_output():
 def test_extract_resume_profile_returns_parsed_and_usage():
     """Returns (parsed, usage) tuple on success."""
     from integrations.openai_client import extract_resume_profile
-    from config.user_profile import ResumeExtractionResult
+    from models.user_profile import ResumeExtractionResult
 
     fake_parsed = MagicMock(spec=ResumeExtractionResult)
     mock_response = MagicMock()
@@ -56,11 +56,11 @@ from unittest.mock import MagicMock
 
 
 def _make_fake_extraction_result():
-    from config.user_profile import (
+    from models.user_profile import (
         ResumeExtractionResult, ResumeSkills,
         ResumeEducation, CareerPreferences, ResumeWorkAuth,
     )
-    from config.job_profile import Axes, EvidenceSnippet
+    from models.job_profile import Axes, EvidenceSnippet
     return ResumeExtractionResult(
         full_name="Jane Doe",
         total_years_experience=3.0,
@@ -146,7 +146,7 @@ def test_extract_resume_saves_profile_with_denormalized_columns(temp_db, monkeyp
 def test_extract_resume_persists_personal_projects_in_profile_json(temp_db, monkeypatch, tmp_path):
     import sqlite3
     import pipeline.extract_resume as extract_module
-    from config.user_profile import PersonalProject
+    from models.user_profile import PersonalProject
 
     fake_pdf = tmp_path / "resume_projects.pdf"
     fake_pdf.write_bytes(b"%PDF fake content")

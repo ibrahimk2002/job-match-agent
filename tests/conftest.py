@@ -5,12 +5,11 @@ from pathlib import Path
 
 import pytest
 
-# Prevent RuntimeError from utils.config during import — tests mock all actual API calls.
+# Prevent RuntimeError from utils.env during import — tests mock all actual API calls.
 os.environ.setdefault("OPENAI_API_KEY", "test-sk-dummy")
 
 ROOT = Path(__file__).resolve().parent.parent
-# Order matters: ROOT comes first (for `from config.job_profile import ...`),
-# then src/ (for `import db`). No name collisions between the two.
+# ROOT first so any root-level imports resolve; src/ for modules (db, models, utils, etc.).
 sys.path.insert(0, str(ROOT / "src"))
 sys.path.insert(0, str(ROOT))
 
