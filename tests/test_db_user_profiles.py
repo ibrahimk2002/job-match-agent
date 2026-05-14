@@ -35,11 +35,11 @@ def test_user_profiles_table_exists(temp_db):
 
 def _make_user_profile():
     """Reusable minimal UserProfile for DB tests."""
-    from config.user_profile import (
+    from models.user_profile import (
         UserProfile, ResumeSkills,
         ResumeEducation, CareerPreferences, ResumeWorkAuth,
     )
-    from config.job_profile import ProfileMeta, Axes
+    from models.job_profile import ProfileMeta, Axes
     return UserProfile(
         meta=ProfileMeta(
             schema_version="1.0", prompt_version="1.0",

@@ -2,7 +2,7 @@ import pytest
 
 
 def test_personal_project_accepts_null_duration():
-    from config.user_profile import PersonalProject
+    from models.user_profile import PersonalProject
     p = PersonalProject(
         name="job-match-agent",
         description="AI-powered job matching system using LLMs.",
@@ -14,7 +14,7 @@ def test_personal_project_accepts_null_duration():
 
 
 def test_personal_project_requires_name_and_description():
-    from config.user_profile import PersonalProject
+    from models.user_profile import PersonalProject
     with pytest.raises(Exception):
         PersonalProject(
             description="A project.",
@@ -32,11 +32,11 @@ def test_personal_project_requires_name_and_description():
 
 
 def test_resume_extraction_result_personal_projects_defaults_empty():
-    from config.user_profile import (
+    from models.user_profile import (
         ResumeExtractionResult, ResumeSkills, ResumeEducation,
         CareerPreferences, ResumeWorkAuth,
     )
-    from config.job_profile import Axes
+    from models.job_profile import Axes
     result = ResumeExtractionResult(
         full_name="Test User",
         total_years_experience=2.0,
@@ -65,11 +65,11 @@ def test_resume_extraction_result_personal_projects_defaults_empty():
 
 
 def test_user_profile_personal_projects_round_trips_model_dump():
-    from config.user_profile import (
+    from models.user_profile import (
         UserProfile, ResumeSkills, ResumeEducation,
         CareerPreferences, ResumeWorkAuth, PersonalProject,
     )
-    from config.job_profile import Axes, ProfileMeta
+    from models.job_profile import Axes, ProfileMeta
     project = PersonalProject(
         name="cli-tool",
         description="A command-line task manager written in Python.",
@@ -115,11 +115,11 @@ def test_user_profile_personal_projects_round_trips_model_dump():
 
 
 def test_user_profile_models_are_importable():
-    from config.user_profile import (
+    from models.user_profile import (
         ResumeSkills, WorkExperience, ResumeEducation,
         CareerPreferences, ResumeWorkAuth, ResumeExtractionResult, UserProfile,
     )
-    from config.job_profile import Axes, EvidenceSnippet, ProfileMeta
+    from models.job_profile import Axes, EvidenceSnippet, ProfileMeta
 
     axes = Axes(
         axis_backend=0.7, axis_frontend=0.1, axis_platform=0.3,

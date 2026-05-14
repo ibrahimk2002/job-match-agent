@@ -1,6 +1,6 @@
 from pydantic import BaseModel
 
-from config.job_profile import Axes, EvidenceSnippet, ProfileMeta  # reused unchanged
+from models.job_profile import Axes, EvidenceSnippet, ProfileMeta
 
 
 class ResumeSkills(BaseModel):

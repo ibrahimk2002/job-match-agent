@@ -1,19 +1,11 @@
 import hashlib
 import os
-import sys
 from datetime import datetime, timezone
-
-_PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
-if _PROJECT_ROOT not in sys.path:
-    sys.path.insert(0, _PROJECT_ROOT)
-_SRC = os.path.join(_PROJECT_ROOT, 'src')
-if _SRC not in sys.path:
-    sys.path.insert(0, _SRC)
 
 from pydantic import ValidationError
 
-from config.job_profile import ProfileMeta
-from config.user_profile import UserProfile
+from models.job_profile import ProfileMeta
+from models.user_profile import UserProfile
 from db import get_or_create_user, get_active_user_profile, save_resume_extraction
 from integrations import extract_resume_profile, MalformedOutputError
 from user_profile_columns import build_profile_columns

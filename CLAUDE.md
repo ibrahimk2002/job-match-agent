@@ -27,15 +27,15 @@ match_results (stage1/stage2 scores, keyed by job_posting_id)
 
 | File | Why it matters |
 |------|---------------|
-| `src/db.py` | All CRUD + `compute_content_hash` + `apply_schema_migrations` (runs every `.sql` in `migrations/` on `init_db`). `JOB_PROFILE_COLUMNS` is the canonical column order for upsert. |
+| `src/db.py` | All CRUD + `compute_content_hash` + `apply_schema_migrations` (runs every `.sql` in `scripts/migrations/` on `init_db`). `JOB_PROFILE_COLUMNS` is the canonical column order for upsert. |
 | `src/profile_columns.py` | Projects a `JobProfile` payload to all 30+ `job_profiles` columns. Reads six primary axes directly from `payload["axes"]` (no presets). Computes `axis_fullstack_span = round(min(2*min(backend,frontend), 1.0), 2)` — never from LLM. `salary_*` fields almost always land as `None`. **Upsert invariant:** `build_profile_columns` return keys must equal `JOB_PROFILE_COLUMNS − {"is_active"}` — enforced by `tests/test_profile_columns.py::test_build_columns_keys_match_db_constants`. |
 | `src/pipeline/extract.py` | Defines `SCHEMA_VERSION = "1.0"` and `DEFAULT_MODEL`; `prompt_version` parsed from first line of `src/prompts/extraction.txt` (`# prompt_version: X.X`). Those four values are the versioning tuple for re-extraction decisions. |
-| `config/job_profile.py` | `JobProfile`, `ExtractionResult`, `ProfileMeta`, `Axes`, `Skills`, `ExperienceRequirements`. `Axes` holds the six primary axis scores (no `axis_fullstack_span`). Both `ExtractionResult` and `JobProfile` carry an `axes: Axes` field. `salary_*`, `work_auth_required`, `degree_required` live in `job_profiles` columns, projected by `profile_columns.py`. |
-| `config/user_profile.py` | Pydantic schema for resume side: `ResumeExtractionResult`, `UserProfile`, `ResumeSkills`, `WorkExperience`, etc. `Axes` and `ProfileMeta` are imported from `config.job_profile` (not duplicated). |
+| `src/models/job_profile.py` | `JobProfile`, `ExtractionResult`, `ProfileMeta`, `Axes`, `Skills`, `ExperienceRequirements`. `Axes` holds the six primary axis scores (no `axis_fullstack_span`). Both `ExtractionResult` and `JobProfile` carry an `axes: Axes` field. `salary_*`, `work_auth_required`, `degree_required` live in `job_profiles` columns, projected by `profile_columns.py`. |
+| `src/models/user_profile.py` | Pydantic schema for resume side: `ResumeExtractionResult`, `UserProfile`, `ResumeSkills`, `WorkExperience`, etc. `Axes` and `ProfileMeta` are imported from `models.job_profile` (not duplicated). |
 | `src/user_profile_columns.py` | Projects a `UserProfile` to 25 denormalized `user_profiles` columns. `USER_PROFILE_COLUMNS` is the canonical list. Same upsert-invariant pattern as `profile_columns.py`. |
 | `src/pipeline/extract_resume.py` | Resume extraction pipeline: PDF → text → hash → version check → LLM → save. `SCHEMA_VERSION`, `DEFAULT_MODEL`, `_PROMPT_VERSION` form the versioning tuple. Hash is of truncated content (`resume_text[:60_000]`), not raw file. |
-| `src/cli.py` | CLI entry point: `python -m src.cli ingest-resume <pdf> --email <email>`. Handles `sys.exit()` — library code raises exceptions, CLI converts to exit codes. |
-| `migrations/001_create_core_schema.sql` | Authoritative schema. `CREATE TABLE IF NOT EXISTS` makes `init_db()` idempotent. There is **no migration-version table** — ordering is purely alphabetical filename. |
+| `src/cli.py` | CLI entry point: `python src/cli.py ingest-resume <pdf> --email <email>` (from project root). Handles `sys.exit()` — library code raises exceptions, CLI converts to exit codes. |
+| `scripts/migrations/001_create_core_schema.sql` | Authoritative schema. `CREATE TABLE IF NOT EXISTS` makes `init_db()` idempotent. There is **no migration-version table** — ordering is purely alphabetical filename. |
 
 ## Design guardrails (from `docs/CONTEXT.md` §Guardrails)
 
