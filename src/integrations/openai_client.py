@@ -89,3 +89,38 @@ def extract_job_profile(
     if parsed is None:
         raise MalformedOutputError("Model returned no parsed structured output")
     return parsed, response.usage
+
+
+def extract_resume_profile(
+    system_prompt: str,
+    resume_text: str,
+    *,
+    model: str,
+    prompt_cache_key: str,
+):
+    from config.user_profile import ResumeExtractionResult
+    client = get_openai_client()
+    response = client.responses.parse(
+        model=model,
+        input=[
+            {
+                "role": "system",
+                "content": [{"type": "input_text", "text": system_prompt}],
+            },
+            {
+                "role": "user",
+                "content": [
+                    {
+                        "type": "input_text",
+                        "text": f"<resume>\n{resume_text}\n</resume>",
+                    }
+                ],
+            },
+        ],
+        text_format=ResumeExtractionResult,
+        prompt_cache_key=prompt_cache_key,
+    )
+    parsed = getattr(response, "output_parsed", None)
+    if parsed is None:
+        raise MalformedOutputError("Model returned no parsed structured output")
+    return parsed, response.usage

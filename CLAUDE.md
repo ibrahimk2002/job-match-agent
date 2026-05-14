@@ -31,7 +31,10 @@ match_results (stage1/stage2 scores, keyed by job_posting_id)
 | `src/profile_columns.py` | Projects a `JobProfile` payload to all 30+ `job_profiles` columns. Reads six primary axes directly from `payload["axes"]` (no presets). Computes `axis_fullstack_span = round(min(2*min(backend,frontend), 1.0), 2)` — never from LLM. `salary_*` fields almost always land as `None`. **Upsert invariant:** `build_profile_columns` return keys must equal `JOB_PROFILE_COLUMNS − {"is_active"}` — enforced by `tests/test_profile_columns.py::test_build_columns_keys_match_db_constants`. |
 | `src/pipeline/extract.py` | Defines `SCHEMA_VERSION = "1.0"` and `DEFAULT_MODEL`; `prompt_version` parsed from first line of `src/prompts/extraction.txt` (`# prompt_version: X.X`). Those four values are the versioning tuple for re-extraction decisions. |
 | `config/job_profile.py` | `JobProfile`, `ExtractionResult`, `ProfileMeta`, `Axes`, `Skills`, `ExperienceRequirements`. `Axes` holds the six primary axis scores (no `axis_fullstack_span`). Both `ExtractionResult` and `JobProfile` carry an `axes: Axes` field. `salary_*`, `work_auth_required`, `degree_required` live in `job_profiles` columns, projected by `profile_columns.py`. |
-| `config/user_profile.py` | New WIP Pydantic `UserProfile` replacing the old `user_profile.json` (which has been deleted). Not yet wired into `src/cli.py`. |
+| `config/user_profile.py` | Pydantic schema for resume side: `ResumeExtractionResult`, `UserProfile`, `ResumeSkills`, `WorkExperience`, etc. `Axes` and `ProfileMeta` are imported from `config.job_profile` (not duplicated). |
+| `src/user_profile_columns.py` | Projects a `UserProfile` to 25 denormalized `user_profiles` columns. `USER_PROFILE_COLUMNS` is the canonical list. Same upsert-invariant pattern as `profile_columns.py`. |
+| `src/pipeline/extract_resume.py` | Resume extraction pipeline: PDF → text → hash → version check → LLM → save. `SCHEMA_VERSION`, `DEFAULT_MODEL`, `_PROMPT_VERSION` form the versioning tuple. Hash is of truncated content (`resume_text[:60_000]`), not raw file. |
+| `src/cli.py` | CLI entry point: `python -m src.cli ingest-resume <pdf> --email <email>`. Handles `sys.exit()` — library code raises exceptions, CLI converts to exit codes. |
 | `migrations/001_create_core_schema.sql` | Authoritative schema. `CREATE TABLE IF NOT EXISTS` makes `init_db()` idempotent. There is **no migration-version table** — ordering is purely alphabetical filename. |
 
 ## Design guardrails (from `docs/CONTEXT.md` §Guardrails)
@@ -56,6 +59,8 @@ Stay in scope. Do not add unrequested features, refactor unrelated code, or crea
 Functions under ~30 lines, files under ~300 lines, nesting ≤ 3 levels where practical.
 Names are self-documenting. Booleans: is_/has_/can_. Functions: verbs. Classes: nouns.
 Handle errors at boundaries with meaningful messages. Never swallow exceptions silently.
+Use `log_info` from `utils` for all logging in pipeline/library code — not `import logging`. `print()` is reserved for user-facing CLI output.
+Library functions raise exceptions; CLI entry points (`src/cli.py`) catch and call `sys.exit()`.
 
 ### Before committing:
 
@@ -70,3 +75,4 @@ Stop. Explain the problem, propose 2–3 options with trade-offs, and ask for gu
 ### Running tests:
 
 `pytest tests/ -v` — runs all unit tests. `tests/conftest.py` sets `sys.path` and provides the `temp_db` fixture, which monkeypatches `db._DB_PATH` to a tmpfile and calls `init_db()`. DB tests must use `temp_db`; never reference a real DB path in tests.
+Pipeline functions that tests need to monkeypatch (e.g. `_extract_pdf_text`, `_attempt_extraction`) must be module-level — not nested inside other functions.
