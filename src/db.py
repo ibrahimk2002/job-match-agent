@@ -11,7 +11,7 @@ from profile_columns import build_profile_columns
 _PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 _LOG_PATH = os.path.join(_PROJECT_ROOT, "logs", "job_matcher.log")
 _DB_PATH = os.path.join(_PROJECT_ROOT, "data", "job_matcher.db")
-_MIGRATIONS_DIR = os.path.join(_PROJECT_ROOT, "migrations")
+_MIGRATIONS_DIR = os.path.join(_PROJECT_ROOT, "scripts", "migrations")
 
 os.makedirs(os.path.join(_PROJECT_ROOT, "logs"), exist_ok=True)
 os.makedirs(os.path.join(_PROJECT_ROOT, "data"), exist_ok=True)
