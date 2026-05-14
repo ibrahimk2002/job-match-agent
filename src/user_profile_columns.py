@@ -1,6 +1,6 @@
 import json
 
-from config.user_profile import UserProfile
+from models.user_profile import UserProfile
 
 
 USER_PROFILE_COLUMNS = [

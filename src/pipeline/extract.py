@@ -1,14 +1,9 @@
 import os
-import sys
 from datetime import datetime, timezone
-
-_PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
-if _PROJECT_ROOT not in sys.path:
-    sys.path.insert(0, _PROJECT_ROOT)
 
 from pydantic import ValidationError
 
-from config import JobProfile, ProfileMeta
+from models import JobProfile, ProfileMeta
 from integrations import extract_job_profile, MalformedOutputError
 from db import get_pending_extraction, save_extraction, fail_extraction
 from utils import log_info
