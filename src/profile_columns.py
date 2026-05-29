@@ -45,9 +45,6 @@ def build_profile_columns(
     salary = profile_payload.get("salary") or {}
     work_eligibility = profile_payload.get("work_eligibility") or {}
 
-    eligible_countries = work_eligibility.get("eligible_countries")
-    eligible_regions = work_eligibility.get("eligible_regions")
-
     return {
         "job_posting_id": job_posting_id,
         "content_hash": content_hash,
@@ -80,6 +77,4 @@ def build_profile_columns(
         "axis_security_reliability": axes["axis_security_reliability"],
         "axis_product_ownership": axes["axis_product_ownership"],
         "axis_fullstack_span": fullstack_span(axes["axis_backend"], axes["axis_frontend"]),
-        "eligible_countries_json": json.dumps(eligible_countries) if eligible_countries else None,
-        "eligible_regions_json": json.dumps(eligible_regions) if eligible_regions else None,
     }

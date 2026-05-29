@@ -61,7 +61,6 @@ def _valid_extraction_payload():
         },
         "education_requirements": [],
         "domain_signals": [],
-        "explicit_constraints": [],
         "extraction_confidence": 0.85,
         "evidence_snippets": [],
         "axes": {
