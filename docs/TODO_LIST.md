@@ -25,10 +25,8 @@
 **Goal**: Remove fields that cost LLM tokens and storage but are never used in matching or display. Shrink the extraction prompt. No behavior change.
 
 **Changes:**
-- `src/models/job_profile.py`: remove `evidence_snippets`, `explicit_constraints`, `education_requirements` from `ExtractionResult` and `JobProfile`
-- `src/models/user_profile.py`: remove `evidence_snippets` from `ResumeExtractionResult` and `UserProfile`; remove `desired_roles` from `CareerPreferences`
+- `src/models/job_profile.py`: remove `eligible_countries`, `eligible_regions`, `explicit_constraints` from `ExtractionResult` and `JobProfile`
 - `src/prompts/extraction.txt`: remove corresponding prompt instructions
-- `src/prompts/extract_resume.txt` (if exists): same
 - `tests/`: update any fixtures or assertions referencing removed fields
 
 **DoD**: `pytest tests/ -v` passes. Extraction still runs against a sample job and produces a valid `JobProfile` without the dropped fields. `profile_json` no longer contains them.
