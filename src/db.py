@@ -2,19 +2,19 @@ import hashlib
 import json
 import logging
 import os
-import sqlite3
 from datetime import datetime, timezone
 from typing import Any
+
+import psycopg2
+import psycopg2.extras
 
 from profile_columns import build_profile_columns
 
 _PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 _LOG_PATH = os.path.join(_PROJECT_ROOT, "logs", "job_matcher.log")
-_DB_PATH = os.path.join(_PROJECT_ROOT, "data", "job_matcher.db")
 _MIGRATIONS_DIR = os.path.join(_PROJECT_ROOT, "scripts", "migrations")
 
 os.makedirs(os.path.join(_PROJECT_ROOT, "logs"), exist_ok=True)
-os.makedirs(os.path.join(_PROJECT_ROOT, "data"), exist_ok=True)
 
 logging.basicConfig(
     filename=_LOG_PATH,
@@ -57,14 +57,17 @@ JOB_PROFILE_COLUMNS = [
     "axis_fullstack_span",
 ]
 
-JOB_PROFILE_UPDATE_COLUMNS = [column for column in JOB_PROFILE_COLUMNS if column not in {"job_posting_id", "content_hash", "schema_version", "prompt_version", "model_version"}]
+JOB_PROFILE_UPDATE_COLUMNS = [
+    column for column in JOB_PROFILE_COLUMNS
+    if column not in {"job_posting_id", "content_hash", "schema_version", "prompt_version", "model_version"}
+]
 
 
 def get_db_connection():
-    conn = sqlite3.connect(_DB_PATH)
-    conn.row_factory = sqlite3.Row
-    conn.execute("PRAGMA foreign_keys = ON")
-    return conn
+    return psycopg2.connect(
+        os.environ["DATABASE_URL"],
+        cursor_factory=psycopg2.extras.RealDictCursor,
+    )
 
 
 def init_db() -> None:
@@ -75,29 +78,44 @@ def init_db() -> None:
         conn.close()
 
 
-def apply_schema_migrations(conn: sqlite3.Connection) -> None:
-    conn.executescript(
-        """
-        CREATE TABLE IF NOT EXISTS schema_migrations (
-            filename   TEXT PRIMARY KEY,
-            applied_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
-        );
-        """
-    )
-    applied = {
-        row[0]
-        for row in conn.execute("SELECT filename FROM schema_migrations").fetchall()
-    }
+def apply_schema_migrations(conn) -> None:
+    with conn.cursor() as cur:
+        cur.execute(
+            """
+            CREATE TABLE IF NOT EXISTS schema_migrations (
+                filename   TEXT PRIMARY KEY,
+                applied_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+            )
+            """
+        )
+    conn.commit()
+
+    with conn.cursor() as cur:
+        cur.execute("SELECT filename FROM schema_migrations")
+        applied = {row["filename"] for row in cur.fetchall()}
+
     for path in sorted(_migration_paths()):
         filename = os.path.basename(path)
         if filename in applied:
             continue
         with open(path, "r", encoding="utf-8") as handle:
-            conn.executescript(handle.read())
-        conn.execute(
-            "INSERT INTO schema_migrations (filename) VALUES (?)", (filename,)
-        )
-    conn.commit()
+            sql = handle.read()
+        with conn.cursor() as cur:
+            for stmt in sql.split(";"):
+                stmt = stmt.strip()
+                if stmt and not _is_comment_only(stmt):
+                    cur.execute(stmt)
+            cur.execute(
+                "INSERT INTO schema_migrations (filename) VALUES (%s)", (filename,)
+            )
+        conn.commit()
+
+
+def _is_comment_only(stmt: str) -> bool:
+    return all(
+        not line.strip() or line.strip().startswith("--")
+        for line in stmt.splitlines()
+    )
 
 
 def _migration_paths() -> list[str]:
@@ -117,7 +135,11 @@ def _normalize_text(value: Any) -> str | None:
     return text or None
 
 
-def compute_content_hash(title_raw: str | None, location_raw: str | None, cleaned_description_text: str | None) -> str | None:
+def compute_content_hash(
+    title_raw: str | None,
+    location_raw: str | None,
+    cleaned_description_text: str | None,
+) -> str | None:
     if not any([title_raw, location_raw, cleaned_description_text]):
         return None
     payload = "||".join([title_raw or "", location_raw or "", cleaned_description_text or ""])
@@ -126,15 +148,8 @@ def compute_content_hash(title_raw: str | None, location_raw: str | None, cleane
 
 def _build_source_metadata(row: dict[str, Any]) -> str | None:
     canonical_keys = {
-        "job_id",
-        "url",
-        "title",
-        "company",
-        "location",
-        "posted_date",
-        "description",
-        "raw_description",
-        "meta_source_file",
+        "job_id", "url", "title", "company", "location",
+        "posted_date", "description", "raw_description", "meta_source_file",
     }
     extras = {key: value for key, value in row.items() if key not in canonical_keys}
     return json.dumps(extras, sort_keys=True) if extras else None
@@ -167,7 +182,7 @@ def import_jobs_from_jsonl(jsonl_path: str, source_system: str = "linkedin") -> 
                     """
                     SELECT id, content_hash, profile_status
                     FROM job_postings
-                    WHERE source_system = ? AND source_posting_id = ?
+                    WHERE source_system = %s AND source_posting_id = %s
                     """,
                     (source_system, source_posting_id),
                 )
@@ -195,7 +210,8 @@ def import_jobs_from_jsonl(jsonl_path: str, source_system: str = "linkedin") -> 
                             last_content_changed_at,
                             profile_status,
                             is_deleted_at_source
-                        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'missing', 0)
+                        ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s,
+                                  NOW(), NOW(), NOW(), 'missing', 0)
                         """,
                         (
                             source_system,
@@ -224,23 +240,23 @@ def import_jobs_from_jsonl(jsonl_path: str, source_system: str = "linkedin") -> 
                 cursor.execute(
                     """
                     UPDATE job_postings
-                    SET source_url               = ?,
-                        title_raw                = ?,
-                        company_raw              = ?,
-                        location_raw             = ?,
-                        posted_date_raw          = ?,
-                        source_file              = ?,
-                        source_batch             = ?,
-                        source_metadata_json     = ?,
-                        cleaned_description_text = ?,
-                        raw_description_text     = ?,
-                        content_hash             = ?,
-                        last_seen_at             = CURRENT_TIMESTAMP,
-                        updated_at               = CURRENT_TIMESTAMP,
-                        last_content_changed_at  = CASE WHEN ? THEN CURRENT_TIMESTAMP ELSE last_content_changed_at END,
-                        profile_status           = ?,
+                    SET source_url               = %s,
+                        title_raw                = %s,
+                        company_raw              = %s,
+                        location_raw             = %s,
+                        posted_date_raw          = %s,
+                        source_file              = %s,
+                        source_batch             = %s,
+                        source_metadata_json     = %s,
+                        cleaned_description_text = %s,
+                        raw_description_text     = %s,
+                        content_hash             = %s,
+                        last_seen_at             = NOW(),
+                        updated_at               = NOW(),
+                        last_content_changed_at  = CASE WHEN %s THEN NOW() ELSE last_content_changed_at END,
+                        profile_status           = %s,
                         is_deleted_at_source     = 0
-                    WHERE id = ?
+                    WHERE id = %s
                     """,
                     (
                         _normalize_text(row.get("url")),
@@ -254,7 +270,7 @@ def import_jobs_from_jsonl(jsonl_path: str, source_system: str = "linkedin") -> 
                         cleaned_text,
                         _normalize_text(row.get("raw_description")) or cleaned_text,
                         content_hash,
-                        1 if content_changed else 0,
+                        content_changed,
                         profile_status,
                         existing["id"],
                     ),
@@ -285,13 +301,13 @@ def get_pending_extraction(
     params: list[Any] = []
 
     if schema_version is not None:
-        mismatch_conditions.append("ap.schema_version <> ?")
+        mismatch_conditions.append("ap.schema_version <> %s")
         params.append(schema_version)
     if prompt_version is not None:
-        mismatch_conditions.append("ap.prompt_version <> ?")
+        mismatch_conditions.append("ap.prompt_version <> %s")
         params.append(prompt_version)
     if model_version is not None:
-        mismatch_conditions.append("ap.model_version <> ?")
+        mismatch_conditions.append("ap.model_version <> %s")
         params.append(model_version)
 
     conn = get_db_connection()
@@ -326,7 +342,9 @@ def save_extraction(job_posting_id: int, profile) -> None:
     cursor = conn.cursor()
 
     try:
-        cursor.execute("SELECT content_hash FROM job_postings WHERE id = ?", (job_posting_id,))
+        cursor.execute(
+            "SELECT content_hash FROM job_postings WHERE id = %s", (job_posting_id,)
+        )
         posting = cursor.fetchone()
         if posting is None:
             raise RuntimeError(f"Unknown job_posting_id {job_posting_id}")
@@ -345,15 +363,15 @@ def save_extraction(job_posting_id: int, profile) -> None:
             """
             UPDATE job_profiles
             SET is_active = 0,
-                invalidated_at = CURRENT_TIMESTAMP,
+                invalidated_at = NOW(),
                 invalidated_reason = 'superseded'
-            WHERE job_posting_id = ?
+            WHERE job_posting_id = %s
               AND is_active = 1
               AND NOT (
-                  content_hash = ?
-                  AND schema_version = ?
-                  AND prompt_version = ?
-                  AND model_version = ?
+                  content_hash = %s
+                  AND schema_version = %s
+                  AND prompt_version = %s
+                  AND model_version = %s
               )
             """,
             (
@@ -371,10 +389,10 @@ def save_extraction(job_posting_id: int, profile) -> None:
             """
             UPDATE job_postings
             SET profile_status = 'current',
-                last_profile_attempt_at = CURRENT_TIMESTAMP,
+                last_profile_attempt_at = NOW(),
                 last_profile_error = NULL,
-                updated_at = CURRENT_TIMESTAMP
-            WHERE id = ?
+                updated_at = NOW()
+            WHERE id = %s
             """,
             (job_posting_id,),
         )
@@ -389,10 +407,10 @@ def save_extraction(job_posting_id: int, profile) -> None:
         conn.close()
 
 
-def _upsert_job_profile(cursor: sqlite3.Cursor, columns: dict[str, Any]) -> None:
+def _upsert_job_profile(cursor, columns: dict[str, Any]) -> None:
     column_sql = ", ".join(JOB_PROFILE_COLUMNS)
-    placeholders = ", ".join(["?"] * len(JOB_PROFILE_COLUMNS))
-    update_sql = ", ".join([f"{column} = excluded.{column}" for column in JOB_PROFILE_UPDATE_COLUMNS])
+    placeholders = ", ".join(["%s"] * len(JOB_PROFILE_COLUMNS))
+    update_sql = ", ".join([f"{col} = EXCLUDED.{col}" for col in JOB_PROFILE_UPDATE_COLUMNS])
     cursor.execute(
         f"""
         INSERT INTO job_profiles ({column_sql})
@@ -402,7 +420,7 @@ def _upsert_job_profile(cursor: sqlite3.Cursor, columns: dict[str, Any]) -> None
                       invalidated_at = NULL,
                       invalidated_reason = NULL
         """,
-        [columns[column] for column in JOB_PROFILE_COLUMNS],
+        [columns[col] for col in JOB_PROFILE_COLUMNS],
     )
 
 
@@ -413,10 +431,10 @@ def fail_extraction(job_posting_id: int, error: str) -> None:
         """
         UPDATE job_postings
         SET profile_status = 'failed',
-            last_profile_attempt_at = CURRENT_TIMESTAMP,
-            last_profile_error = ?,
-            updated_at = CURRENT_TIMESTAMP
-        WHERE id = ?
+            last_profile_attempt_at = NOW(),
+            last_profile_error = %s,
+            updated_at = NOW()
+        WHERE id = %s
         """,
         (error, job_posting_id),
     )
@@ -433,7 +451,7 @@ def get_active_job_profile(job_posting_id: int) -> dict[str, Any] | None:
         """
         SELECT *
         FROM job_profiles
-        WHERE job_posting_id = ?
+        WHERE job_posting_id = %s
           AND is_active = 1
         """,
         (job_posting_id,),
@@ -449,11 +467,11 @@ def get_or_create_user(email: str) -> int:
     cursor = conn.cursor()
     try:
         cursor.execute(
-            "INSERT OR IGNORE INTO users (email) VALUES (?)",
+            "INSERT INTO users (email) VALUES (%s) ON CONFLICT (email) DO NOTHING",
             (email,),
         )
         conn.commit()
-        cursor.execute("SELECT id FROM users WHERE email = ?", (email,))
+        cursor.execute("SELECT id FROM users WHERE email = %s", (email,))
         return cursor.fetchone()["id"]
     finally:
         cursor.close()
@@ -465,7 +483,7 @@ def get_active_user_profile(user_id: int) -> dict | None:
     cursor = conn.cursor()
     try:
         cursor.execute(
-            "SELECT * FROM user_profiles WHERE user_id = ? AND is_active = 1",
+            "SELECT * FROM user_profiles WHERE user_id = %s AND is_active = 1",
             (user_id,),
         )
         row = cursor.fetchone()
@@ -488,7 +506,7 @@ def save_resume_extraction(user_id: int, profile, columns: dict, *, content_hash
     all_cols = {**fixed, **columns}
     col_names = list(all_cols.keys())
     col_sql = ", ".join(col_names)
-    placeholders = ", ".join(["?"] * len(col_names))
+    placeholders = ", ".join(["%s"] * len(col_names))
 
     conn = get_db_connection()
     cursor = conn.cursor()
@@ -497,9 +515,9 @@ def save_resume_extraction(user_id: int, profile, columns: dict, *, content_hash
             """
             UPDATE user_profiles
             SET is_active = 0,
-                invalidated_at = CURRENT_TIMESTAMP,
+                invalidated_at = NOW(),
                 invalidated_reason = 'superseded'
-            WHERE user_id = ? AND is_active = 1
+            WHERE user_id = %s AND is_active = 1
             """,
             (user_id,),
         )
@@ -544,19 +562,21 @@ def get_jobs_for_stage1():
     return rows
 
 
-def save_stage1_result(job_posting_id: int, score: float, decision: str, reasoning: str) -> None:
+def save_stage1_result(
+    job_posting_id: int, score: float, decision: str, reasoning: str
+) -> None:
     active_profile = get_active_job_profile(job_posting_id)
     conn = get_db_connection()
     cursor = conn.cursor()
     cursor.execute(
         """
         INSERT INTO match_results (job_posting_id, job_profile_id, stage1_score, stage1_decision, stage1_reasoning)
-        VALUES (?, ?, ?, ?, ?)
+        VALUES (%s, %s, %s, %s, %s)
         ON CONFLICT(job_posting_id) DO UPDATE SET
-            job_profile_id = excluded.job_profile_id,
-            stage1_score = excluded.stage1_score,
-            stage1_decision = excluded.stage1_decision,
-            stage1_reasoning = excluded.stage1_reasoning
+            job_profile_id = EXCLUDED.job_profile_id,
+            stage1_score = EXCLUDED.stage1_score,
+            stage1_decision = EXCLUDED.stage1_decision,
+            stage1_reasoning = EXCLUDED.stage1_reasoning
         """,
         (
             job_posting_id,
@@ -600,18 +620,20 @@ def get_jobs_for_stage2():
     return rows
 
 
-def save_stage2_result(job_posting_id: int, score: float, decision: str, reasoning: str) -> None:
+def save_stage2_result(
+    job_posting_id: int, score: float, decision: str, reasoning: str
+) -> None:
     active_profile = get_active_job_profile(job_posting_id)
     conn = get_db_connection()
     cursor = conn.cursor()
     cursor.execute(
         """
         UPDATE match_results
-        SET job_profile_id = ?,
-            stage2_score = ?,
-            stage2_decision = ?,
-            stage2_reasoning = ?
-        WHERE job_posting_id = ?
+        SET job_profile_id = %s,
+            stage2_score = %s,
+            stage2_decision = %s,
+            stage2_reasoning = %s
+        WHERE job_posting_id = %s
         """,
         (
             active_profile["id"] if active_profile else None,
@@ -643,7 +665,7 @@ def get_top_matches(limit: int = 10):
           ON mr.job_posting_id = jp.id
         WHERE mr.stage2_decision IS NOT NULL
         ORDER BY mr.stage2_score DESC
-        LIMIT ?
+        LIMIT %s
         """,
         (limit,),
     )
