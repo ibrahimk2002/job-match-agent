@@ -55,8 +55,6 @@ JOB_PROFILE_COLUMNS = [
     "axis_security_reliability",
     "axis_product_ownership",
     "axis_fullstack_span",
-    "eligible_countries_json",
-    "eligible_regions_json",
 ]
 
 JOB_PROFILE_UPDATE_COLUMNS = [column for column in JOB_PROFILE_COLUMNS if column not in {"job_posting_id", "content_hash", "schema_version", "prompt_version", "model_version"}]

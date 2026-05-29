@@ -25,8 +25,6 @@ def _payload_with_axes(**axes_overrides):
         "work_eligibility": {
             "work_auth_required": True,
             "sponsorship_available": False,
-            "eligible_countries": ["US"],
-            "eligible_regions": None,
         },
         "degree_required": 1,
         "summary": "x",
@@ -41,7 +39,6 @@ def _payload_with_axes(**axes_overrides):
                                     "years_min_hard": 5},
         "education_requirements": [],
         "domain_signals": [],
-        "explicit_constraints": [],
         "extraction_confidence": 0.9,
         "evidence_snippets": [],
         "axes": axes,
@@ -90,7 +87,6 @@ def test_build_columns_passes_through_work_eligibility_directly():
     payload = _payload_with_axes()
     payload["work_eligibility"]["work_auth_required"] = True
     payload["work_eligibility"]["sponsorship_available"] = False
-    payload["explicit_constraints"] = ["totally unrelated text"]  # was used by regex
     cols = build_profile_columns(
         payload, job_posting_id=1, content_hash="abc",
     )

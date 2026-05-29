@@ -61,7 +61,6 @@ def _valid_extraction_payload():
         },
         "education_requirements": [],
         "domain_signals": [],
-        "explicit_constraints": [],
         "extraction_confidence": 0.85,
         "evidence_snippets": [],
         "axes": {
@@ -102,3 +101,14 @@ def test_job_profile_carries_axes_through():
     }
     profile = JobProfile.model_validate(profile_payload)
     assert profile.axes.axis_backend == 0.9
+
+
+def test_work_eligibility_does_not_have_geographic_restriction_fields():
+    from models.job_profile import WorkEligibility
+    assert "eligible_countries" not in WorkEligibility.model_fields
+    assert "eligible_regions" not in WorkEligibility.model_fields
+
+
+def test_job_profile_does_not_have_explicit_constraints():
+    assert "explicit_constraints" not in JobProfile.model_fields
+    assert "explicit_constraints" not in ExtractionResult.model_fields
