@@ -27,6 +27,7 @@ def _drop_all_tables(url: str) -> None:
             cur.execute(
                 """
                 DROP TABLE IF EXISTS
+                    resume_skills, job_profile_skills, skill_aliases, skills_catalog,
                     match_results, user_actions, user_profiles, users,
                     job_profiles, job_postings, schema_migrations
                 CASCADE
