@@ -16,17 +16,16 @@ CREATE TABLE IF NOT EXISTS skill_aliases (
 
 CREATE TABLE IF NOT EXISTS job_profile_skills (
     job_profile_id INTEGER NOT NULL REFERENCES job_profiles(id) ON DELETE CASCADE,
-    skill_id       INTEGER NOT NULL REFERENCES skills_catalog(id),
+    skill_id       INTEGER NOT NULL REFERENCES skills_catalog(id) ON DELETE CASCADE,
     importance     TEXT NOT NULL CHECK (importance IN ('must', 'preferred', 'nice')),
     PRIMARY KEY (job_profile_id, skill_id)
 );
 
 CREATE TABLE IF NOT EXISTS resume_skills (
     resume_id INTEGER NOT NULL REFERENCES user_profiles(id) ON DELETE CASCADE,
-    skill_id  INTEGER NOT NULL REFERENCES skills_catalog(id),
+    skill_id  INTEGER NOT NULL REFERENCES skills_catalog(id) ON DELETE CASCADE,
     PRIMARY KEY (resume_id, skill_id)
 );
 
 CREATE INDEX IF NOT EXISTS idx_job_profile_skills_skill ON job_profile_skills(skill_id);
 CREATE INDEX IF NOT EXISTS idx_resume_skills_skill ON resume_skills(skill_id);
-CREATE INDEX IF NOT EXISTS idx_resume_skills_resume ON resume_skills(resume_id);
