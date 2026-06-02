@@ -17,6 +17,34 @@ jobs:
 
     runs-on: ubuntu-latest
 
+    services:
+      postgres-production:
+        image: postgres:15
+        env:
+          POSTGRES_DB: jobmatch_prod
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+      postgres-test:
+        image: postgres:15
+        env:
+          POSTGRES_DB: jobmatch_test
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5433:5432
+    
     steps:
     - uses: actions/checkout@v4
     - name: Set up Python 3.10
@@ -35,5 +63,8 @@ jobs:
         # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
         flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
     - name: Test with pytest
+      env:
+        DATABASE_URL: postgresql://postgres:postgres@localhost:5432/jobmatch_prod
+        TEST_DATABASE_URL: postgresql://postgres:postgres@localhost:5433/jobmatch_test
       run: |
         pytest
