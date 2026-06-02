@@ -1,9 +1,13 @@
-def _column_names(db_path, table):
-    import sqlite3
-    conn = sqlite3.connect(db_path)
+def _column_names(db_url, table):
+    import psycopg2
+    conn = psycopg2.connect(db_url)
     try:
-        rows = conn.execute(f"PRAGMA table_info({table})").fetchall()
-        return [r[1] for r in rows]
+        with conn.cursor() as cur:
+            cur.execute(
+                "SELECT column_name FROM information_schema.columns WHERE table_name = %s",
+                (table,),
+            )
+            return [row[0] for row in cur.fetchall()]
     finally:
         conn.close()
 
@@ -95,25 +99,17 @@ def test_get_active_user_profile_returns_none_when_empty(temp_db):
 
 def test_save_resume_extraction_stores_row(temp_db):
     import db
-    import sqlite3
     from user_profile_columns import build_profile_columns
 
     user_id = db.get_or_create_user("alice@example.com")
     profile = _make_user_profile()
     db.save_resume_extraction(user_id, profile, build_profile_columns(profile), content_hash="abc123")
 
-    conn = sqlite3.connect(temp_db)
-    conn.row_factory = sqlite3.Row
-    try:
-        row = conn.execute(
-            "SELECT * FROM user_profiles WHERE user_id = ? AND is_active = 1", (user_id,)
-        ).fetchone()
-        assert row is not None
-        assert row["current_level"] == "junior"
-        assert row["content_hash"] == "abc123"
-        assert row["is_active"] == 1
-    finally:
-        conn.close()
+    result = db.get_active_user_profile(user_id)
+    assert result is not None
+    assert result["current_level"] == "junior"
+    assert result["content_hash"] == "abc123"
+    assert result["is_active"] == 1
 
 
 def test_get_active_user_profile_returns_row_after_save(temp_db):
@@ -131,7 +127,6 @@ def test_get_active_user_profile_returns_row_after_save(temp_db):
 
 def test_versioning_supersedes_old_row(temp_db):
     import db
-    import sqlite3
     from user_profile_columns import build_profile_columns
 
     user_id = db.get_or_create_user("alice@example.com")
@@ -140,10 +135,11 @@ def test_versioning_supersedes_old_row(temp_db):
     db.save_resume_extraction(user_id, profile, build_profile_columns(profile), content_hash="hash_v1")
     db.save_resume_extraction(user_id, profile, build_profile_columns(profile), content_hash="hash_v2")
 
-    conn = sqlite3.connect(temp_db)
-    conn.row_factory = sqlite3.Row
+    conn = db.get_db_connection()
     try:
-        rows = conn.execute("SELECT * FROM user_profiles WHERE user_id = ?", (user_id,)).fetchall()
+        with conn.cursor() as cur:
+            cur.execute("SELECT * FROM user_profiles WHERE user_id = %s", (user_id,))
+            rows = cur.fetchall()
         assert len(rows) == 2
         active = [r for r in rows if r["is_active"] == 1]
         inactive = [r for r in rows if r["is_active"] == 0]
@@ -156,32 +152,32 @@ def test_versioning_supersedes_old_row(temp_db):
 
 
 def test_unique_index_prevents_two_active_profiles(temp_db):
-    import sqlite3
+    import psycopg2
     import pytest
+    import db
 
-    conn = sqlite3.connect(temp_db)
-    conn.execute("PRAGMA foreign_keys = ON")
+    conn = db.get_db_connection()
     try:
-        conn.execute("INSERT INTO users (email) VALUES ('test@example.com')")
-        user_id = conn.execute(
-            "SELECT id FROM users WHERE email = 'test@example.com'"
-        ).fetchone()[0]
-
-        conn.execute(
-            """INSERT INTO user_profiles
-               (user_id, content_hash, schema_version, prompt_version, model_version, is_active, profile_json)
-               VALUES (?, 'h1', '1.0', '1.0', 'model', 1, '{}')""",
-            (user_id,),
-        )
-        conn.commit()
-
-        with pytest.raises(sqlite3.IntegrityError):
-            conn.execute(
+        with conn.cursor() as cur:
+            cur.execute("INSERT INTO users (email) VALUES ('test@example.com')")
+            cur.execute("SELECT id FROM users WHERE email = 'test@example.com'")
+            user_id = cur.fetchone()["id"]
+            cur.execute(
                 """INSERT INTO user_profiles
                    (user_id, content_hash, schema_version, prompt_version, model_version, is_active, profile_json)
-                   VALUES (?, 'h2', '1.0', '1.0', 'model', 1, '{}')""",
+                   VALUES (%s, 'h1', '1.0', '1.0', 'model', 1, '{}')""",
                 (user_id,),
             )
-            conn.commit()
+        conn.commit()
+
+        with pytest.raises(psycopg2.IntegrityError):
+            with conn.cursor() as cur:
+                cur.execute(
+                    """INSERT INTO user_profiles
+                       (user_id, content_hash, schema_version, prompt_version, model_version, is_active, profile_json)
+                       VALUES (%s, 'h2', '1.0', '1.0', 'model', 1, '{}')""",
+                    (user_id,),
+                )
+                conn.commit()
     finally:
         conn.close()

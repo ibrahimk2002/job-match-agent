@@ -1,9 +1,13 @@
-def _column_names(temp_db_path, table):
-    import sqlite3
-    conn = sqlite3.connect(temp_db_path)
+def _column_names(db_url, table):
+    import psycopg2
+    conn = psycopg2.connect(db_url)
     try:
-        rows = conn.execute(f"PRAGMA table_info({table})").fetchall()
-        return [r[1] for r in rows]
+        with conn.cursor() as cur:
+            cur.execute(
+                "SELECT column_name FROM information_schema.columns WHERE table_name = %s",
+                (table,),
+            )
+            return [row[0] for row in cur.fetchall()]
     finally:
         conn.close()
 

@@ -93,7 +93,7 @@ def _make_fake_extraction_result():
 
 
 def test_extract_resume_saves_profile_with_denormalized_columns(temp_db, monkeypatch, tmp_path):
-    import sqlite3
+    import db
     import pipeline.extract_resume as extract_module
 
     fake_pdf = tmp_path / "resume.pdf"
@@ -115,36 +115,24 @@ def test_extract_resume_saves_profile_with_denormalized_columns(temp_db, monkeyp
 
     extract_module.extract_resume(str(fake_pdf), "jane@example.com")
 
-    conn = sqlite3.connect(temp_db)
-    conn.row_factory = sqlite3.Row
-    try:
-        user = conn.execute(
-            "SELECT * FROM users WHERE email = 'jane@example.com'"
-        ).fetchone()
-        assert user is not None
+    user_id = db.get_or_create_user("jane@example.com")
+    profile = db.get_active_user_profile(user_id)
+    assert profile is not None
+    assert profile["current_level"] == "junior"
+    assert profile["primary_role_family"] == "backend"
+    assert profile["axis_backend"] == pytest.approx(0.7)
+    assert profile["axis_fullstack_span"] == pytest.approx(0.20)  # 2*min(0.7,0.1)
+    assert profile["work_auth_canada"] == 1
+    assert profile["work_auth_us"] == 0
+    assert profile["degree_level"] == 1
 
-        profile = conn.execute(
-            "SELECT * FROM user_profiles WHERE user_id = ? AND is_active = 1",
-            (user["id"],),
-        ).fetchone()
-        assert profile is not None
-        assert profile["current_level"] == "junior"
-        assert profile["primary_role_family"] == "backend"
-        assert profile["axis_backend"] == pytest.approx(0.7)
-        assert profile["axis_fullstack_span"] == pytest.approx(0.20)  # 2*min(0.7,0.1)
-        assert profile["work_auth_canada"] == 1
-        assert profile["work_auth_us"] == 0
-        assert profile["degree_level"] == 1
-
-        profile_json = json.loads(profile["profile_json"])
-        assert profile_json["full_name"] == "Jane Doe"
-        assert profile_json["extraction_confidence"] == pytest.approx(0.85)
-    finally:
-        conn.close()
+    profile_json = json.loads(profile["profile_json"])
+    assert profile_json["full_name"] == "Jane Doe"
+    assert profile_json["extraction_confidence"] == pytest.approx(0.85)
 
 
 def test_extract_resume_persists_personal_projects_in_profile_json(temp_db, monkeypatch, tmp_path):
-    import sqlite3
+    import db
     import pipeline.extract_resume as extract_module
     from models.user_profile import PersonalProject
 
@@ -170,23 +158,14 @@ def test_extract_resume_persists_personal_projects_in_profile_json(temp_db, monk
 
     extract_module.extract_resume(str(fake_pdf), "projects@example.com")
 
-    conn = sqlite3.connect(temp_db)
-    conn.row_factory = sqlite3.Row
-    try:
-        user = conn.execute("SELECT id FROM users WHERE email = 'projects@example.com'").fetchone()
-        assert user is not None
-        row = conn.execute(
-            "SELECT profile_json FROM user_profiles WHERE user_id = ? AND is_active = 1",
-            (user["id"],),
-        ).fetchone()
-        assert row is not None
-        profile_json = json.loads(row["profile_json"])
-        projects = profile_json.get("personal_projects", [])
-        assert len(projects) == 1
-        assert projects[0]["name"] == "open-source-tool"
-        assert "SQLite" in projects[0]["tech_stack"]
-    finally:
-        conn.close()
+    user_id = db.get_or_create_user("projects@example.com")
+    profile = db.get_active_user_profile(user_id)
+    assert profile is not None
+    profile_json = json.loads(profile["profile_json"])
+    projects = profile_json.get("personal_projects", [])
+    assert len(projects) == 1
+    assert projects[0]["name"] == "open-source-tool"
+    assert "SQLite" in projects[0]["tech_stack"]
 
 
 def test_extract_resume_skips_if_already_current(temp_db, monkeypatch, tmp_path, capsys):
