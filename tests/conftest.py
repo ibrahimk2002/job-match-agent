@@ -1,32 +1,51 @@
 import os
 import sys
-import tempfile
 from pathlib import Path
 
 import pytest
+from dotenv import load_dotenv
 
-# Prevent RuntimeError from utils.env during import — tests mock all actual API calls.
 os.environ.setdefault("OPENAI_API_KEY", "test-sk-dummy")
 
 ROOT = Path(__file__).resolve().parent.parent
-# ROOT first so any root-level imports resolve; src/ for modules (db, models, utils, etc.).
 sys.path.insert(0, str(ROOT / "src"))
 sys.path.insert(0, str(ROOT))
+
+load_dotenv(ROOT / ".env")
+
+_TEST_DB_URL = os.environ.get(
+    "TEST_DATABASE_URL", "postgresql://localhost/jobmatch_test"
+)
+
+
+def _drop_all_tables(url: str) -> None:
+    import psycopg2
+
+    conn = psycopg2.connect(url)
+    try:
+        with conn.cursor() as cur:
+            cur.execute(
+                """
+                DROP TABLE IF EXISTS
+                    match_results, user_actions, user_profiles, users,
+                    job_profiles, job_postings, schema_migrations
+                CASCADE
+                """
+            )
+        conn.commit()
+    finally:
+        conn.close()
 
 
 @pytest.fixture
 def temp_db(monkeypatch):
-    """Yields a path to a fresh SQLite DB with all migrations applied."""
-    fd, path = tempfile.mkstemp(suffix=".db")
-    os.close(fd)
-
+    """Yields a Postgres DATABASE_URL with a fresh schema and all migrations applied."""
     import db as db_module
-    monkeypatch.setattr(db_module, "_DB_PATH", path)
+
+    monkeypatch.setenv("DATABASE_URL", _TEST_DB_URL)
+    _drop_all_tables(_TEST_DB_URL)
     db_module.init_db()
 
-    yield path
+    yield _TEST_DB_URL
 
-    try:
-        os.remove(path)
-    except OSError:
-        pass
+    _drop_all_tables(_TEST_DB_URL)

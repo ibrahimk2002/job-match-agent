@@ -1,78 +1,82 @@
 # CLAUDE.md
 
-This file provides guidance to Claude Code when working with code in this repository, the role of the agent is a senior software architect. Perfer simple, direct solutions over enterpsrise over-engineering.
+This file provides guidance to Claude Code when working with code in this repository. Role: senior software architect. Prefer simple, direct solutions over enterprise over-engineering.
+
 ## Project
 
-AI-powered job matching system: ingest job postings (LinkedIn JSONL exports) → extract structured `JobProfile`s once via LLM → match candidates against profiles cheaply via denormalized columns → optional LLM rerank on shortlist. SQLite, single DB file, scale is a few hundred postings. Owner: Ibrahim Khan.
+AI-powered job matching system: ingest job postings (LinkedIn JSONL exports) → extract structured `JobProfile`s once via LLM → match candidates against profiles cheaply via SQL → optional LLM rerank on shortlist. Owner: Ibrahim Khan.
 
 **Core principle**: matching is the product. Extraction exists to feed matching. Never call the LLM per `(candidate, job)` pair — extract once, query denormalized columns many times, reserve LLM for final rerank only.
 
+**Current migration in progress**: SQLite → PostgreSQL + pgvector. All new schema work targets Postgres. See `docs/TODO_LIST.md` for PR sequence.
+
 ## Architecture at a glance
 
-Two-layer data model (see `docs/CONTEXT.md` §3 for rationale):
-
 ```
-job_postings (ingestion: one row per posting, tracks content_hash + profile_status)
-    ↓ 1:N (only one is_active=1 per posting)
-job_profiles (semantic cache: full profile_json + ~30 denormalized columns)
+job_postings          (ingestion: one row per posting, content_hash + profile_status)
+    ↓ 1:N
+job_profiles          (semantic cache: profile_json + ~30 denormalized columns + axes_vec)
+    ↓ 1:N
+job_profile_skills    (inverted index: one row per skill × importance per active profile)
     ↓
-match_results (stage1/stage2 scores, keyed by job_posting_id)
+match_results         (stage1/stage2/stage3 scores, keyed by job_posting_id + user_id)
+
+users                 (one row per user, email unique)
+    ↓ 1:N
+user_profiles         (resume extraction cache: same versioning pattern as job_profiles)
+    ↓ 1:N
+resume_skills         (one row per skill per active resume)
+
+skills_catalog        (canonical skills vocabulary: skill_id, canonical, category, source)
+skill_aliases         (alias → skill_id lookup; lowercased strings)
 ```
 
-- **Ingestion** (`src/pipeline/ingest.py` → `src/db.py::import_jobs_from_jsonl`): discovers `data/reports/*/cleaned_jobs.jsonl`, upserts `job_postings`. `content_hash = SHA-256(title || location || cleaned_description)`. On content change, flips `profile_status` to `stale` (or `missing` if previously failed).
-- **Extraction** (`src/pipeline/extract.py` → `src/db.py::save_extraction`): picks jobs where the active profile's `(content_hash, schema_version, prompt_version, model_version)` doesn't match current policy. Calls OpenAI `responses.parse` with `ExtractionResult` as the structured-output schema, wraps in `JobProfile` with `ProfileMeta`, then `profile_columns.build_profile_columns` projects it to all denormalized columns before upsert. Previous active profile is marked `is_active=0, invalidated_reason='superseded'`.
-- **Matching** (`src/pipeline/match1.py`, `match2.py`): **current impl is LLM-per-job and commented out in `run.py`**. Target: stage 1 filters on denormalized columns (`role_family`, `seniority`, `work_auth_required`, `salary_*`, `axis_*`) with no LLM; stage 2 reranks top ~100 with LLM. See `docs/TODO_LIST.md` #7.
+**Matching algorithm (three stages):**
+- Stage 1 — SQL hard filters on `job_profiles` columns (work_auth, degree, salary bounds) + pgvector cosine on `axes_vec`. No LLM. Returns a shortlist.
+- Stage 2 — SQL keyword overlap: `job_profile_skills ⋈ resume_skills`, scored by importance (`must`=3, `preferred`=2, `nice`=1). No LLM. Ranks the shortlist.
+- Stage 3 — Optional LLM rerank on top 10–20 jobs only, using `profile_json` for full context.
 
 ## Load-bearing modules
 
 | File | Why it matters |
-|------|---------------|
-| `src/db.py` | All CRUD + `compute_content_hash` + `apply_schema_migrations` (runs every `.sql` in `scripts/migrations/` on `init_db`). `JOB_PROFILE_COLUMNS` is the canonical column order for upsert. |
-| `src/profile_columns.py` | Projects a `JobProfile` payload to all 30+ `job_profiles` columns. Reads six primary axes directly from `payload["axes"]` (no presets). Computes `axis_fullstack_span = round(min(2*min(backend,frontend), 1.0), 2)` — never from LLM. `salary_*` fields almost always land as `None`. **Upsert invariant:** `build_profile_columns` return keys must equal `JOB_PROFILE_COLUMNS − {"is_active"}` — enforced by `tests/test_profile_columns.py::test_build_columns_keys_match_db_constants`. |
-| `src/pipeline/extract.py` | Defines `SCHEMA_VERSION = "1.0"` and `DEFAULT_MODEL`; `prompt_version` parsed from first line of `src/prompts/extraction.txt` (`# prompt_version: X.X`). Those four values are the versioning tuple for re-extraction decisions. |
-| `src/models/job_profile.py` | `JobProfile`, `ExtractionResult`, `ProfileMeta`, `Axes`, `Skills`, `ExperienceRequirements`. `Axes` holds the six primary axis scores (no `axis_fullstack_span`). Both `ExtractionResult` and `JobProfile` carry an `axes: Axes` field. `salary_*`, `work_auth_required`, `degree_required` live in `job_profiles` columns, projected by `profile_columns.py`. |
-| `src/models/user_profile.py` | Pydantic schema for resume side: `ResumeExtractionResult`, `UserProfile`, `ResumeSkills`, `WorkExperience`, etc. `Axes` and `ProfileMeta` are imported from `models.job_profile` (not duplicated). |
-| `src/user_profile_columns.py` | Projects a `UserProfile` to 25 denormalized `user_profiles` columns. `USER_PROFILE_COLUMNS` is the canonical list. Same upsert-invariant pattern as `profile_columns.py`. |
-| `src/pipeline/extract_resume.py` | Resume extraction pipeline: PDF → text → hash → version check → LLM → save. `SCHEMA_VERSION`, `DEFAULT_MODEL`, `_PROMPT_VERSION` form the versioning tuple. Hash is of truncated content (`resume_text[:60_000]`), not raw file. |
-| `src/cli.py` | CLI entry point: `python src/cli.py ingest-resume <pdf> --email <email>` (from project root). Handles `sys.exit()` — library code raises exceptions, CLI converts to exit codes. |
-| `scripts/migrations/001_create_core_schema.sql` | Authoritative schema. `CREATE TABLE IF NOT EXISTS` makes `init_db()` idempotent. There is **no migration-version table** — ordering is purely alphabetical filename. |
+|------|----------------|
+| `src/db.py` | All CRUD + `compute_content_hash` + `apply_schema_migrations`. `JOB_PROFILE_COLUMNS` and `USER_PROFILE_COLUMNS` are the canonical column lists for upserts. |
+| `src/profile_columns.py` | Projects `JobProfile` payload → all `job_profiles` columns. `build_profile_columns` return keys must equal `JOB_PROFILE_COLUMNS − {"is_active"}`. Enforced by `tests/test_profile_columns.py::test_build_columns_keys_match_db_constants`. |
+| `src/user_profile_columns.py` | Projects `UserProfile` → `user_profiles` columns. Same invariant pattern. |
+| `src/pipeline/extract.py` | `SCHEMA_VERSION`, `DEFAULT_MODEL`, `prompt_version` from `prompts/extraction.txt` form the four-tuple for re-extraction decisions. |
+| `src/pipeline/extract_resume.py` | PDF → text → hash → version check → LLM → save. Hash over `resume_text[:60_000]`. |
+| `src/models/job_profile.py` | `JobProfile`, `ExtractionResult`, `Axes`, `Skills`. `Skills` has 8 categories; these feed `job_profile_skills` at extraction time. |
+| `src/models/user_profile.py` | `UserProfile`, `ResumeExtractionResult`, `ResumeSkills`. Imports `Axes` and `ProfileMeta` from `job_profile` — not duplicated. |
+| `src/cli.py` | CLI entry point. Library code raises exceptions; CLI catches and calls `sys.exit()`. |
+| `scripts/migrations/` | Authoritative schema. Applied alphabetically by filename on `init_db()`. No migration-version table — ordering is filename order. |
 
-## Design guardrails (from `docs/CONTEXT.md` §Guardrails)
+## Design guardrails
 
-1. Do not reintroduce LLM-per-job matching in stage 1.
-2. Do not parse `profile_json` during matching — use denormalized columns.
-3. Do not merge `job_profiles` back into `job_postings`; they are separate concerns on purpose.
-4. Do not treat seniority as a hard filter for early-career users (it's a soft signal unless clearly strict, e.g. "5+ years required").
-5. Do not over-normalize into many small tables. Keep full JSON + denormalize the ~20 fields matching actually touches.
-6. Stay on SQLite; no vector DB or microservices at current scale.
+1. Do not reintroduce LLM-per-job matching in stage 1 or 2.
+2. Do not parse `profile_json` during matching — use denormalized columns and junction tables.
+3. Do not merge `job_profiles` back into `job_postings`; they are separate concerns.
+4. Do not treat seniority as a hard filter for early-career users (soft signal unless explicitly strict).
+5. Do not over-normalize into many small tables. Denormalize the ~20 fields matching actually touches.
+6. Do not use embeddings for skill matching — too ambiguous to tune and explain. pgvector is for axis cosine only.
+7. Keep PRs under ~400 lines. One logical change per PR. No mass rewrites.
 
 ## How to work here
-### Before coding:
 
-Enter plan mode for non-trivial changes. Present the plan and get approval before writing code.
-If the request is ambiguous, ask clarifying questions before starting.
-Read docs/CONTEXT.md and the relevant migration SQL before proposing schema changes.
+### Before coding
+Enter plan mode for non-trivial changes. Present the plan, get approval, then code.
+Read `docs/CONTEXT.md` and relevant migration SQL before proposing schema changes.
+Check `docs/TODO_LIST.md` for the current PR in sequence — do not skip ahead.
 
-### While coding:
+### While coding
+Stay in scope. Do not add unrequested features or refactor unrelated code.
+Functions ≤ 30 lines, files ≤ 300 lines, nesting ≤ 3 levels.
+Use `log_info` from `utils` for all pipeline/library logging. `print()` for CLI output only.
+Library functions raise exceptions; `src/cli.py` catches them and calls `sys.exit()`.
 
-Stay in scope. Do not add unrequested features, refactor unrelated code, or create files that weren't asked for.
-Functions under ~30 lines, files under ~300 lines, nesting ≤ 3 levels where practical.
-Names are self-documenting. Booleans: is_/has_/can_. Functions: verbs. Classes: nouns.
-Handle errors at boundaries with meaningful messages. Never swallow exceptions silently.
-Use `log_info` from `utils` for all logging in pipeline/library code — not `import logging`. `print()` is reserved for user-facing CLI output.
-Library functions raise exceptions; CLI entry points (`src/cli.py`) catch and call `sys.exit()`.
+### Before committing
+Show the file list and proposed commit message. Wait for explicit approval.
+Commit format: `type(scope): subject` (feat/fix/docs/refactor/test/chore).
+Never force-push to main. Never commit `.env`, secrets, or credentials.
 
-### Before committing:
-
-Show the file list and proposed commit message. Wait for explicit approval before running git commit or git push.
-Commit format: type(scope): subject (feat/fix/docs/refactor/test/chore).
-Never force-push to main. Never commit secrets, .env, or credentials.
-
-### When stuck:
-
-Stop. Explain the problem, propose 2–3 options with trade-offs, and ask for guidance.
-
-### Running tests:
-
-`pytest tests/ -v` — runs all unit tests. `tests/conftest.py` sets `sys.path` and provides the `temp_db` fixture, which monkeypatches `db._DB_PATH` to a tmpfile and calls `init_db()`. DB tests must use `temp_db`; never reference a real DB path in tests.
-Pipeline functions that tests need to monkeypatch (e.g. `_extract_pdf_text`, `_attempt_extraction`) must be module-level — not nested inside other functions.
+### Running tests
+`pytest tests/ -v` — all unit tests. `tests/conftest.py` provides the `temp_db` fixture (monkeypatches `db._DB_PATH` to a tmpfile, calls `init_db()`). DB tests must use `temp_db`. Never reference a real DB path in tests.

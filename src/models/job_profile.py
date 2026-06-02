@@ -81,17 +81,6 @@ class WorkEligibility(BaseModel):
             "('we do not sponsor'). Null if not mentioned."
         ),
     )
-    eligible_countries: list[str] | None = Field(
-        None,
-        description=(
-            "ISO 3166-1 alpha-2 country codes where the role is eligible (e.g. ['US', 'CA']). "
-            "Null if not restricted or not stated."
-        ),
-    )
-    eligible_regions: list[str] | None = Field(
-        None,
-        description="Sub-national regions or states explicitly stated (e.g. ['California', 'Ontario']). Null if not stated.",
-    )
 
 
 class JobProfile(BaseModel):
@@ -130,7 +119,6 @@ class JobProfile(BaseModel):
     experience_requirements: ExperienceRequirements
     education_requirements: list[str]
     domain_signals: list[str]
-    explicit_constraints: list[str]
     extraction_confidence: float
     evidence_snippets: list[EvidenceSnippet]
     axes: Axes
@@ -172,7 +160,6 @@ class ExtractionResult(BaseModel):
     experience_requirements: ExperienceRequirements
     education_requirements: list[str]
     domain_signals: list[str]
-    explicit_constraints: list[str]
     extraction_confidence: float
     evidence_snippets: list[EvidenceSnippet]
     axes: Axes
