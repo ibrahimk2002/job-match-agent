@@ -19,7 +19,7 @@ jobs:
 
     services:
       postgres-production:
-        image: postgres:15
+        image: pgvector/pgvector:pg16
         env:
           POSTGRES_DB: jobmatch_prod
           POSTGRES_USER: postgres
@@ -32,7 +32,7 @@ jobs:
         ports:
           - 5432:5432
       postgres-test:
-        image: postgres:15
+        image: pgvector/pgvector:pg16
         env:
           POSTGRES_DB: jobmatch_test
           POSTGRES_USER: postgres
