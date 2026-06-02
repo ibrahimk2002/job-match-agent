@@ -23,3 +23,28 @@ def test_axis_columns_use_canonical_names(temp_db):
 def test_axis_fullstack_span_column_still_exists(temp_db):
     cols = _column_names(temp_db, "job_profiles")
     assert "axis_fullstack_span" in cols
+
+
+def test_skills_catalog_tables_exist(temp_db):
+    tables = ['skills_catalog', 'skill_aliases', 'job_profile_skills', 'resume_skills']
+    for table in tables:
+        cols = _column_names(temp_db, table)
+        assert len(cols) > 0, f"Table {table!r} not found or has no columns"
+
+def test_skills_catalog_columns(temp_db):
+    cols = _column_names(temp_db, 'skills_catalog')
+    assert 'id' in cols
+    assert 'canonical' in cols
+    assert 'category' in cols
+    assert 'source' in cols
+
+def test_job_profile_skills_columns(temp_db):
+    cols = _column_names(temp_db, 'job_profile_skills')
+    assert 'job_profile_id' in cols
+    assert 'skill_id' in cols
+    assert 'importance' in cols
+
+def test_resume_skills_columns(temp_db):
+    cols = _column_names(temp_db, 'resume_skills')
+    assert 'resume_id' in cols
+    assert 'skill_id' in cols
