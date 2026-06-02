@@ -3,12 +3,15 @@ import sys
 from pathlib import Path
 
 import pytest
+from dotenv import load_dotenv
 
 os.environ.setdefault("OPENAI_API_KEY", "test-sk-dummy")
 
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT / "src"))
 sys.path.insert(0, str(ROOT))
+
+load_dotenv(ROOT / ".env")
 
 _TEST_DB_URL = os.environ.get(
     "TEST_DATABASE_URL", "postgresql://localhost/jobmatch_test"
