@@ -10,16 +10,25 @@ def _conn(db_url):
 
 
 def _seed_one(conn, canonical, category="hard", aliases=None):
-    """Insert one skill + optional aliases. Commits."""
+    """Insert one skill + optional aliases. Commits.
+
+    Uses ON CONFLICT DO NOTHING so tests work even when the migration has
+    already seeded the same canonical name into the catalog.
+    """
     with conn.cursor() as cur:
         cur.execute(
-            "INSERT INTO skills_catalog (canonical, category, source) VALUES (%s, %s, 'curated') RETURNING id",
+            """
+            INSERT INTO skills_catalog (canonical, category, source)
+            VALUES (%s, %s, 'curated')
+            ON CONFLICT (canonical) DO UPDATE SET canonical = EXCLUDED.canonical
+            RETURNING id
+            """,
             (canonical, category),
         )
         skill_id = cur.fetchone()["id"]
         for alias in (aliases or []):
             cur.execute(
-                "INSERT INTO skill_aliases (alias, skill_id) VALUES (%s, %s)",
+                "INSERT INTO skill_aliases (alias, skill_id) VALUES (%s, %s) ON CONFLICT DO NOTHING",
                 (alias.lower(), skill_id),
             )
     conn.commit()
@@ -107,4 +116,58 @@ def test_caller_owns_commit(temp_db):
         )
         row = cur.fetchone()
     assert row is None, "Rollback should have discarded the auto-insert"
+    conn.close()
+
+
+def test_seeded_python_resolves_via_alias(temp_db):
+    """After migration runs, 'py' should resolve to the seeded Python entry."""
+    conn = _conn(temp_db)
+    skill_id = canonicalize("py", conn)
+    with conn.cursor() as cur:
+        cur.execute("SELECT canonical FROM skills_catalog WHERE id = %s", (skill_id,))
+        row = cur.fetchone()
+    assert row["canonical"] == "Python"
+    conn.close()
+
+
+def test_seeded_kubernetes_k8s_alias(temp_db):
+    conn = _conn(temp_db)
+    id_k8s = canonicalize("k8s", conn)
+    id_kubernetes = canonicalize("Kubernetes", conn)
+    assert id_k8s == id_kubernetes
+    conn.close()
+
+
+def test_seeded_postgres_aliases(temp_db):
+    conn = _conn(temp_db)
+    ids = [canonicalize(a, conn) for a in ["postgres", "psql", "pgsql", "pg", "PostgreSQL"]]
+    assert len(set(ids)) == 1, "All PostgreSQL aliases must resolve to the same skill_id"
+    conn.close()
+
+
+def test_seeded_aws_abbreviation(temp_db):
+    conn = _conn(temp_db)
+    id_abbr = canonicalize("amazon web services", conn)
+    id_canon = canonicalize("AWS", conn)
+    assert id_abbr == id_canon
+    conn.close()
+
+
+def test_seed_catalog_count(temp_db):
+    """Sanity check: at least 200 curated canonical entries loaded."""
+    conn = _conn(temp_db)
+    with conn.cursor() as cur:
+        cur.execute("SELECT COUNT(*) AS cnt FROM skills_catalog WHERE source = 'curated'")
+        count = cur.fetchone()["cnt"]
+    assert count >= 200, f"Expected ≥200 seeded skills, got {count}"
+    conn.close()
+
+
+def test_seed_alias_count(temp_db):
+    """Sanity check: at least 80 aliases loaded."""
+    conn = _conn(temp_db)
+    with conn.cursor() as cur:
+        cur.execute("SELECT COUNT(*) AS cnt FROM skill_aliases")
+        count = cur.fetchone()["cnt"]
+    assert count >= 80, f"Expected ≥80 aliases, got {count}"
     conn.close()
