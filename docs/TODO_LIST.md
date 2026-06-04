@@ -102,7 +102,7 @@
 - `scripts/migrations/007_add_axes_vec.sql`: `ALTER TABLE job_profiles ADD COLUMN axes_vec vector(6); ALTER TABLE user_profiles ADD COLUMN axes_vec vector(6);` + HNSW index on each
 - `src/profile_columns.py`: compute and include `axes_vec` in `build_profile_columns` return dict (as a Python list `[backend, frontend, platform, ai_data, security, product]`)
 - `src/user_profile_columns.py`: same
-- `src/db.py` or a migration script: backfill `axes_vec` for all existing rows from scalar columns
+- `src/db.py` or a migration script: backfill `axes_vec` for all existing  rows from scalar columns
 - `tests/test_profile_columns.py`: add assertion that `axes_vec` is present and has 6 elements
 
 **DoD**: All existing `job_profiles` and `user_profiles` rows have non-null `axes_vec`. The HNSW index is created. `pytest tests/ -v` passes.
