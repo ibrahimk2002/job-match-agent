@@ -1,18 +1,6 @@
 from typing import Literal
 from pydantic import BaseModel, Field
 
-
-class Skills(BaseModel):
-    languages: list[str]
-    frameworks: list[str]
-    cloud: list[str]
-    databases: list[str]
-    devops: list[str]
-    ai_ml: list[str]
-    other_tools: list[str]
-    concepts: list[str]
-
-
 class ExperienceRequirements(BaseModel):
     years_min: int | None
     years_max: int | None
@@ -115,7 +103,7 @@ class JobProfile(BaseModel):
     must_have_requirements: list[str]
     preferred_requirements: list[str]
     responsibilities: list[str]
-    skills: Skills
+    skills: list[str]
     experience_requirements: ExperienceRequirements
     education_requirements: list[str]
     domain_signals: list[str]
@@ -156,7 +144,7 @@ class ExtractionResult(BaseModel):
     must_have_requirements: list[str]
     preferred_requirements: list[str]
     responsibilities: list[str]
-    skills: Skills
+    skills: list[str]
     experience_requirements: ExperienceRequirements
     education_requirements: list[str]
     domain_signals: list[str]

@@ -16,7 +16,7 @@ Rules:
 
 Quality bar:
 - Keep `summary` concise and factual.
-- Classify skills into the correct category buckets.
+- Identify relevant hard skills and necessary soft skills  
 - Ensure consistency between `seniority`, `responsibilities`, and `experience_requirements`.
 
 Salary and compensation:

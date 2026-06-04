@@ -2,18 +2,6 @@ from pydantic import BaseModel
 
 from models.job_profile import Axes, EvidenceSnippet, ProfileMeta
 
-
-class ResumeSkills(BaseModel):
-    languages: list[str]
-    frameworks: list[str]
-    cloud: list[str]
-    databases: list[str]
-    devops: list[str]
-    ai_ml: list[str]
-    other_tools: list[str]
-    concepts: list[str]
-
-
 class WorkExperience(BaseModel):
     title: str
     company: str
@@ -58,7 +46,7 @@ class ResumeExtractionResult(BaseModel):
     current_level: str              # "student"|"junior"|"mid"|"senior"|"staff"|"principal"
     primary_role_family: str        # "backend"|"frontend"|"fullstack"|"platform"|"ai_ml"|"security"|"product"
     axes: Axes
-    skills: ResumeSkills
+    skills: list[str]
     work_experience: list[WorkExperience]
     personal_projects: list[PersonalProject] = []
     education: ResumeEducation
@@ -75,7 +63,7 @@ class UserProfile(BaseModel):
     current_level: str
     primary_role_family: str
     axes: Axes
-    skills: ResumeSkills
+    skills: list[str]
     work_experience: list[WorkExperience]
     personal_projects: list[PersonalProject] = []
     education: ResumeEducation
