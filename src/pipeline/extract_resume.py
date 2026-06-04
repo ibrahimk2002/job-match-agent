@@ -6,8 +6,9 @@ from pydantic import ValidationError
 
 from models.job_profile import ProfileMeta
 from models.user_profile import UserProfile
-from db import get_or_create_user, get_active_user_profile, save_resume_extraction
+from db import get_or_create_user, get_active_user_profile, save_resume_extraction, get_db_connection
 from integrations import extract_resume_profile, MalformedOutputError
+from pipeline.skills_scan import populate_resume_skills
 from user_profile_columns import build_profile_columns
 from utils import log_info
 
@@ -101,7 +102,12 @@ def _run_extraction_and_save(user_id: int, resume_text: str, content_hash: str) 
     )
 
     columns = build_profile_columns(profile)
-    save_resume_extraction(user_id, profile, columns, content_hash=content_hash)
+    user_profile_id = save_resume_extraction(user_id, profile, columns, content_hash=content_hash)
+    conn = get_db_connection()
+    try:
+        populate_resume_skills(user_profile_id, resume_text, profile.model_dump_json(), conn)
+    finally:
+        conn.close()
     _log_usage(user_id, usage)
     return profile
 

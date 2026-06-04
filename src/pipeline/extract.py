@@ -5,7 +5,8 @@ from pydantic import ValidationError
 
 from models import JobProfile, ProfileMeta
 from integrations import extract_job_profile, MalformedOutputError
-from db import get_pending_extraction, save_extraction, fail_extraction
+from db import get_pending_extraction, save_extraction, fail_extraction, get_db_connection
+from pipeline.skills_scan import populate_job_skills
 from utils import log_info
 
 
@@ -152,7 +153,12 @@ def _process_one(job: dict, stats: dict) -> None:
         profile_meta=profile_meta,
         **extraction_result.model_dump(),
     )
-    save_extraction(db_job_id, profile)
+    job_profile_id = save_extraction(db_job_id, profile)
+    conn = get_db_connection()
+    try:
+        populate_job_skills(job_profile_id, job_text, profile.model_dump_json(), conn)
+    finally:
+        conn.close()
     stats["succeeded"] += 1
     log_info(
         f"Extracted data for job_id {db_job_id}: "
