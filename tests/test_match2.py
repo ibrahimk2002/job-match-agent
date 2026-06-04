@@ -124,6 +124,26 @@ def test_partial_match_score(temp_db):
     conn.close()
 
 
+def test_eighty_percent_match_score(temp_db):
+    """User matches 4 of 5 must-skills. Score = 12/15 ≈ 0.8."""
+    conn = _conn(temp_db)
+    job_profile_id = _insert_job_profile(conn, "80pct")
+    user_profile_id = _insert_user_profile(conn)
+    skills = [_seed_skill(conn, f"Skill80pct-{i}") for i in range(5)]
+    conn.commit()
+
+    save_job_profile_skills(
+        job_profile_id, [(s, "must", None) for s in skills], conn
+    )
+    # User has 4 of 5
+    save_resume_skills(user_profile_id, [(s, "must") for s in skills[:4]], conn)
+
+    rows = _run_stage2(conn, user_profile_id, [job_profile_id])
+    assert len(rows) == 1
+    assert abs(rows[0]["keyword_score"] - 0.8) < 1e-6
+    conn.close()
+
+
 def test_full_match_score(temp_db):
     """User has all 3 skills (must+preferred+nice). Score = 6/6 = 1.0."""
     conn = _conn(temp_db)
@@ -210,7 +230,8 @@ def test_missing_skill_ids_populated(temp_db):
 
 
 def test_higher_match_ranks_first(temp_db):
-    """Job A: user matches all 3 must-skills. Job B: user matches 1 of 3 must-skills. A ranks first."""
+    """Job A needs skill_1+skill_2+skill_3 (user has all). Job B needs skill_1+skill_4+skill_5 (user has only skill_1).
+    With 3 must-skills each: job A scores 1.0, job B scores 1/3. Job A ranks first."""
     conn = _conn(temp_db)
     job_a_id = _insert_job_profile(conn, "rankA")
     job_b_id = _insert_job_profile(conn, "rankB")
@@ -219,53 +240,32 @@ def test_higher_match_ranks_first(temp_db):
     skill_1 = _seed_skill(conn, "Skill1-rank")
     skill_2 = _seed_skill(conn, "Skill2-rank")
     skill_3 = _seed_skill(conn, "Skill3-rank")
+    skill_4 = _seed_skill(conn, "Skill4-rank")
+    skill_5 = _seed_skill(conn, "Skill5-rank")
     conn.commit()
 
-    # Job A requires all three skills (user has all)
+    # Job A: skills 1, 2, 3 — user has all three
     save_job_profile_skills(
         job_a_id,
         [(skill_1, "must", None), (skill_2, "must", None), (skill_3, "must", None)],
         conn,
     )
-    # Job B requires the same three (user has only skill_1)
+    # Job B: skills 1, 4, 5 — user only has skill_1
     save_job_profile_skills(
         job_b_id,
-        [(skill_1, "must", None), (skill_2, "must", None), (skill_3, "must", None)],
+        [(skill_1, "must", None), (skill_4, "must", None), (skill_5, "must", None)],
         conn,
     )
-    # User has all three skills
+    # User has skills 1, 2, 3 (all of job A; only 1 of job B)
     save_resume_skills(
         user_profile_id,
         [(skill_1, "must"), (skill_2, "must"), (skill_3, "must")],
         conn,
     )
 
-    rows_all = _run_stage2(conn, user_profile_id, [job_a_id, job_b_id])
-    assert rows_all[0]["job_profile_id"] == job_a_id
-    assert rows_all[0]["keyword_score"] == 1.0
-
-    # Now verify job B with only 1 match scores lower
-    # Override job B's user match: only keep skill_1 for a second user
-    conn2 = _conn(temp_db)
-    # Create a second user with only skill_1 to test job B ranking
-    with conn2.cursor() as cur:
-        cur.execute("INSERT INTO users (email) VALUES ('rank_user2@example.com') RETURNING id")
-        user2_id_row = cur.fetchone()["id"]
-        cur.execute(
-            """INSERT INTO user_profiles (user_id, content_hash, schema_version, prompt_version,
-               model_version, is_active, profile_json, current_level, primary_role_family,
-               total_years_experience)
-               VALUES (%s, 'hash-resume-2', '1.0', '1.0', 'gpt-4.1-nano', 1, '{}', 'mid', 'backend', 3.0)
-               RETURNING id""",
-            (user2_id_row,),
-        )
-        user2_profile_id = cur.fetchone()["id"]
-    conn2.commit()
-    save_resume_skills(user2_profile_id, [(skill_1, "must")], conn2)
-
-    rows2 = _run_stage2(conn2, user2_profile_id, [job_a_id, job_b_id])
-    assert rows2[0]["keyword_score"] == pytest.approx(1 / 3, abs=1e-6)
-    assert rows2[0]["job_profile_id"] in (job_a_id, job_b_id)  # both tie at 1/3
-
-    conn2.close()
+    rows = _run_stage2(conn, user_profile_id, [job_a_id, job_b_id])
+    assert len(rows) == 2
+    assert rows[0]["job_profile_id"] == job_a_id
+    assert abs(rows[0]["keyword_score"] - 1.0) < 1e-6
+    assert abs(rows[1]["keyword_score"] - (1 / 3)) < 1e-6
     conn.close()

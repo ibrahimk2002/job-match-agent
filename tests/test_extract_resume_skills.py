@@ -125,6 +125,29 @@ def test_populate_resume_skills_calls_scan_and_saves(temp_db):
     conn.close()
 
 
+def test_populate_resume_skills_mines_beyond_flat_skills_list(temp_db):
+    """Skills returned by the scan (e.g., from work experience bullets) are
+    saved even when they are not in the profile's flat skills list."""
+    conn = _conn(temp_db)
+    user_profile_id = _insert_user_profile(conn)
+    conn.commit()
+
+    # Profile json only lists "Python"; LLM mines "Debugging" from work bullets
+    profile_json = '{"skills": ["Python"]}'
+    mock_result = ResumeScanResult(skills=[
+        SkillEntry(skill="Python", importance="must", group_id=None),
+        SkillEntry(skill="Debugging", importance="preferred", group_id=None),
+    ])
+    mock_usage = MagicMock()
+
+    with patch("pipeline.skills_scan.scan_resume_skills", return_value=(mock_result, mock_usage)):
+        from pipeline.skills_scan import populate_resume_skills
+        populate_resume_skills(user_profile_id, "...work experience...", profile_json, conn)
+
+    assert _count_resume_skills(conn, user_profile_id) == 2
+    conn.close()
+
+
 def test_populate_resume_skills_nonfatal_on_error(temp_db):
     conn = _conn(temp_db)
     user_profile_id = _insert_user_profile(conn)
