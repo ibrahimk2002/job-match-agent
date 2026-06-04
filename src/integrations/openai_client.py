@@ -124,13 +124,11 @@ def scan_job_skills(
     job_text: str,
     profile_json: str,
     *,
+    system_prompt: str,
     model: str,
     prompt_cache_key: str,
 ):
     from models.skills import JobSkillScanResult
-    prompt_path = os.path.join(os.path.dirname(__file__), '..', 'prompts', 'skills_scan.txt')
-    with open(prompt_path) as f:
-        system_prompt = f.read()
     client = get_openai_client()
     response = client.responses.parse(
         model=model,
@@ -165,13 +163,11 @@ def scan_resume_skills(
     resume_text: str,
     profile_json: str,
     *,
+    system_prompt: str,
     model: str,
     prompt_cache_key: str,
 ):
     from models.skills import ResumeScanResult
-    prompt_path = os.path.join(os.path.dirname(__file__), '..', 'prompts', 'resume_skills_scan.txt')
-    with open(prompt_path) as f:
-        system_prompt = f.read()
     client = get_openai_client()
     response = client.responses.parse(
         model=model,

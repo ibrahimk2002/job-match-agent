@@ -30,7 +30,6 @@ def batch_canonicalize(skills: list[str], conn) -> list[int]:
     ids: list[int] = []
     cache: dict[str, int] = {}
 
-    print(f"  Canonicalizing {total} skills...", flush=True)
     for skill in skills:
         key = skill.strip().lower()
         if key in cache:
@@ -41,5 +40,4 @@ def batch_canonicalize(skills: list[str], conn) -> list[int]:
         ids.append(skill_id)
 
     log_info(f"skills: batch_canonicalize total={total} unique={len(cache)}")
-    print(f"  Done: {len(cache)} unique skills resolved.", flush=True)
     return ids

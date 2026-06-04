@@ -670,7 +670,6 @@ def save_job_profile_skills(
                 "INSERT INTO job_profile_skills (job_profile_id, skill_id, importance, group_id) VALUES %s",
                 [(job_profile_id, skill_id, importance, group_id) for skill_id, importance, group_id in entries],
             )
-    conn.commit()
 
 
 def save_resume_skills(
@@ -689,7 +688,6 @@ def save_resume_skills(
                 "INSERT INTO resume_skills (resume_id, skill_id, importance) VALUES %s",
                 [(user_profile_id, skill_id, importance) for skill_id, importance in entries],
             )
-    conn.commit()
 
 
 def get_top_matches(limit: int = 10):
