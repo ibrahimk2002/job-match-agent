@@ -336,7 +336,7 @@ def get_pending_extraction(
     return rows
 
 
-def save_extraction(job_posting_id: int, profile) -> None:
+def save_extraction(job_posting_id: int, profile) -> int:
     payload = profile.model_dump()
     conn = get_db_connection()
     cursor = conn.cursor()
@@ -383,7 +383,7 @@ def save_extraction(job_posting_id: int, profile) -> None:
             ),
         )
 
-        _upsert_job_profile(cursor, columns)
+        job_profile_id = _upsert_job_profile(cursor, columns)
 
         cursor.execute(
             """
@@ -399,6 +399,7 @@ def save_extraction(job_posting_id: int, profile) -> None:
 
         conn.commit()
         logging.info("Saved extraction for job_posting_id: %s", job_posting_id)
+        return job_profile_id
     except Exception:
         conn.rollback()
         raise
@@ -407,7 +408,7 @@ def save_extraction(job_posting_id: int, profile) -> None:
         conn.close()
 
 
-def _upsert_job_profile(cursor, columns: dict[str, Any]) -> None:
+def _upsert_job_profile(cursor, columns: dict[str, Any]) -> int:
     column_sql = ", ".join(JOB_PROFILE_COLUMNS)
     placeholders = ", ".join(["%s"] * len(JOB_PROFILE_COLUMNS))
     update_sql = ", ".join([f"{col} = EXCLUDED.{col}" for col in JOB_PROFILE_UPDATE_COLUMNS])
@@ -419,9 +420,12 @@ def _upsert_job_profile(cursor, columns: dict[str, Any]) -> None:
         DO UPDATE SET {update_sql},
                       invalidated_at = NULL,
                       invalidated_reason = NULL
+        RETURNING id
         """,
         [columns[col] for col in JOB_PROFILE_COLUMNS],
     )
+    row = cursor.fetchone()
+    return row["id"]
 
 
 def fail_extraction(job_posting_id: int, error: str) -> None:
@@ -493,7 +497,7 @@ def get_active_user_profile(user_id: int) -> dict | None:
         conn.close()
 
 
-def save_resume_extraction(user_id: int, profile, columns: dict, *, content_hash: str) -> None:
+def save_resume_extraction(user_id: int, profile, columns: dict, *, content_hash: str) -> int:
     fixed = {
         "user_id": user_id,
         "content_hash": content_hash,
@@ -522,11 +526,13 @@ def save_resume_extraction(user_id: int, profile, columns: dict, *, content_hash
             (user_id,),
         )
         cursor.execute(
-            f"INSERT INTO user_profiles ({col_sql}) VALUES ({placeholders})",
+            f"INSERT INTO user_profiles ({col_sql}) VALUES ({placeholders}) RETURNING id",
             [all_cols[c] for c in col_names],
         )
+        user_profile_id = cursor.fetchone()["id"]
         conn.commit()
         logging.info("Saved resume extraction for user_id: %s", user_id)
+        return user_profile_id
     except Exception:
         conn.rollback()
         raise
@@ -646,6 +652,44 @@ def save_stage2_result(
     conn.commit()
     cursor.close()
     conn.close()
+
+
+def save_job_profile_skills(
+    job_profile_id: int,
+    entries: list[tuple[int, str, int | None]],
+    conn,
+) -> None:
+    with conn.cursor() as cur:
+        cur.execute(
+            "DELETE FROM job_profile_skills WHERE job_profile_id = %s",
+            (job_profile_id,),
+        )
+        if entries:
+            psycopg2.extras.execute_values(
+                cur,
+                "INSERT INTO job_profile_skills (job_profile_id, skill_id, importance, group_id) VALUES %s",
+                [(job_profile_id, skill_id, importance, group_id) for skill_id, importance, group_id in entries],
+            )
+    conn.commit()
+
+
+def save_resume_skills(
+    user_profile_id: int,
+    entries: list[tuple[int, str]],
+    conn,
+) -> None:
+    with conn.cursor() as cur:
+        cur.execute(
+            "DELETE FROM resume_skills WHERE resume_id = %s",
+            (user_profile_id,),
+        )
+        if entries:
+            psycopg2.extras.execute_values(
+                cur,
+                "INSERT INTO resume_skills (resume_id, skill_id, importance) VALUES %s",
+                [(user_profile_id, skill_id, importance) for skill_id, importance in entries],
+            )
+    conn.commit()
 
 
 def get_top_matches(limit: int = 10):
