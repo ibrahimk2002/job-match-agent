@@ -1,4 +1,5 @@
 import json
+import os
 
 import dotenv
 dotenv.load_dotenv()
@@ -111,6 +112,88 @@ def extract_resume_profile(
             },
         ],
         text_format=ResumeExtractionResult,
+        prompt_cache_key=prompt_cache_key,
+    )
+    parsed = getattr(response, "output_parsed", None)
+    if parsed is None:
+        raise MalformedOutputError("Model returned no parsed structured output")
+    return parsed, response.usage
+
+
+def scan_job_skills(
+    job_text: str,
+    profile_json: str,
+    *,
+    model: str,
+    prompt_cache_key: str,
+):
+    from models.skills import JobSkillScanResult
+    prompt_path = os.path.join(os.path.dirname(__file__), '..', 'prompts', 'skills_scan.txt')
+    with open(prompt_path) as f:
+        system_prompt = f.read()
+    client = get_openai_client()
+    response = client.responses.parse(
+        model=model,
+        input=[
+            {
+                "role": "system",
+                "content": [{"type": "input_text", "text": system_prompt}],
+            },
+            {
+                "role": "user",
+                "content": [
+                    {
+                        "type": "input_text",
+                        "text": (
+                            f"<job_description>{job_text}</job_description>\n"
+                            f"<job_profile>{profile_json}</job_profile>"
+                        ),
+                    }
+                ],
+            },
+        ],
+        text_format=JobSkillScanResult,
+        prompt_cache_key=prompt_cache_key,
+    )
+    parsed = getattr(response, "output_parsed", None)
+    if parsed is None:
+        raise MalformedOutputError("Model returned no parsed structured output")
+    return parsed, response.usage
+
+
+def scan_resume_skills(
+    resume_text: str,
+    profile_json: str,
+    *,
+    model: str,
+    prompt_cache_key: str,
+):
+    from models.skills import ResumeScanResult
+    prompt_path = os.path.join(os.path.dirname(__file__), '..', 'prompts', 'resume_skills_scan.txt')
+    with open(prompt_path) as f:
+        system_prompt = f.read()
+    client = get_openai_client()
+    response = client.responses.parse(
+        model=model,
+        input=[
+            {
+                "role": "system",
+                "content": [{"type": "input_text", "text": system_prompt}],
+            },
+            {
+                "role": "user",
+                "content": [
+                    {
+                        "type": "input_text",
+                        "text": (
+                            f"<resume>{resume_text}</resume>\n"
+                            f"<resume_profile>{profile_json}</resume_profile>"
+                        ),
+                    }
+                ],
+            },
+        ],
+        text_format=ResumeScanResult,
         prompt_cache_key=prompt_cache_key,
     )
     parsed = getattr(response, "output_parsed", None)
