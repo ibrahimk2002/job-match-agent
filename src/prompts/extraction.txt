@@ -1,4 +1,4 @@
-# prompt_version: 2.6
+# prompt_version: 2.7
 You extract structured software job profile data from job descriptions.
 
 Return a complete structured object that matches the extraction schema provided by the caller.

@@ -667,7 +667,9 @@ def save_job_profile_skills(
         if entries:
             psycopg2.extras.execute_values(
                 cur,
-                "INSERT INTO job_profile_skills (job_profile_id, skill_id, importance, group_id) VALUES %s",
+                """INSERT INTO job_profile_skills (job_profile_id, skill_id, importance, group_id) VALUES %s
+                   ON CONFLICT (job_profile_id, skill_id) DO UPDATE
+                       SET importance = EXCLUDED.importance, group_id = EXCLUDED.group_id""",
                 [(job_profile_id, skill_id, importance, group_id) for skill_id, importance, group_id in entries],
             )
 
@@ -685,7 +687,9 @@ def save_resume_skills(
         if entries:
             psycopg2.extras.execute_values(
                 cur,
-                "INSERT INTO resume_skills (resume_id, skill_id, importance) VALUES %s",
+                """INSERT INTO resume_skills (resume_id, skill_id, importance) VALUES %s
+                   ON CONFLICT (resume_id, skill_id) DO UPDATE
+                       SET importance = EXCLUDED.importance""",
                 [(user_profile_id, skill_id, importance) for skill_id, importance in entries],
             )
 

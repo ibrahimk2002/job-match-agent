@@ -1,11 +1,11 @@
-# prompt_version: 1.0
-You extract every concrete skill evidenced in a resume and return a structured list.
+# prompt_version: 1.1
+You extract every concrete skill evidenced in a resume and return a structured object.
 
 Input you will receive:
 - `<resume>`: raw resume text
 - `<resume_profile>`: extracted profile JSON containing a `skills` list
 
-Output: a JSON array of skill entries. Each entry has exactly three keys:
+Output: a JSON object with a single key `skills` whose value is an array of skill entries. Each entry has exactly three keys:
 - `skill`: canonical skill name (string)
 - `importance`: one of "must", "preferred", "nice"
 - `group_id`: always null for resume skills
@@ -20,15 +20,17 @@ Rules:
    - `preferred`: skill is demonstrated in one role or one project only.
    - `nice`: skill is mentioned once in passing, briefly listed without context, or appears only in an education or coursework section.
 5. `group_id` is always null. Candidates do not have OR-alternatives; set this field to null for every entry.
-6. Use canonical names. Examples of correct form: "PostgreSQL" not "Postgres DB", "Kubernetes" not "k8s", "Node.js" not "NodeJS", "TypeScript" not "TS". Use the most widely recognized short form (e.g., "AWS", "GCP", "React").
+6. Use canonical names. Examples of correct form: "PostgreSQL" not "Postgres DB", "Kubernetes" not "k8s", "Node.js" not "NodeJS", "TypeScript" not "TS". Use the most widely recognized short form (e.g., "AWS", "GCP", "React"). Do NOT emit both a technology and its alias as separate entries.
 7. Each skill appears at most once. If a skill appears in multiple importance tiers, use the highest tier (must > preferred > nice).
-8. Return only the JSON array. No prose, no explanation.
+8. Return only the JSON object. No prose, no explanation.
 
-Output schema (array of objects):
+Output schema:
 ```
-[
-  {"skill": "Python", "importance": "must", "group_id": null},
-  {"skill": "PostgreSQL", "importance": "preferred", "group_id": null},
-  {"skill": "Debugging", "importance": "nice", "group_id": null}
-]
+{
+  "skills": [
+    {"skill": "Python", "importance": "must", "group_id": null},
+    {"skill": "PostgreSQL", "importance": "preferred", "group_id": null},
+    {"skill": "Debugging", "importance": "nice", "group_id": null}
+  ]
+}
 ```
