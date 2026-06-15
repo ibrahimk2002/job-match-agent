@@ -4,7 +4,7 @@
 
 **Goal:** Replace the "exact-or-auto-insert" `canonicalize()` with a tiered resolver — normalization candidates → exact match → `pg_trgm` similarity → auto-insert — that collapses common LLM variant forms (`C++17`, `React (TypeScript)`, `CI/CD pipelines`, `ES6`) into existing catalog entries, plus a one-time FK-repointing cleanup script and a `skills-audit` CLI command for ongoing visibility.
 
-**Architecture:** The new `canonicalize()` in `src/skills.py` generates 1–5 normalized candidates from the raw string (most-specific → least-specific: strip parentheticals, version suffixes, trailing generic nouns, leading qualifiers), tries each candidate against alias + canonical tables via exact match, then falls back to a `pg_trgm` similarity query (threshold ≥ 0.80, skips strings ≤ 4 chars to protect short names like `Go`, `C#`, `QA`), and only auto-inserts if nothing resolves. A dedup script `scripts/dedup_skills.py` re-tests every existing `source='auto'` row against the new engine (excluding itself) and repoints FKs before deleting orphaned rows. The migration enables `pg_trgm`, adds GIN trgm indexes, and seeds 10 missing base canonicals and 30+ aliases identified from real job postings. Nothing in Stage 1/2 matching changes — matching is always integer-keyed `skill_id` comparison.
+**Architecture:** The new `canonicalize()` in `src/skills.py` generates 1–5 normalized candidates from the raw string (most-specific → least-specific: strip parentheticals, version suffixes, trailing generic nouns, leading qualifiers), tries each candidate against alias + canonical tables via exact match, then falls back to a `pg_trgm` similarity query (threshold ≥ 0.80, skips strings ≤ 4 chars to protect short names like `Go`, `C#`, `QA`), and only auto-inserts if nothing resolves. Trigram hits are **ephemeral** — resolved to a `skill_id` in memory but never written back as aliases; each trgm match is `log_info`-logged for human review via `skills-audit`. A dedup script `scripts/dedup_skills.py` re-tests every existing `source='auto'` row against the new engine (excluding itself) and repoints FKs before deleting orphaned rows. The migration enables `pg_trgm`, adds GIN trgm indexes, seeds 10 missing base canonicals, and seeds 35+ aliases — **semantic-only**: mappings that normalization + trigram cannot derive (acronyms, preprocessor names, compound slash-forms, semantic synonyms). Lexical variants derivable by version-stripping (e.g., `html5`, `css3`) are NOT added as aliases because normalization handles them. Nothing in Stage 1/2 matching changes — matching is always integer-keyed `skill_id` comparison.
 
 **Tech Stack:** PostgreSQL + `pg_trgm` extension, Python 3.11+, psycopg2, pytest
 
@@ -20,7 +20,7 @@
 
 | File | Action | Purpose |
 |---|---|---|
-| `scripts/migrations/010_smart_canonicalization.sql` | Create | Enable `pg_trgm`, add GIN indexes, seed 10 missing canonicals + 30+ aliases |
+| `scripts/migrations/010_smart_canonicalization.sql` | Create | Enable `pg_trgm`, add GIN indexes, seed 10 missing canonicals + 35+ semantic-only aliases (including compound slash-forms) |
 | `src/skills.py` | Rewrite | Tiered canonicalize: candidates → exact → trgm → auto-insert |
 | `tests/test_skills.py` | Extend | Normalization rules, merge guards, trgm, novel auto-insert |
 | `scripts/dedup_skills.py` | Create | One-time FK-repointing cleanup; dry-run by default |
@@ -51,6 +51,11 @@ CREATE INDEX IF NOT EXISTS idx_skills_catalog_canonical_trgm
 CREATE INDEX IF NOT EXISTS idx_skill_aliases_alias_trgm
     ON skill_aliases USING gin(alias gin_trgm_ops);
 
+-- Invariant: alias table holds only mappings that normalization + trigram cannot derive.
+-- Use aliases for: acronyms (es6 → JavaScript), preprocessor synonyms (scss → CSS),
+-- semantic synonyms (quality assurance → QA), and compound slash-forms (c/c++ → C++).
+-- Do NOT add lexical variants derivable by version-stripping (html5, css3, python3).
+
 -- Missing base canonicals not in the original 235-skill seed
 INSERT INTO skills_catalog (canonical, category, source) VALUES
   ('HTML',                           'hard',  'curated'),
@@ -65,15 +70,15 @@ INSERT INTO skills_catalog (canonical, category, source) VALUES
   ('Cross-functional Collaboration', 'soft',  'curated')
 ON CONFLICT (canonical) DO NOTHING;
 
--- HTML aliases
+-- HTML aliases (html5 omitted — normalization strips '5', so alias is redundant)
 INSERT INTO skill_aliases (alias, skill_id)
-SELECT unnest(ARRAY['html5', 'html/css', 'html & css', 'html and css']), id
+SELECT unnest(ARRAY['html/css', 'html & css', 'html and css']), id
 FROM skills_catalog WHERE canonical = 'HTML'
 ON CONFLICT DO NOTHING;
 
--- CSS aliases (preprocessors map here because CSS knowledge is implied)
+-- CSS aliases — preprocessors are semantic synonyms, not version-strips (css3 omitted)
 INSERT INTO skill_aliases (alias, skill_id)
-SELECT unnest(ARRAY['css3', 'scss', 'sass', 'less', 'css/scss']), id
+SELECT unnest(ARRAY['scss', 'sass', 'less', 'css/scss']), id
 FROM skills_catalog WHERE canonical = 'CSS'
 ON CONFLICT DO NOTHING;
 
@@ -93,6 +98,21 @@ ON CONFLICT DO NOTHING;
 INSERT INTO skill_aliases (alias, skill_id)
 SELECT unnest(ARRAY['c/c++', 'c and c++', 'c or c++']), id
 FROM skills_catalog WHERE canonical = 'C++'
+ON CONFLICT DO NOTHING;
+
+-- Additional compound slash-forms — pair/combo strings that clearly map to one dominant tool.
+-- Deliberately narrow: genuinely ambiguous pairs (e.g., "React/Angular") are NOT aliased
+-- because they assert knowledge of two distinct skills, not one.
+-- Note: list-in-parentheses compounds like "Cloud platforms (AWS, GCP, Azure)" require
+-- extraction-time splitting and are out of scope here.
+INSERT INTO skill_aliases (alias, skill_id)
+SELECT unnest(ARRAY['spring/spring boot', 'spring / spring boot']), id
+FROM skills_catalog WHERE canonical = 'Spring Boot'
+ON CONFLICT DO NOTHING;
+
+INSERT INTO skill_aliases (alias, skill_id)
+SELECT unnest(ARRAY['typescript/javascript', 'typescript / javascript']), id
+FROM skills_catalog WHERE canonical = 'TypeScript'
 ON CONFLICT DO NOTHING;
 
 -- QA aliases
@@ -169,7 +189,7 @@ psql $DATABASE_URL -c "SELECT canonical FROM skills_catalog WHERE canonical IN (
 
 ```bash
 git add scripts/migrations/010_smart_canonicalization.sql
-git commit -m "feat(skills): enable pg_trgm, seed 10 missing canonicals and 30+ aliases"
+git commit -m "feat(skills): enable pg_trgm, seed 10 missing canonicals and 35+ semantic-only aliases"
 ```
 
 ---
@@ -190,7 +210,10 @@ from utils import log_info
 # Strip parentheticals: "React (TypeScript)" → "React"
 _PARENS_RE = re.compile(r'\s*\([^)]*\)')
 # Strip trailing version tokens: "C++17" → "C++", "HTML5" → "HTML", "Vue 3" → "Vue"
-_VERSION_RE = re.compile(r'\s+v?\d+(\.\d+)*[a-z]?$', re.IGNORECASE)
+# \s* (not \s+) allows no-space suffixes like C++17 and HTML5 alongside spaced ones like Vue 3.
+# Safety: short strings (S3, EC2, ES6) resolve via exact alias at candidate[0] before any
+# stripped form is tried — alias-precedence contains the collision risk.
+_VERSION_RE = re.compile(r'\s*v?\d+(\.\d+)*[a-z]?$', re.IGNORECASE)
 # Strip trailing generic nouns that dilute a skill name
 _TRAILING_GENERIC_RE = re.compile(
     r'\s+(pipelines?|workflows?|practices?|tools?|systems?|concepts?|'
@@ -301,7 +324,9 @@ def _trgm_resolve(normalized_lower: str, conn) -> int | None:
         )
         row = cur.fetchone()
         if row:
-            return row["skill_id"]
+            skill_id = row["skill_id"]
+            log_info(f"skills: trgm-resolved '{normalized_lower}' → skill_id={skill_id}")
+            return skill_id
     return None
 
 
@@ -523,10 +548,40 @@ def test_qa_practices_collapses_to_qa(temp_db):
 
 
 def test_html5_resolves_to_html(temp_db):
-    """html5 alias resolves to HTML (seeded alias in migration 010)."""
+    """HTML5 resolves to HTML via version-suffix stripping (Tier 1/2) — normalization, not alias."""
     conn = psycopg2.connect(temp_db, cursor_factory=psycopg2.extras.RealDictCursor)
     html_id = _get_skill_id(conn, "HTML")
     assert canonicalize("HTML5", conn) == html_id
+    conn.close()
+
+
+def test_version_strip_does_not_collapse_s3(temp_db):
+    """S3 must not collapse to 'S' — 'S' is not in the catalog, proving the \s* strip is safe."""
+    conn = psycopg2.connect(temp_db, cursor_factory=psycopg2.extras.RealDictCursor)
+    # Confirm 'S' has no catalog entry (the only unsafe collapse target)
+    with conn.cursor() as cur:
+        cur.execute("SELECT id FROM skills_catalog WHERE LOWER(canonical) = 's'")
+        assert cur.fetchone() is None, "Catalog entry 'S' would cause S3 to false-collapse"
+    result = canonicalize("S3", conn)
+    with conn.cursor() as cur:
+        cur.execute("SELECT canonical FROM skills_catalog WHERE id = %s", (result,))
+        resolved = cur.fetchone()["canonical"]
+    # Accepted: resolves via alias to 'Amazon S3' (if seeded) or auto-inserts as 'S3'
+    assert resolved in ("Amazon S3", "S3"), f"Unexpected collapse: S3 → {resolved!r}"
+    conn.close()
+
+
+def test_version_strip_does_not_collapse_ec2(temp_db):
+    """EC2 must not collapse to 'EC' — 'EC' is not in the catalog."""
+    conn = psycopg2.connect(temp_db, cursor_factory=psycopg2.extras.RealDictCursor)
+    with conn.cursor() as cur:
+        cur.execute("SELECT id FROM skills_catalog WHERE LOWER(canonical) = 'ec'")
+        assert cur.fetchone() is None, "Catalog entry 'EC' would cause EC2 to false-collapse"
+    result = canonicalize("EC2", conn)
+    with conn.cursor() as cur:
+        cur.execute("SELECT canonical FROM skills_catalog WHERE id = %s", (result,))
+        resolved = cur.fetchone()["canonical"]
+    assert resolved in ("Amazon EC2", "EC2"), f"Unexpected collapse: EC2 → {resolved!r}"
     conn.close()
 
 
@@ -733,21 +788,13 @@ def _apply_merge(old_id: int, new_id: int, conn) -> None:
         )
         cur.execute("DELETE FROM job_profile_skills WHERE skill_id = %s", (old_id,))
 
-        # Repoint resume_skills — keep higher importance on PK conflict
+        # Repoint resume_skills — schema is (resume_id, skill_id) only, no importance column
         cur.execute(
             """
-            INSERT INTO resume_skills (resume_id, skill_id, importance)
-            SELECT resume_id, %s, importance
+            INSERT INTO resume_skills (resume_id, skill_id)
+            SELECT resume_id, %s
             FROM resume_skills WHERE skill_id = %s
-            ON CONFLICT (resume_id, skill_id) DO UPDATE
-                SET importance = CASE
-                    WHEN CASE resume_skills.importance
-                             WHEN 'must' THEN 3 WHEN 'preferred' THEN 2 ELSE 1 END
-                       >= CASE EXCLUDED.importance
-                              WHEN 'must' THEN 3 WHEN 'preferred' THEN 2 ELSE 1 END
-                    THEN resume_skills.importance
-                    ELSE EXCLUDED.importance
-                END
+            ON CONFLICT DO NOTHING
             """,
             (new_id, old_id),
         )
@@ -1152,7 +1199,36 @@ Then run `python src/cli.py migrate`.
 | Cleanup script re-run idempotent | Task 4 — `_find_merge_target` excludes auto_id from search |
 | Review surface (skills-audit command) | Task 6 — `_cmd_skills_audit` |
 | All tests pass | Tasks 3, 5 |
+| Semantic-only alias invariant | Task 1 — invariant comment in migration 010; `html5`, `css3` removed |
+| Compound slash-form aliases | Task 1 — Spring Boot, TypeScript compound blocks added |
+| trgm hits logged, not persisted | Task 2 — `log_info` in `_trgm_resolve`; no alias write-back |
+| `_VERSION_RE` handles no-space suffixes (`C++17`, `HTML5`) | Task 2 — `\s+` → `\s*` with alias-precedence safety |
+| Alias-precedence guard tests | Task 3 — `test_version_strip_does_not_collapse_s3/ec2` |
+| `resume_skills` has no `importance` column | Task 4 — `_apply_merge` uses `(resume_id, skill_id)` only; no conflict merge needed |
 
 **Placeholder scan:** None found.
 
 **Type consistency:** `_normalization_candidates` returns `list[str]`, consumed in Task 2 and Task 4 consistently. `_TRGM_MIN_SIMILARITY` and `_TRGM_MIN_LEN` defined in Task 2, imported in Task 4 — names match exactly.
+
+---
+
+## Future Work
+
+### ESCO Taxonomy (Verdict: audit reference only, do not bulk-seed)
+
+The ESCO EU skills taxonomy (v1.2.1, ~13,939 skills) was evaluated as a seeding source. Conclusion: **not worth bulk-importing; use as a periodic audit cross-check only.**
+
+Three blockers to bulk seeding:
+1. **Granularity mismatch** — ESCO is competence-level (`"use software libraries"`, `"apply information security policies"`), not tool-level. Our catalog is tool-level (`React`, `PostgreSQL`). Bulk seeding reintroduces the abstraction bloat the dedup script removes.
+2. **Low marginal yield** — only ~700 of the ~13,900 ESCO skills are tagged "digital", and the concrete-tool subset is largely covered by the existing 235 curated canonicals.
+3. **Alias handling** — ESCO's non-preferred (alternative) labels are natural alias candidates but need per-entry review against the semantic-only alias invariant before loading.
+
+**Recommended use:** After each major extraction run, scan ESCO's digital sub-tree to confirm no widely-used concrete technology is missing from the catalog. Add any gap as an individually hand-picked entry via a future `011_*.sql` migration, not a bulk import.
+
+The `source='auto'` log visible in `skills-audit` is a more precise gap list than any ESCO subset — it reflects actual demand from real job postings.
+
+### Extraction-time Splitting (Multi-token Compound Strings)
+
+Strings like `"Cloud platforms (AWS, GCP, Azure)"` or `"Programming languages: Python, Go, Java"` embed multiple distinct skills in one LLM output token. These cannot be resolved by aliasing — they require splitting at extraction time (comma/slash tokenization) before `canonicalize()` is called.
+
+Out of scope for this plan. Track as a follow-up: add a pre-canonicalize step in `extract.py` and `extract_resume.py` that splits multi-skill list strings into individual tokens before calling `batch_canonicalize`.
