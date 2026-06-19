@@ -5,11 +5,8 @@ import os
 from datetime import datetime, timezone
 from typing import Any
 
-import numpy as np
-
 import psycopg2
 import psycopg2.extras
-from pgvector.psycopg2 import register_vector
 
 from profile_columns import build_profile_columns
 
@@ -68,16 +65,10 @@ JOB_PROFILE_UPDATE_COLUMNS = [
 
 
 def get_db_connection():
-    conn = psycopg2.connect(
+    return psycopg2.connect(
         os.environ["DATABASE_URL"],
         cursor_factory=psycopg2.extras.RealDictCursor,
     )
-    try:
-        register_vector(conn)
-    except psycopg2.ProgrammingError:
-        # pgvector extension not yet installed (e.g. during initial migration)
-        pass
-    return conn
 
 
 def init_db() -> None:
@@ -548,7 +539,7 @@ def get_stage1_matches_pgvector(
 
     match_score = cosine_similarity + role_bonus(0.10) + seniority_bonus(0.05)
     """
-    vec = np.array(user_axes, dtype=np.float32)
+    vec_str = "[" + ",".join(str(v) for v in user_axes) + "]"
     conn = get_db_connection()
     cursor = conn.cursor()
     try:
@@ -565,9 +556,9 @@ def get_stage1_matches_pgvector(
                 ap.seniority,
                 ap.work_mode,
                 ap.location_scope,
-                1.0 - (ap.axes_vec <=> %s)                                AS cosine_similarity,
+                1.0 - (ap.axes_vec <=> %s::vector)                        AS cosine_similarity,
                 (
-                    1.0 - (ap.axes_vec <=> %s)
+                    1.0 - (ap.axes_vec <=> %s::vector)
                     + CASE WHEN ap.role_family = %s THEN 0.10 ELSE 0.0 END
                     + CASE WHEN ap.seniority   = %s THEN 0.05 ELSE 0.0 END
                 )                                                          AS match_score
@@ -576,10 +567,11 @@ def get_stage1_matches_pgvector(
               ON ap.job_posting_id = jp.id
              AND ap.is_active = 1
             WHERE ap.axes_vec IS NOT NULL
+              AND (ap.axes_vec <-> '[0,0,0,0,0,0]'::vector) > 0
             ORDER BY match_score DESC
             LIMIT %s
             """,
-            [vec, vec, preferred_role, preferred_seniority, limit],
+            [vec_str, vec_str, preferred_role, preferred_seniority, limit],
         )
         return [dict(row) for row in cursor.fetchall()]
     finally:
