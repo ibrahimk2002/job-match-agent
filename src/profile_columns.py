@@ -77,4 +77,12 @@ def build_profile_columns(
         "axis_security_reliability": axes["axis_security_reliability"],
         "axis_product_ownership": axes["axis_product_ownership"],
         "axis_fullstack_span": fullstack_span(axes["axis_backend"], axes["axis_frontend"]),
+        "axes_vec": [
+            axes["axis_backend"],
+            axes["axis_frontend"],
+            axes["axis_platform"],
+            axes["axis_ai_data"],
+            axes["axis_security_reliability"],
+            axes["axis_product_ownership"],
+        ],
     }

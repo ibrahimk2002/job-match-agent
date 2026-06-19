@@ -29,6 +29,7 @@ USER_PROFILE_COLUMNS = [
     "work_auth_us",
     "sponsorship_needed",
     "degree_level",
+    "axes_vec",
 ]
 
 
@@ -65,4 +66,12 @@ def build_profile_columns(profile: UserProfile) -> dict:
             if profile.work_auth.sponsorship_needed is not None else None
         ),
         "degree_level": profile.education.degree_level,
+        "axes_vec": [
+            backend,
+            frontend,
+            axes.axis_platform,
+            axes.axis_ai_data,
+            axes.axis_security_reliability,
+            axes.axis_product_ownership,
+        ],
     }
