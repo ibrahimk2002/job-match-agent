@@ -63,7 +63,7 @@ def _print_results(results: list[dict], label: str) -> None:
         url = r.get("source_url") or ""
         print(f"\n  #{i}  {title} | {company}")
         print(f"       Role: {role} | Seniority: {seniority} | Mode: {mode}")
-        print(f"       Match score: {score:.4f} | Cosine similarity: {sim:.4f}")
+        print(f"       Match score: {score:.4f} | L2 similarity: {sim:.4f}")
         if url:
             print(f"       {url}")
 
