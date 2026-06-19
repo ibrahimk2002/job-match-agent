@@ -556,9 +556,9 @@ def get_stage1_matches_pgvector(
                 ap.seniority,
                 ap.work_mode,
                 ap.location_scope,
-                1.0 - (ap.axes_vec <=> %s::vector)                        AS cosine_similarity,
+                1.0 / (1.0 + (ap.axes_vec <-> %s::vector))               AS l2_similarity,
                 (
-                    1.0 - (ap.axes_vec <=> %s::vector)
+                    1.0 / (1.0 + (ap.axes_vec <-> %s::vector))
                     + CASE WHEN ap.role_family = %s THEN 0.10 ELSE 0.0 END
                     + CASE WHEN ap.seniority   = %s THEN 0.05 ELSE 0.0 END
                 )                                                          AS match_score

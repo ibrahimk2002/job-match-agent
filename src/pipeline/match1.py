@@ -2,7 +2,7 @@ import math
 import time
 from typing import Any, Callable
 
-from db import get_all_active_job_profiles
+from db import get_all_active_job_profiles, get_user_by_email, get_active_user_profile, get_stage1_matches_pgvector
 
 _AXIS_COLS = [
     "axis_backend",
@@ -23,13 +23,28 @@ def timed(fn: Callable, *args: Any, **kwargs: Any) -> tuple[Any, float]:
     return result, time.perf_counter() - start
 
 
-def _cosine_similarity(a: list[float], b: list[float]) -> float:
-    dot = sum(x * y for x, y in zip(a, b))
-    mag_a = math.sqrt(sum(x * x for x in a))
-    mag_b = math.sqrt(sum(y * y for y in b))
-    if mag_a == 0.0 or mag_b == 0.0:
-        return 0.0
-    return dot / (mag_a * mag_b)
+def _l2_similarity(a: list[float], b: list[float]) -> float:
+    dist = math.sqrt(sum((x - y) ** 2 for x, y in zip(a, b)))
+    return 1.0 / (1.0 + dist)
+
+
+def get_user_axes_for_email(email: str) -> list[float]:
+    user = get_user_by_email(email)
+    if user is None:
+        raise ValueError(f"No user found with email '{email}'")
+    profile = get_active_user_profile(user["id"])
+    if profile is None:
+        raise ValueError(f"No active resume for '{email}'. Run 'ingest-resume' first.")
+    return [profile.get(col) or 0.0 for col in _AXIS_COLS]
+
+
+def run_stage1_pgvector(
+    user_axes: list[float],
+    preferred_role: str | None,
+    preferred_seniority: str | None,
+    limit: int = 5,
+) -> list[dict]:
+    return get_stage1_matches_pgvector(user_axes, preferred_role, preferred_seniority, limit)
 
 
 def run_stage1_naive(
@@ -38,17 +53,17 @@ def run_stage1_naive(
     preferred_seniority: str | None,
     limit: int = 5,
 ) -> list[dict]:
-    """Stage 1 without pgvector — Python cosine similarity over scalar columns."""
+    """Stage 1 without pgvector — Python L2 similarity over scalar columns."""
     profiles = get_all_active_job_profiles()
     scored = []
     for p in profiles:
         job_axes = [p.get(col) or 0.0 for col in _AXIS_COLS]
-        sim = _cosine_similarity(user_axes, job_axes)
+        sim = _l2_similarity(user_axes, job_axes)
         role_bonus = _ROLE_BONUS if p.get("role_family") == preferred_role else 0.0
         seniority_bonus = _SENIORITY_BONUS if p.get("seniority") == preferred_seniority else 0.0
         scored.append({
             **p,
-            "cosine_similarity": round(sim, 4),
+            "l2_similarity": round(sim, 4),
             "match_score": round(sim + role_bonus + seniority_bonus, 4),
         })
     scored.sort(key=lambda x: x["match_score"], reverse=True)

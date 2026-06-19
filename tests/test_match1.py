@@ -1,29 +1,35 @@
 import pytest
-from pipeline.match1 import _cosine_similarity, run_stage1_naive, timed
+from pipeline.match1 import _l2_similarity, run_stage1_naive, timed
 
 
-def test_cosine_similarity_identical_vectors():
+def test_l2_similarity_identical_vectors():
     v = [0.9, 0.1, 0.5, 0.2, 0.6, 0.4]
-    assert _cosine_similarity(v, v) == pytest.approx(1.0, abs=1e-6)
+    assert _l2_similarity(v, v) == pytest.approx(1.0, abs=1e-6)
 
 
-def test_cosine_similarity_orthogonal_vectors():
-    a = [1.0, 0.0, 0.0, 0.0, 0.0, 0.0]
-    b = [0.0, 1.0, 0.0, 0.0, 0.0, 0.0]
-    assert _cosine_similarity(a, b) == pytest.approx(0.0, abs=1e-6)
+def test_l2_similarity_zero_distance_means_perfect_match():
+    a = [0.5, 0.3, 0.1, 0.0, 0.2, 0.4]
+    assert _l2_similarity(a, a) == pytest.approx(1.0, abs=1e-6)
 
 
-def test_cosine_similarity_zero_vector_returns_zero():
-    zero = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
-    b = [0.9, 0.1, 0.5, 0.2, 0.6, 0.4]
-    assert _cosine_similarity(zero, b) == 0.0
-    assert _cosine_similarity(b, zero) == 0.0
+def test_l2_similarity_different_magnitude_same_direction_not_equal():
+    # Unlike cosine, L2 distinguishes [0.9,...] from [0.3,...] even if proportional
+    a = [0.9, 0.0, 0.0, 0.0, 0.0, 0.0]
+    b = [0.3, 0.0, 0.0, 0.0, 0.0, 0.0]
+    assert _l2_similarity(a, b) < 1.0
 
 
-def test_cosine_similarity_proportional_vectors():
-    a = [0.5, 0.2, 0.3, 0.1, 0.4, 0.2]
-    b = [v * 2 for v in a]
-    assert _cosine_similarity(a, b) == pytest.approx(1.0, abs=1e-6)
+def test_l2_similarity_decreases_as_vectors_diverge():
+    base = [0.8, 0.1, 0.3, 0.2, 0.4, 0.1]
+    close = [0.7, 0.1, 0.3, 0.2, 0.4, 0.1]
+    far   = [0.1, 0.9, 0.0, 0.0, 0.0, 0.0]
+    assert _l2_similarity(base, close) > _l2_similarity(base, far)
+
+
+def test_l2_similarity_always_positive():
+    a = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+    b = [1.0, 1.0, 1.0, 1.0, 1.0, 1.0]
+    assert _l2_similarity(a, b) > 0.0
 
 
 def test_timed_returns_correct_result():
@@ -66,10 +72,10 @@ def test_naive_ranks_closer_vector_first(temp_db):
     rows = cur.fetchall()
     jp1_id, jp2_id = rows[0]["id"], rows[1]["id"]
 
-    # Job 1: backend-heavy (close to user)
+    # Job 1: backend-heavy — close to user axes
     _insert_job(cur, jp1_id, "h1", "Backend SWE", "backend", "senior",
                 (0.90, 0.05, 0.30, 0.10, 0.40, 0.20))
-    # Job 2: frontend-heavy (far from user)
+    # Job 2: frontend-heavy — far from user axes
     _insert_job(cur, jp2_id, "h2", "Frontend SWE", "frontend", "junior",
                 (0.05, 0.90, 0.10, 0.05, 0.10, 0.30))
     conn.commit()

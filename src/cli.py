@@ -59,7 +59,7 @@ def _print_results(results: list[dict], label: str) -> None:
         role = r.get("role_family") or ""
         seniority = r.get("seniority") or ""
         score = r.get("match_score") or 0
-        sim = r.get("cosine_similarity") or 0
+        sim = r.get("l2_similarity") or 0
         url = r.get("source_url") or ""
         print(f"\n  #{i}  {title} | {company}")
         print(f"       Role: {role} | Seniority: {seniority} | Mode: {mode}")
@@ -70,42 +70,28 @@ def _print_results(results: list[dict], label: str) -> None:
 
 def _cmd_match(args: argparse.Namespace) -> None:
     from models.job_profile import ExtractionResult
-    from db import get_user_by_email, get_active_user_profile, get_stage1_matches_pgvector
-    from pipeline.match1 import run_stage1_naive, timed
+    from pipeline.match1 import get_user_axes_for_email, run_stage1_pgvector, run_stage1_naive, timed
 
     role_families = [v for v in get_args(ExtractionResult.model_fields["role_family"].annotation) if v != "unknown"]
     seniority_levels = [v for v in get_args(ExtractionResult.model_fields["seniority"].annotation) if v != "unknown"]
-
-    user = get_user_by_email(args.email)
-    if user is None:
-        print(f"Error: no user found with email '{args.email}'", file=sys.stderr)
-        sys.exit(1)
-
-    profile = get_active_user_profile(user["id"])
-    if profile is None:
-        print(f"Error: no active resume for '{args.email}'. Run 'ingest-resume' first.", file=sys.stderr)
-        sys.exit(1)
-
-    user_axes = [
-        profile.get("axis_backend") or 0.0,
-        profile.get("axis_frontend") or 0.0,
-        profile.get("axis_platform") or 0.0,
-        profile.get("axis_ai_data") or 0.0,
-        profile.get("axis_security_reliability") or 0.0,
-        profile.get("axis_product_ownership") or 0.0,
-    ]
 
     preferred_role = _prompt_choice("What type of role are you interested in?", role_families)
     preferred_seniority = _prompt_choice("What seniority level are you targeting?", seniority_levels)
 
     print(f"\nFinding top 5 matches for {args.email}...")
 
+    try:
+        user_axes = get_user_axes_for_email(args.email)
+    except ValueError as e:
+        print(f"Error: {e}", file=sys.stderr)
+        sys.exit(1)
+
     if not args.benchmark:
-        results, elapsed = timed(get_stage1_matches_pgvector, user_axes, preferred_role, preferred_seniority)
+        results, elapsed = timed(run_stage1_pgvector, user_axes, preferred_role, preferred_seniority)
         _print_results(results, f"Top 5 Matches  (pgvector · {elapsed * 1000:.1f} ms)")
         return
 
-    pgvec_results, pgvec_time = timed(get_stage1_matches_pgvector, user_axes, preferred_role, preferred_seniority)
+    pgvec_results, pgvec_time = timed(run_stage1_pgvector, user_axes, preferred_role, preferred_seniority)
     naive_results, naive_time = timed(run_stage1_naive, user_axes, preferred_role, preferred_seniority)
 
     _print_results(pgvec_results, f"pgvector  ({pgvec_time * 1000:.1f} ms)")
