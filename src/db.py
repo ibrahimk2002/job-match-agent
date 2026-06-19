@@ -5,8 +5,11 @@ import os
 from datetime import datetime, timezone
 from typing import Any
 
+import numpy as np
+
 import psycopg2
 import psycopg2.extras
+from pgvector.psycopg2 import register_vector
 
 from profile_columns import build_profile_columns
 
@@ -55,6 +58,7 @@ JOB_PROFILE_COLUMNS = [
     "axis_security_reliability",
     "axis_product_ownership",
     "axis_fullstack_span",
+    "axes_vec",
 ]
 
 JOB_PROFILE_UPDATE_COLUMNS = [
@@ -64,10 +68,16 @@ JOB_PROFILE_UPDATE_COLUMNS = [
 
 
 def get_db_connection():
-    return psycopg2.connect(
+    conn = psycopg2.connect(
         os.environ["DATABASE_URL"],
         cursor_factory=psycopg2.extras.RealDictCursor,
     )
+    try:
+        register_vector(conn)
+    except psycopg2.ProgrammingError:
+        # pgvector extension not yet installed (e.g. during initial migration)
+        pass
+    return conn
 
 
 def init_db() -> None:
@@ -473,6 +483,105 @@ def get_or_create_user(email: str) -> int:
         conn.commit()
         cursor.execute("SELECT id FROM users WHERE email = %s", (email,))
         return cursor.fetchone()["id"]
+    finally:
+        cursor.close()
+        conn.close()
+
+
+def get_user_by_email(email: str) -> dict | None:
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    try:
+        cursor.execute(
+            "SELECT id, email, created_at FROM users WHERE email = %s", (email,)
+        )
+        row = cursor.fetchone()
+        return dict(row) if row is not None else None
+    finally:
+        cursor.close()
+        conn.close()
+
+
+def get_all_active_job_profiles() -> list[dict]:
+    """Return all active job profiles with scalar axis columns for naive matching."""
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    try:
+        cursor.execute(
+            """
+            SELECT
+                jp.id            AS job_posting_id,
+                jp.title_raw,
+                jp.company_raw,
+                jp.source_url,
+                ap.id            AS job_profile_id,
+                ap.normalized_title,
+                ap.role_family,
+                ap.seniority,
+                ap.work_mode,
+                ap.location_scope,
+                ap.axis_backend,
+                ap.axis_frontend,
+                ap.axis_platform,
+                ap.axis_ai_data,
+                ap.axis_security_reliability,
+                ap.axis_product_ownership
+            FROM job_postings jp
+            JOIN job_profiles ap
+              ON ap.job_posting_id = jp.id
+             AND ap.is_active = 1
+            """
+        )
+        return [dict(row) for row in cursor.fetchall()]
+    finally:
+        cursor.close()
+        conn.close()
+
+
+def get_stage1_matches_pgvector(
+    user_axes: list[float],
+    preferred_role: str | None,
+    preferred_seniority: str | None,
+    limit: int = 5,
+) -> list[dict]:
+    """Stage 1 query using pgvector cosine similarity with soft role/seniority boost.
+
+    match_score = cosine_similarity + role_bonus(0.10) + seniority_bonus(0.05)
+    """
+    vec = np.array(user_axes, dtype=np.float32)
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    try:
+        cursor.execute(
+            """
+            SELECT
+                jp.id            AS job_posting_id,
+                jp.title_raw,
+                jp.company_raw,
+                jp.source_url,
+                ap.id            AS job_profile_id,
+                ap.normalized_title,
+                ap.role_family,
+                ap.seniority,
+                ap.work_mode,
+                ap.location_scope,
+                1.0 - (ap.axes_vec <=> %s)                                AS cosine_similarity,
+                (
+                    1.0 - (ap.axes_vec <=> %s)
+                    + CASE WHEN ap.role_family = %s THEN 0.10 ELSE 0.0 END
+                    + CASE WHEN ap.seniority   = %s THEN 0.05 ELSE 0.0 END
+                )                                                          AS match_score
+            FROM job_postings jp
+            JOIN job_profiles ap
+              ON ap.job_posting_id = jp.id
+             AND ap.is_active = 1
+            WHERE ap.axes_vec IS NOT NULL
+            ORDER BY match_score DESC
+            LIMIT %s
+            """,
+            [vec, vec, preferred_role, preferred_seniority, limit],
+        )
+        return [dict(row) for row in cursor.fetchall()]
     finally:
         cursor.close()
         conn.close()
